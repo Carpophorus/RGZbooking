@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>РГЗ-ИНФО</title>
+  <title>РГЗ Заказивање</title>
 
   <link rel="apple-touch-icon" sizes="57x57" href="img/favicons/apple-touch-icon-57x57.png">
   <link rel="apple-touch-icon" sizes="60x60" href="img/favicons/apple-touch-icon-60x60.png">
@@ -46,74 +46,27 @@
   <div id="navi" role="navigation">
     <img src="img/logo.svg" alt="logo">
     <div id="navi-landing">
-      <span class="hidden-md-down">ИНФО-ЦЕНТАР&nbsp;РЕПУБЛИЧКОГ&nbsp;ГЕОДЕТСКОГ&nbsp;ЗАВОДА</span>
-      <span class="hidden-lg-up">ИНФО-ЦЕНТАР&nbsp;РГЗ</span>
+      <span>РГЗ ЗАКАЗИВАЊЕ</span>
     </div>
-    <div id="navi-menu" class="hidden-md-down row gone" style="opacity: 0">
-      <div id="navi-home" class="col-3"><span onclick="$RGZ.navi(0);">ПОЧЕТНА</span></div>
-      <div id="navi-book" class="col-3"><span onclick="$RGZ.navi(1);">ЗАКАЗИВАЊЕ</span></div>
-      <div id="navi-stat" class="col-3"><span onclick="$RGZ.navi(2);">СТАЊЕ&nbsp;ПРЕДМЕТА</span></div>
-      <div id="navi-info" class="col-3"><span onclick="$RGZ.navi(3);">ИНФОРМАЦИЈЕ</span></div>
-    </div>
-    <button id="navi-button" class="hidden-lg-up hidden collapsed" data-toggle="collapse" data-target="#navi-collapse" aria-controls="navi-collapse" aria-expanded="false"><i class="fa fa-bars"></i></button>
-    <ul class="collapse navbar-collapse" id="navi-collapse" aria-expanded="false">
-      <li id="navi-home" onclick="$RGZ.navi(0);">ПОЧЕТНА</li>
-      <li id="navi-book" onclick="$RGZ.navi(1);">ЗАКАЗИВАЊЕ</li>
-      <li id="navi-stat" onclick="$RGZ.navi(2);">СТАЊЕ&nbsp;ПРЕДМЕТА</li>
-      <li id="navi-info" onclick="$RGZ.navi(3);">ИНФОРМАЦИЈЕ</li>
-    </ul>
   </div>
 
-  <div id="tiles" class="row" onclick="$RGZ.mobileMenuTouchOutside();">
+  <div id="tiles" class="row">
 
-    <div id="book" class="tile hidden-md-down col-4" onmouseenter="$RGZ.tileMouseOver(this);" onmouseleave="$RGZ.tileMouseOut();">
-      <div class="tile-img"></div>
-      <div class="tile-title">ЗАКАЗИВАЊЕ</div>
-      <div class="tile-line hidden"></div>
-      <div class="tile-text hidden">Закажите термин на шалтеру или у одређеним канцеларијама за предају захтева или предмета.</div>
-      <div class="tile-button hidden" onclick="$RGZ.navi(1);">ЗАКАЖИ&nbsp;ТЕРМИН</div>
-    </div>
-    <div id="stat" class="tile hidden-md-down col-4" onmouseenter="$RGZ.tileMouseOver(this);" onmouseleave="$RGZ.tileMouseOut();">
-      <div class="tile-img"></div>
-      <div class="tile-title">СТАЊЕ&nbsp;ПРЕДМЕТА</div>
-      <div class="tile-line hidden"></div>
-      <div class="tile-text hidden">Сазнајте у ком степену обраде је Ваш захтев или предмет &mdash; потребан Вам је само деловодни број.</div>
-      <div class="tile-button hidden" onclick="$RGZ.navi(2);">ПОГЛЕДАЈ&nbsp;СТАЊЕ</div>
-    </div>
-    <div id="info" class="tile hidden-md-down col-4" onmouseenter="$RGZ.tileMouseOver(this);" onmouseleave="$RGZ.tileMouseOut();">
-      <div class="tile-img"></div>
-      <div class="tile-title">ИНФОРМАЦИЈЕ</div>
-      <div class="tile-line hidden"></div>
-      <div class="tile-text hidden">Пронађите висине такси и неопходне обрасце за подношење одређеног захтева или погледајте најчешће постављана питања.</div>
-      <div class="tile-button hidden" onclick="$RGZ.navi(3);">ИДИ&nbsp;НА&nbsp;ИНФО</div>
+    <div id="book-content" class="content-box col-12">
+      <div class="content-box-img"></div>
+      <div class="content-box-loader">
+        <div class="loader">
+          <div class="loader-inner"></div>
+        </div>
+      </div>
+      <div class="content-box-content"></div>
     </div>
 
-    <div id="book-mobile" class="tile-mobile hidden-lg-up col-12" onclick="$RGZ.tileMobileClick(this);">
-      <div class="tile-mobile-img"></div>
-      <div class="tile-mobile-title">ЗАКАЗИВАЊЕ</div>
-      <div class="tile-mobile-line hidden"></div>
-      <div class="tile-mobile-text hidden">Закажите термин на шалтеру или у одређеним канцеларијама за предају захтева или предмета.</div>
-      <div class="tile-mobile-button hidden" onclick="$RGZ.navi(1);">ЗАКАЖИ&nbsp;ТЕРМИН</div>
-    </div>
-    <div id="stat-mobile" class="tile-mobile hidden-lg-up col-12" onclick="$RGZ.tileMobileClick(this);">
-      <div class="tile-mobile-img"></div>
-      <div class="tile-mobile-title">СТАЊЕ&nbsp;ПРЕДМЕТА</div>
-      <div class="tile-mobile-line hidden"></div>
-      <div class="tile-mobile-text hidden">Сазнајте у ком степену обраде је Ваш захтев или предмет &mdash; потребан Вам је само деловодни број.</div>
-      <div class="tile-mobile-button hidden" onclick="$RGZ.navi(2);">ПОГЛЕДАЈ&nbsp;СТАЊЕ</div>
-    </div>
-    <div id="info-mobile" class="tile-mobile hidden-lg-up col-12" onclick="$RGZ.tileMobileClick(this);">
-      <div class="tile-mobile-img"></div>
-      <div class="tile-mobile-title">ИНФОРМАЦИЈЕ</div>
-      <div class="tile-mobile-line hidden"></div>
-      <div class="tile-mobile-text hidden">Пронађите висине такси и неопходне обрасце за подношење одређеног захтева или погледајте најчешће постављана питања.</div>
-      <div class="tile-mobile-button hidden" onclick="$RGZ.navi(3);">ИДИ&nbsp;НА&nbsp;ИНФО</div>
-    </div>
-    <div id="foot-mobile" class="foot-mobile hidden-lg-up col-12" onclick="$RGZ.tileMobileClick(this);">
+    <div id="foot-mobile" class="foot-mobile col-12" onclick="$RGZ.tileMobileClick(this);">
       <div id="foot-mobile-title">КОНТАКТ</div>
-      <div id="foot-mobile-logo" class="hidden"></div>
-      <div id="foot-mobile-name" class="hidden">РЕПУБЛИЧКИ<br>ГЕОДЕТСКИ<br>ЗАВОД</div>
-      <div id="foot-mobile-container" class="row hidden">
+      <div id="foot-mobile-logo"></div>
+      <div id="foot-mobile-name">РЕПУБЛИЧКИ<br>ГЕОДЕТСКИ<br>ЗАВОД</div>
+      <div id="foot-mobile-container">
         <div class="col-12">
           <a id="foot-mobile-location" href="https://goo.gl/maps/U2BfPquLxVw" target="_blank"><i class="fa fa-map-marker"></i>Булевар&nbsp;Војводе&nbsp;Мишића&nbsp;39,<br>11040&nbsp;Београд,&nbsp;Србија</a>
         </div>
@@ -134,34 +87,6 @@
         </div>
       </div>
       <div id="foot-mobile-copy">Copyright&nbsp;&copy;&nbsp;RGZ&nbsp;2017.&nbsp;All&nbsp;Rights&nbsp;Reserved.</div>
-    </div>
-
-    <div id="book-content" class="content-box gone">
-      <div class="content-box-img"></div>
-      <div class="content-box-loader">
-        <div class="loader">
-          <div class="loader-inner"></div>
-        </div>
-      </div>
-      <div class="content-box-content"></div>
-    </div>
-    <div id="stat-content" class="content-box gone">
-      <div class="content-box-img"></div>
-      <div class="content-box-loader">
-        <div class="loader">
-          <div class="loader-inner"></div>
-        </div>
-      </div>
-      <div class="content-box-content"></div>
-    </div>
-    <div id="info-content" class="content-box gone">
-      <div class="content-box-img"></div>
-      <div class="content-box-loader">
-        <div class="loader">
-          <div class="loader-inner"></div>
-        </div>
-      </div>
-      <div class="content-box-content"></div>
     </div>
 
   </div>

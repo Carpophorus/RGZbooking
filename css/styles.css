@@ -48,7 +48,7 @@ input {
   line-height: 7vh;
   text-align: center;
   font-family: 'Russo One', sans-serif;
-  color: #5A5050;
+  color: #666;
   position: absolute;
   top: 0;
   z-index: 1000;
@@ -101,7 +101,7 @@ input {
 }
 
 #navi-menu>#navi-book>span:hover, #navi-menu>#navi-book>.active {
-  color: #589662;
+  color: #1A3360;
 }
 
 #navi-menu>#navi-stat>span:hover, #navi-menu>#navi-stat>.active {
@@ -137,7 +137,7 @@ input {
 
 ul {
   margin-bottom: 0;
-  border-top: 1px solid #5A5050;
+  border-top: 1px solid #666;
   list-style-type: none;
 }
 
@@ -170,7 +170,7 @@ ul {
 }
 
 #book, #book-mobile {
-  background-color: #589662;
+  background-color: #1A3360;
 }
 
 #stat, #stat-mobile {
@@ -207,7 +207,7 @@ ul {
 }
 
 #foot {
-  background-color: #5A5050;
+  background-color: #666;
   height: 7vh;
   color: #F4F8E6;
   position: absolute;
@@ -219,7 +219,7 @@ ul {
 }
 
 #foot-mobile {
-  background-color: #5A5050;
+  background-color: #666;
   height: 8vh;
   max-height: 8vh;
   color: #F4F8E6;
@@ -369,7 +369,7 @@ ul {
 }
 
 #foot a:hover {
-  color: #3EACA8;
+  color: #1A3360;
 }
 
 #foot-mobile-container {
@@ -386,7 +386,7 @@ ul {
 
 #foot-mobile a {
   background-color: #F4F8E6;
-  color: #5A5050;
+  color: #666;
   padding: 2vh 0;
   margin-bottom: 3vh;
   text-align: center;
@@ -458,7 +458,7 @@ ul {
 }
 
 #book>.tile-line, #book-mobile>.tile-mobile-line {
-  background-color: #589662;
+  background-color: #1A3360;
 }
 
 #stat>.tile-line, #stat-mobile>.tile-mobile-line {
@@ -546,7 +546,7 @@ ul {
 }
 
 #book-mobile>.tile-mobile-button {
-  background-color: #589662;
+  background-color: #1A3360;
 }
 
 #stat-mobile>.tile-mobile-button {
@@ -558,12 +558,12 @@ ul {
 }
 
 #book>.tile-button, #book-content .form-button {
-  border: 0.5vh solid #589662;
+  border: 0.5vh solid #1A3360;
   color: #333;
 }
 
 #book>.tile-button:hover, #book-content .form-button:hover {
-  background-color: #589662;
+  background-color: #1A3360;
   color: #F4F8E6;
   cursor: pointer;
 }
@@ -591,11 +591,9 @@ ul {
 }
 
 .content-box {
-  opacity: 0;
   width: 100%;
-  height: 100%;
+  height: 84vh;
   background-color: #E5EEC1;
-  position: absolute;
   top: 0;
   left: 0;
   -webkit-transition: opacity 0.4s linear;
@@ -710,7 +708,7 @@ ul {
 }
 
 #book-content .loader-inner {
-  background-color: #589662;
+  background-color: #1A3360;
 }
 
 #stat-content .loader-inner {
@@ -779,15 +777,15 @@ ul {
 }
 
 #book-content .btn-group>label {
-  border-color: #589662;
+  border-color: #1A3360;
 }
 
 #book-content .btn-primary.active {
-  background-color: #589662;
+  background-color: #1A3360;
 }
 
 #book-content .btn-primary:not(.active):hover {
-  background-color: #589662;
+  background-color: #1A3360;
 }
 
 #stat-content .btn-group>label {
@@ -856,7 +854,7 @@ ul {
 }
 
 #book-content .card {
-  border-color: #589662;
+  border-color: #1A3360;
 }
 
 #stat-content .card {
@@ -919,7 +917,7 @@ ul {
 }
 
 #counter-select, #counter-time-select, #counter-day-select, #office-select, #office-time-select, #office-day-select {
-  border-color: #589662;
+  border-color: #1A3360;
 }
 
 #docsaux, #book-counter-aux, #book-office-aux {
@@ -939,7 +937,7 @@ ul {
   color: #333;
   height: 7vh;
   background-color: rgba(255, 255, 255, 0.5);
-  border-bottom: 0.6vh solid #589662;
+  border-bottom: 0.6vh solid #1A3360;
   margin-bottom: 4vh;
   padding: 0 2vh;
 }
@@ -951,7 +949,7 @@ ul {
   margin-right: 2vh;
   cursor: pointer;
   font-size: 5vh;
-  color: #589662;
+  color: #1A3360;
 }
 
 .checkbox-label {
@@ -1086,7 +1084,7 @@ a.docsaux-item-download:hover {
     margin-right: 0;
   }
   #book-content .form-button {
-    background-color: #589662;
+    background-color: #1A3360;
     color: #F4F8E6;
   }
 }
