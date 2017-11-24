@@ -1,10 +1,6 @@
 (function(global) {
   RGZ = {};
 
-  RGZ.nav = 0;
-  RGZ.mobileButtonClicked = false;
-  RGZ.tileHoverID = "";
-
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
     targetElem.innerHTML = html;
