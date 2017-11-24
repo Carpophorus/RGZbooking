@@ -11,7 +11,92 @@
   };
 
   document.addEventListener("DOMContentLoaded", function(event) {
-    RGZ.fillBookContent();
+    $("#book-content>.content-box-loader").css({
+      "opacity": "1"
+    });
+    $(".content-box-content").css({
+      "opacity": "0"
+    });
+    setTimeout(function() {
+      insertHtml("#book-content>.content-box-content", `
+        <div class="btn-group" data-toggle="buttons">
+          <label class="btn btn-primary active" onclick="RGZ.bookSwitch(0);">
+            <input type="radio" name="options" id="option1" autocomplete="off" checked>ШАЛТЕРИ
+          </label>
+          <label class="btn btn-primary" onclick="RGZ.bookSwitch(1);">
+            <input type="radio" name="options" id="option2" autocomplete="off">КАНЦЕЛАРИЈЕ
+          </label>
+        </div>
+        <div id="book-counters">
+          <select id="counter-select" onchange="$RGZ.fetchCounterTimes();">
+            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР...</option>
+            <option value="1">Шалтер 1</option>
+            <option value="2">Шалтер 2</option>
+            <option value="3">Шалтер 3</option>
+            <option value="4">Шалтер 4</option>
+          </select>
+          <select id="counter-day-select" class="gone" onchange="$RGZ.bookCounterDay();">
+          </select>
+          <select id="counter-time-select" class="gone" onchange="$RGZ.bookCounterTime();">
+          </select>
+          <div id="book-counter-aux" class="aux-container gone">
+            <input id="book-counter-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
+            <input id="book-counter-id" placeholder="број личне карте ✱" onfocus="this.placeholder=''" onblur="this.placeholder='број личне карте ✱'">
+            <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
+            <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
+            <div id="book-counter-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
+            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/предмет због којег заказујем термин. Такође, пристајем да наредна странка буде услужена уколико се не појавим у заказано време.</label>
+            <div class="form-button">ЗАКАЖИ</div>
+          </div>
+        </div>
+        <div id="book-offices" class="gone">
+          <select id="office-select" onchange="$RGZ.fetchOfficeTimes();">
+            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ КАНЦЕЛАРИЈУ...</option>
+            <option value="1">Канцеларија 1</option>
+            <option value="2">Канцеларија 2</option>
+            <option value="3">Канцеларија 3</option>
+            <option value="4">Канцеларија 4</option>
+          </select>
+          <select id="office-day-select" class="gone" onchange="$RGZ.bookOfficeDay();">
+          </select>
+          <select id="office-time-select" class="gone" onchange="$RGZ.bookOfficeTime();">
+          </select>
+          <div id="book-office-aux" class="aux-container gone">
+            <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
+            <input id="book-office-id" placeholder="број личне карте ✱" onfocus="this.placeholder=''" onblur="this.placeholder='број личне карте ✱'">
+            <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
+            <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
+            <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
+            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/предмет због којег заказујем термин. Такође, пристајем да наредна странка буде услужена уколико се не појавим у заказано време.</label>
+            <div class="form-button">ЗАКАЖИ</div>
+          </div>
+        </div>
+      `);
+      $(".content-box-loader").css({
+        "opacity": "0"
+      });
+      setTimeout(function() {
+        $("#book-content>.content-box-content").css({
+          "opacity": "1"
+        });
+        $(".content-box-loader").css({
+          "padding-top": "34vh"
+        });
+      }, 200);
+    }, 3000); //this delay only simulating network response, fetch counters and offices for first dropdown in both sections
+  });
+
+  $(window).resize(function() {
+    if (window.innerWidth > 991.5) {
+      if ($("#foot-mobile").hasClass("clicked")) $("#foot-mobile").click();
+      $(".content-box").css({
+        "height": "86vh"
+      });
+    } else {
+      $(".content-box").css({
+        "height": "84vh"
+      });
+    }
   });
 
   RGZ.checkboxClicked = function(e) {
@@ -200,78 +285,7 @@
     }, 10);
   };
 
-  RGZ.fillBookContent = function() {
-    $("#book-content>.content-box-loader").css({
-      "opacity": "1"
-    });
-    $(".content-box-content").css({
-      "opacity": "0"
-    });
-    setTimeout(function() {
-      insertHtml("#book-content>.content-box-content", `
-        <div class="btn-group" data-toggle="buttons">
-          <label class="btn btn-primary active" onclick="RGZ.bookSwitch(0);">
-            <input type="radio" name="options" id="option1" autocomplete="off" checked>ШАЛТЕРИ
-          </label>
-          <label class="btn btn-primary" onclick="RGZ.bookSwitch(1);">
-            <input type="radio" name="options" id="option2" autocomplete="off">КАНЦЕЛАРИЈЕ
-          </label>
-        </div>
-        <div id="book-counters">
-          <select id="counter-select" onchange="$RGZ.fetchCounterTimes();">
-            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР...</option>
-            <option value="1">Шалтер 1</option>
-            <option value="2">Шалтер 2</option>
-            <option value="3">Шалтер 3</option>
-            <option value="4">Шалтер 4</option>
-          </select>
-          <select id="counter-day-select" class="gone" onchange="$RGZ.bookCounterDay();">
-          </select>
-          <select id="counter-time-select" class="gone" onchange="$RGZ.bookCounterTime();">
-          </select>
-          <div id="book-counter-aux" class="aux-container gone">
-            <input id="book-counter-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-            <input id="book-counter-id" placeholder="број личне карте ✱" onfocus="this.placeholder=''" onblur="this.placeholder='број личне карте ✱'">
-            <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
-            <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-            <div id="book-counter-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/предмет због којег заказујем термин. Такође, пристајем да наредна странка буде услужена уколико се не појавим у заказано време.</label>
-            <div class="form-button">ЗАКАЖИ</div>
-          </div>
-        </div>
-        <div id="book-offices" class="gone">
-          <select id="office-select" onchange="$RGZ.fetchOfficeTimes();">
-            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ КАНЦЕЛАРИЈУ...</option>
-            <option value="1">Канцеларија 1</option>
-            <option value="2">Канцеларија 2</option>
-            <option value="3">Канцеларија 3</option>
-            <option value="4">Канцеларија 4</option>
-          </select>
-          <select id="office-day-select" class="gone" onchange="$RGZ.bookOfficeDay();">
-          </select>
-          <select id="office-time-select" class="gone" onchange="$RGZ.bookOfficeTime();">
-          </select>
-          <div id="book-office-aux" class="aux-container gone">
-            <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-            <input id="book-office-id" placeholder="број личне карте ✱" onfocus="this.placeholder=''" onblur="this.placeholder='број личне карте ✱'">
-            <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
-            <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-            <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/предмет због којег заказујем термин. Такође, пристајем да наредна странка буде услужена уколико се не појавим у заказано време.</label>
-            <div class="form-button">ЗАКАЖИ</div>
-          </div>
-        </div>
-      `);
-      $(".content-box-loader").css({
-        "opacity": "0"
-      });
-      setTimeout(function() {
-        $("#book-content>.content-box-content").css({
-          "opacity": "1"
-        });
-      }, 200);
-    }, 3000); //this delay only simulating network response, fetch counters and offices for first dropdown in both sections
-  };
+  RGZ.fillBookContent = function() {};
 
   RGZ.footMouseOver = function() {
     $("#foot").css({
@@ -299,109 +313,37 @@
     });
   };
 
-  RGZ.tileMobileClick = function(e) {
-    if (RGZ.mobileButtonClicked) {
-      RGZ.mobileButtonClicked = false;
-      return;
-    }
+  RGZ.footerMobileClick = function(e) {
     if (!$(e).hasClass("clicked")) {
-      $(".tile-mobile, .foot-mobile").css({
-        "height": "8vh",
-        "max-height": "8vh"
-      });
-      $(".tile-mobile>.tile-mobile-title").css({
-        "top": "0",
-        "color": "#F4F8E6"
-      });
-      $("#book-mobile").css({
-        "background-color": "#589662"
-      });
-      $("#stat-mobile").css({
-        "background-color": "#3EACA8"
-      });
-      $("#info-mobile").css({
-        "background-color": "#547A82"
-      });
-
-      $(".tile-mobile-line, .tile-mobile-text, .tile-mobile-button").addClass("hidden");
-      $(".tile-mobile-line").css({
-        "width": "0"
-      });
-      $(".tile-mobile-text").css({
-        "bottom": "15vh",
-        "opacity": "0"
-      });
-      $(".tile-mobile-button").css({
-        "bottom": "1vh",
-        "opacity": "0"
-      });
-
       $(e).css({
         "height": "68vh",
         "max-height": "68vh"
       });
-
-      $(e).find(".tile-mobile-title").css({
-        "top": "12vh",
-        "color": "#333",
-        "font-size": "3.3vh"
+      $(".content-box").css({
+        "height": "24vh"
       });
-      $(e).find(".tile-mobile-line").removeClass("hidden").css({
-        "width": "90%"
+      $("#foot-mobile-logo, #foot-mobile-name").removeClass("hidden").css({
+        "opacity": "1",
+        "bottom": "49.5vh",
+        "-webkit-transition": "opacity 0.6s ease 0.3s, bottom 0.6s ease 0.3s",
+        "-moz-transition": "opacity 0.6s ease 0.3s, bottom 0.6s ease 0.3s",
+        "transition": "opacity 0.6s ease 0.3s, bottom 0.6s ease 0.3s"
       });
-      $(e).find(".tile-mobile-text").removeClass("hidden").css({
-        "bottom": "20vh",
-        "opacity": "1"
+      $("#foot-mobile-container").removeClass("hidden").css({
+        "opacity": "1",
+        "bottom": "3vh",
+        "-webkit-transition": "opacity 0.6s ease 0.5s, bottom 0.6s ease 0.5s",
+        "-moz-transition": "opacity 0.6s ease 0.5s, bottom 0.6s ease 0.5s",
+        "transition": "opacity 0.6s ease 0.5s, bottom 0.6s ease 0.5s"
       });
-      $(e).find(".tile-mobile-button").removeClass("hidden").css({
-        "bottom": "6vh",
-        "opacity": "1"
-      });
-
-      $("#foot-mobile-logo, #foot-mobile-name").addClass("hidden").css({
-        "opacity": "0",
-        "bottom": "44.5vh",
-        "-webkit-transition": "opacity 0.1s ease, bottom 0.1s ease",
-        "-moz-transition": "opacity 0.1s ease, bottom 0.1s ease",
-        "transition": "opacity 0.1s ease, bottom 0.1s ease"
-      });
-      $("#foot-mobile-container").addClass("hidden").css({
-        "opacity": "0",
-        "bottom": "0",
-        "-webkit-transition": "opacity 0.1s ease, bottom 0.1s ease",
-        "-moz-transition": "opacity 0.1s ease, bottom 0.1s ease",
-        "transition": "opacity 0.1s ease, bottom 0.1s ease"
-      });
-      if (!$(e).hasClass("foot-mobile"))
-        $(e).css({
-          "background-color": "#E5EEC1"
-        });
-      else {
-        $("#foot-mobile-logo, #foot-mobile-name").removeClass("hidden").css({
-          "opacity": "1",
-          "bottom": "49.5vh",
-          "-webkit-transition": "opacity 0.6s ease 0.3s, bottom 0.6s ease 0.3s",
-          "-moz-transition": "opacity 0.6s ease 0.3s, bottom 0.6s ease 0.3s",
-          "transition": "opacity 0.6s ease 0.3s, bottom 0.6s ease 0.3s"
-        });
-        $("#foot-mobile-container").removeClass("hidden").css({
-          "opacity": "1",
-          "bottom": "3vh",
-          "-webkit-transition": "opacity 0.6s ease 0.5s, bottom 0.6s ease 0.5s",
-          "-moz-transition": "opacity 0.6s ease 0.5s, bottom 0.6s ease 0.5s",
-          "transition": "opacity 0.6s ease 0.5s, bottom 0.6s ease 0.5s"
-        });
-      }
-
-      $(".tile-mobile, .foot-mobile").removeClass("clicked");
       $(e).addClass("clicked");
     } else {
-      $(".foot-mobile").css({
+      $(e).css({
         "height": "8vh",
         "max-height": "8vh"
       });
       $(".content-box").css({
-        "height": "68vh"
+        "height": "84vh"
       });
       $("#foot-mobile-logo, #foot-mobile-name").addClass("hidden").css({
         "opacity": "0",
@@ -417,40 +359,13 @@
         "-moz-transition": "opacity 0.1s ease, bottom 0.1s ease",
         "transition": "opacity 0.1s ease, bottom 0.1s ease"
       });
-      $(".tile-mobile").css({
-        "height": "28vh",
-        "max-height": "28vh"
-      });
-      $("#book-mobile").css({
-        "background-color": "#589662"
-      });
-      $("#stat-mobile").css({
-        "background-color": "#3EACA8"
-      });
-      $("#info-mobile").css({
-        "background-color": "#547A82"
-      });
-
-      $(".tile-mobile-line, .tile-mobile-text, .tile-mobile-button").addClass("hidden");
-      $(".tile-mobile-line").css({
-        "width": "0"
-      });
-      $(".tile-mobile-text").css({
-        "bottom": "15vh",
-        "opacity": "0"
-      });
-      $(".tile-mobile-button").css({
-        "bottom": "1vh",
-        "opacity": "0"
-      });
-
-      $(".tile-mobile-title").css({
-        "top": "11vh",
-        "font-size": "3vh",
-        "color": "#F4F8E6"
-      });
-      $(".tile-mobile, .foot-mobile").removeClass("clicked");
+      $(e).removeClass("clicked");
     }
+  };
+
+  RGZ.footerMobileOutsideClick = function() {
+    if ($("#foot-mobile").hasClass("clicked"))
+      RGZ.footerMobileClick($("#foot-mobile"));
   };
 
   global.$RGZ = RGZ;

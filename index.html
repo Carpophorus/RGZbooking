@@ -43,7 +43,7 @@
 </head>
 
 <body>
-  <div id="navi" role="navigation">
+  <div id="navi" role="navigation" onclick="$RGZ.footerMobileOutsideClick(this);">
     <img src="img/logo.svg" alt="logo">
     <div id="navi-landing">
       <span>РГЗ ЗАКАЗИВАЊЕ</span>
@@ -52,7 +52,7 @@
 
   <div id="tiles" class="row">
 
-    <div id="book-content" class="content-box col-12">
+    <div id="book-content" class="content-box col-12" onclick="$RGZ.footerMobileOutsideClick(this);">
       <div class="content-box-img"></div>
       <div class="content-box-loader">
         <div class="loader">
@@ -60,6 +60,33 @@
         </div>
       </div>
       <div class="content-box-content"></div>
+    </div>
+
+    <div id="foot-mobile" class="foot-mobile hidden-lg-up col-12" onclick="$RGZ.footerMobileClick(this);">
+      <div id="foot-mobile-title">КОНТАКТ</div>
+      <div id="foot-mobile-logo" class="hidden"></div>
+      <div id="foot-mobile-name" class="hidden">РЕПУБЛИЧКИ<br>ГЕОДЕТСКИ<br>ЗАВОД</div>
+      <div id="foot-mobile-container" class="row hidden">
+        <div class="col-12">
+          <a id="foot-mobile-location" href="https://goo.gl/maps/U2BfPquLxVw" target="_blank"><i class="fa fa-map-marker"></i>Булевар&nbsp;Војводе&nbsp;Мишића&nbsp;39,<br>11040&nbsp;Београд,&nbsp;Србија</a>
+        </div>
+        <div class="col-6 foot-mobile-button-left">
+          <a id="foot-mobile-tel" href="tel:+381112652222"><i class="fa fa-phone"></i>+381&nbsp;11&nbsp;265&nbsp;22&nbsp;22</a>
+        </div>
+        <div class="col-6 foot-mobile-button-right">
+          <a id="foot-mobile-fax" href="tel:+381117152609"><i class="fa fa-fax"></i>+381&nbsp;11&nbsp;715&nbsp;26&nbsp;09</a>
+        </div>
+        <div class="col-12">
+          <a id="foot-mobile-mail" href="mailto:office@rgz.gov.rs"><i class="fa fa-envelope"></i>office@rgz.gov.rs</a>
+        </div>
+        <div class="col-6 foot-mobile-button-left">
+          <a id="foot-mobile-rgz" href="http://www.rgz.gov.rs/" target="_blank"><i class="fa fa-link"></i>Сајт&nbsp;РГЗ</a>
+        </div>
+        <div class="col-6 foot-mobile-button-right">
+          <a id="foot-mobile-knweb" href="http://katastar.rgz.gov.rs/KnWebPublic/PublicAccess.aspx" target="_blank"><i class="fa fa-link"></i>Сајт&nbsp;KNWEB</a>
+        </div>
+      </div>
+      <div id="foot-mobile-copy">Copyright&nbsp;&copy;&nbsp;RGZ&nbsp;2017.&nbsp;All&nbsp;Rights&nbsp;Reserved.</div>
     </div>
 
   </div>
