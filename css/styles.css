@@ -297,7 +297,7 @@ input {
   padding-left: 1.5vh!important;
 }
 
-.form-button {
+.form-button, .form-search-button {
   width: 50%;
   margin: 10vh auto;
   height: 7vh;
@@ -305,18 +305,27 @@ input {
   font-size: 2.5vh;
   font-family: 'Russo One', sans-serif;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.25);
   -webkit-transition: background-color 0.4s ease, color 0.4s ease;
   -moz-transition: background-color 0.4s ease, color 0.4s ease;
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-#book-content .form-button {
+.form-search-button {
+  margin: 0 auto 4vh auto;
+}
+
+.form-search-button-container {
+  width: 50%;
+  margin: auto;
+}
+
+#book-content .form-button, #book-content .form-search-button {
   border: 0.5vh solid #1A3360;
   color: #333;
 }
 
-#book-content .form-button:hover {
+#book-content .form-button:hover, #book-content .form-search-button:hover {
   background-color: #1A3360;
   color: #F4F8E6;
   cursor: pointer;
@@ -370,11 +379,17 @@ input {
   transition: opacity 0.2s linear;
 }
 
+.content-box-loader-inner-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
 .loader {
   width: 15vh;
   height: 15vh;
-  position: absolute;
   border: 1.5vh solid #F4F8E6;
+  position: absolute;
   left: 0;
   right: 0;
   top: 0;
@@ -474,51 +489,96 @@ input {
 
 .btn-primary {
   color: #333;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.25);
 }
 
 .btn-primary.active {
   color: #F4F8E6;
 }
 
-#counter-select, #counter-time-select, #counter-day-select, #office-select, #office-time-select, #office-day-select {
+#book-counters select, #book-offices select {
   font-family: 'Russo One', sans-serif;
   font-size: 2.5vh;
   color: #333;
   width: 50%;
-  margin: 0 25% 10vh 25%;
+  margin: 0 25% 4vh 25%;
   height: 7vh;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-bottom: 0.6vh solid #547A82;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-bottom: 0.6vh solid #1A3360;
   text-align-last: center;
   -webkit-transition: opacity 0.4s ease;
   -moz-transition: opacity 0.4s ease;
   transition: opacity 0.4s ease;
 }
 
-#counter-day-select, #office-day-select {
-  margin-bottom: 4vh;
+#subj-select {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5vh;
+  color: #333;
+  height: 7vh;
+  line-height: 7vh;
+  margin: 0 25% 4vh 25%;
 }
 
-#counter-select, #office-select {
-  margin-bottom: 4vh;
+#subj-select>div {
+  position: relative;
+  display: inline-block;
+  height: 7vh;
+  float: left;
 }
 
-#counter-select, #counter-time-select, #counter-day-select, #office-select, #office-time-select, #office-day-select {
-  border-color: #1A3360;
-}
-
-#book-counter-aux, #book-office-aux {
+#subj-select input {
+  width: 100%;
+  height: 7vh;
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5vh;
+  color: #333;
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-bottom: 0.6vh solid #1A3360;
+  text-align-last: center;
   -webkit-transition: opacity 0.4s ease;
   -moz-transition: opacity 0.4s ease;
   transition: opacity 0.4s ease;
 }
 
+#subj-1 {
+  white-space: nowrap;
+  overflow: hidden !important;
+  max-width: 50%;
+}
+
+#subj-2 {
+  width: 10%;
+}
+
+#subj-3, #subj-5 {
+  max-width: 5%;
+}
+
+#subj-4 {
+  width: 20%;
+}
+
+#subj-6 {
+  width: 10%;
+}
+
+#counter-day-select, #office-day-select, #counter-select, #office-select, #subj-select {
+  margin-bottom: 4vh;
+}
+
 #book-counter-aux, #book-office-aux {
-  padding: 0 25%;
+  padding: 6vh 25% 0 25%;
+  -webkit-transition: opacity 0.4s ease;
+  -moz-transition: opacity 0.4s ease;
+  transition: opacity 0.4s ease;
 }
 
 .aux-container input {
@@ -548,7 +608,7 @@ input {
   margin: 0;
   cursor: pointer;
   font-size: 1.7vh;
-  line-height: 2vh;
+  line-height: 1.3;
   text-align: justify;
   width: calc(100% - 8vh);
   padding-top: 1.5vh;
@@ -576,21 +636,20 @@ input {
     padding: 10vh 5vh;
   }
   #book-counters, #book-offices {
-    padding: 0 5vh 5vh 5vh;
+    padding: 0 5vh;
   }
   #book-counter-aux, #book-office-aux {
-    padding: 0;
+    padding: 6vh 0 0 0;
   }
-  #counter-select, #counter-time-select, #counter-day-select, #office-select, #office-time-select, #office-day-select {
+  #book-counters select, #book-offices select, #subj-select, .form-search-button-container {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
   }
-  .form-button {
+  .form-button, .form-search-button {
     margin-right: 0;
-    margin-bottom: 5vh;
   }
-  #book-content .form-button {
+  #book-content .form-button, #book-content .form-search-button {
     background-color: #1A3360;
     color: #F4F8E6;
   }

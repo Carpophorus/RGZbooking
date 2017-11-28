@@ -6,6 +6,30 @@
     targetElem.innerHTML = html;
   };
 
+  var appear = function(selector, interval) {
+    $(selector).removeClass("gone");
+    setTimeout(function() {
+      $(selector).css({
+        "opacity": 1,
+        "-webkit-transition": "opacity " + Number(interval) / 1000 + "s ease",
+        "-moz-transition": "opacity " + Number(interval) / 1000 + "s ease",
+        "transition": "opacity " + Number(interval) / 1000 + "s ease"
+      });
+    }, 10);
+  };
+
+  var disappear = function(selector, interval) {
+    $(selector).css({
+      "opacity": 0,
+      "-webkit-transition": "opacity " + Number(interval) / 1000 + "s ease",
+      "-moz-transition": "opacity " + Number(interval) / 1000 + "s ease",
+      "transition": "opacity " + Number(interval) / 1000 + "s ease"
+    });
+    setTimeout(function() {
+      $(selector).addClass("gone");
+    }, Number(interval) + 10);
+  };
+
   document.addEventListener("DOMContentLoaded", function(event) {
     $("#book-content>.content-box-loader").css({
       "opacity": "1"
@@ -24,35 +48,49 @@
           </label>
         </div>
         <div id="book-counters">
-          <select id="counter-select" onchange="$RGZ.fetchCounterTimes();">
-            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР...</option>
-            <option value="1">Шалтер 1</option>
-            <option value="2">Шалтер 2</option>
-            <option value="3">Шалтер 3</option>
-            <option value="4">Шалтер 4</option>
+          <select id="counter-select">
+            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
+            <option value="1">Ада</option>
+            <option value="2">Београд</option>
+            <option value="3">Сурдулица</option>
+            <option value="4">Заклопача</option>
           </select>
+          <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchCounterTimes();">ПРЕТРАГА</div></div>
           <select id="counter-day-select" class="gone" onchange="$RGZ.bookCounterDay();">
           </select>
           <select id="counter-time-select" class="gone" onchange="$RGZ.bookCounterTime();">
           </select>
           <div id="book-counter-aux" class="aux-container gone">
             <input id="book-counter-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-            <input id="book-counter-id" placeholder="број личне карте ✱" onfocus="this.placeholder=''" onblur="this.placeholder='број личне карте ✱'">
+            <input id="book-counter-subj" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
             <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
             <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
             <div id="book-counter-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/предмет због којег заказујем термин. Такође, пристајем да наредна странка буде услужена уколико се не појавим у заказано време.</label>
+            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
             <div class="form-button">ЗАКАЖИ</div>
           </div>
         </div>
         <div id="book-offices" class="gone">
-          <select id="office-select" onchange="$RGZ.fetchOfficeTimes();">
-            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ КАНЦЕЛАРИЈУ...</option>
-            <option value="1">Канцеларија 1</option>
-            <option value="2">Канцеларија 2</option>
-            <option value="3">Канцеларија 3</option>
-            <option value="4">Канцеларија 4</option>
+          <select id="office-select">
+            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
+            <option value="1">Ада</option>
+            <option value="2">Београд</option>
+            <option value="3">Сурдулица</option>
+            <option value="4">Заклопача</option>
           </select>
+          <div id="subj-select">
+            <div id="subj-1">
+              <span class="hidden-sm-down">БР.&nbsp;ПРЕДМЕТА:</span>
+              <span class="hidden-md-up">БР.&nbsp;ПР.:</span>
+              &nbsp;952&nbsp;-&nbsp;02&nbsp;-&nbsp;
+            </div>
+            <div id="subj-2"><input id="subj-type" type="text"></div>
+            <div id="subj-3">&nbsp;-&nbsp;</div>
+            <div id="subj-4"><input id="subj-id" type="text"></div>
+            <div id="subj-5">&nbsp;/&nbsp;</div>
+            <div id="subj-6"><input id="subj-year" type="text"></div>
+          </div>
+          <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchOfficeTimes();">ПРЕТРАГА</div></div>
           <select id="office-day-select" class="gone" onchange="$RGZ.bookOfficeDay();">
           </select>
           <select id="office-time-select" class="gone" onchange="$RGZ.bookOfficeTime();">
@@ -63,7 +101,7 @@
             <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
             <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
             <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/предмет због којег заказујем термин. Такође, пристајем да наредна странка буде услужена уколико се не појавим у заказано време.</label>
+            <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
             <div class="form-button">ЗАКАЖИ</div>
           </div>
         </div>
@@ -74,9 +112,6 @@
       setTimeout(function() {
         $("#book-content>.content-box-content").css({
           "opacity": "1"
-        });
-        $(".content-box-loader").css({
-          "padding-top": "34vh"
         });
       }, 200);
     }, 3000); //this delay only simulating network response, fetch counters and offices for first dropdown in both sections
@@ -93,6 +128,7 @@
         "height": "84vh"
       });
     }
+    //vvvvvvvvvvvvv
   });
 
   RGZ.checkboxClicked = function(e) {
@@ -146,7 +182,7 @@
     }, 400);
     $(".content-box-loader").css({
       "opacity": "1",
-      "top": "10vh"
+      "padding-top": "45vh"
     });
     setTimeout(function() {
       //api call
@@ -173,11 +209,6 @@
         $(".content-box-loader").css({
           "opacity": "0"
         });
-        setTimeout(function() {
-          $(".content-box-loader").css({
-            "top": "0"
-          });
-        }, 400);
         $("#counter-select").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
     }, 400);
@@ -196,7 +227,7 @@
     }, 400);
     $(".content-box-loader").css({
       "opacity": "1",
-      "top": "10vh"
+      "padding-top": "56vh"
     });
     setTimeout(function() {
       //api call
@@ -223,11 +254,6 @@
         $(".content-box-loader").css({
           "opacity": "0"
         });
-        setTimeout(function() {
-          $(".content-box-loader").css({
-            "top": "0"
-          });
-        }, 400);
         $("#office-select").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
     }, 400);
