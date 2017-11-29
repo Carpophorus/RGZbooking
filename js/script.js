@@ -1,6 +1,8 @@
 (function(global) {
   RGZ = {};
 
+  var bookingForbidden = false;
+
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
     targetElem.innerHTML = html;
@@ -48,7 +50,7 @@
           </label>
         </div>
         <div id="book-counters">
-          <select id="counter-select">
+          <select id="counter-select" onchange="$RGZ.counterDepartmentChanged();">
             <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
             <option value="1">Ада</option>
             <option value="2">Београд</option>
@@ -71,7 +73,7 @@
           </div>
         </div>
         <div id="book-offices" class="gone">
-          <select id="office-select">
+          <select id="office-select" onchange="$RGZ.officeDepartmentChanged();">
             <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
             <option value="1">Ада</option>
             <option value="2">Београд</option>
@@ -99,7 +101,7 @@
           </select>
           <div id="book-office-aux" class="aux-container gone">
             <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-            <input id="book-office-id" placeholder="број личне карте ✱" onfocus="this.placeholder=''" onblur="this.placeholder='број личне карте ✱'">
+            <input id="book-office-id" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
             <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
             <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
             <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
@@ -151,7 +153,7 @@
             "opacity": "1"
           });
         }, 10);
-      }, 400);
+      }, 500);
       $("#book-offices").css({
         "opacity": "0"
       });
@@ -166,12 +168,43 @@
             "opacity": "1"
           });
         }, 10);
-      }, 400);
+      }, 500);
       $("#book-counters").css({
         "opacity": "0"
       });
     }
   };
+
+  RGZ.counterDepartmentChanged = function() {
+    bookingForbidden = true;
+    $("#counter-day-select, #counter-time-select").prop("disabled", true);
+    setTimeout(function() {
+      bookingForbidden = false;
+      $("#counter-day-select, #counter-time-select").prop("disabled", false);
+    }, 1000);
+    setTimeout(function() {
+      disappear($("#counter-day-select, #counter-time-select, #book-counter-aux"), 500);
+    }, 500);
+    $(".content-box-content").animate({
+      scrollTop: 0
+    }, 1000);
+  }
+
+  RGZ.officeDepartmentChanged = function() {
+    bookingForbidden = true;
+    $("#office-day-select, #office-time-select").prop("disabled", true);
+    setTimeout(function() {
+      bookingForbidden = false;
+      $("#office-day-select, #office-time-select").prop("disabled", false);
+    }, 1000);
+    setTimeout(function() {
+      disappear($("#office-day-select, #office-time-select, #book-office-aux"), 500);
+    }, 500);
+    $(".content-box-content").animate({
+      scrollTop: 0
+    }, 1000);
+  }
+
 
   RGZ.fetchCounterTimes = function() {
     //memorise value of select?
@@ -183,7 +216,7 @@
       $("#book-counter-aux, #counter-time-select, #counter-day-select").addClass("gone");
       $("#book-counter-aux>input").val("");
       $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
-    }, 400);
+    }, 500);
     $(".content-box-loader").css({
       "opacity": "1",
       "padding-top": "45vh"
@@ -215,7 +248,7 @@
         });
         $("#counter-select").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
-    }, 400);
+    }, 500);
   };
 
   RGZ.fetchOfficeTimes = function() {
@@ -228,7 +261,7 @@
       $("#book-office-aux, #office-time-select, #office-day-select").addClass("gone");
       $("#book-office-aux>input").val("");
       $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
-    }, 400);
+    }, 500);
     $(".content-box-loader").css({
       "opacity": "1",
       "padding-top": "56vh"
@@ -260,7 +293,7 @@
         });
         $("#office-select").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
-    }, 400);
+    }, 500);
   };
 
   RGZ.bookCounterDay = function() {
@@ -280,6 +313,9 @@
   RGZ.bookCounterTime = function() {
     //memorise value of select?
     $("#book-counter-aux").removeClass("gone");
+    $(".content-box-content").animate({
+      scrollTop: $("#book-counter-aux").offset().top - $(".btn-group").offset().top
+    }, 1500);
     setTimeout(function() {
       $("#book-counter-aux").css({
         "opacity": "1"
@@ -304,13 +340,15 @@
   RGZ.bookOfficeTime = function() {
     //memorise value of select?
     $("#book-office-aux").removeClass("gone");
+    $(".content-box-content").animate({
+      scrollTop: $("#book-office-aux").offset().top - $(".btn-group").offset().top
+    }, 1500);
     setTimeout(function() {
       $("#book-office-aux").css({
         "opacity": "1"
       })
     }, 10);
   };
-
 
   RGZ.numbersOnly = function(e) {
     $(e).val($(e).val().replace(/\D/g, ''));
