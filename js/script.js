@@ -205,7 +205,6 @@
     }, 1000);
   }
 
-
   RGZ.fetchCounterTimes = function() {
     //memorise value of select?
     $("#counter-select").prop("disabled", true);
@@ -352,6 +351,8 @@
 
   RGZ.numbersOnly = function(e) {
     $(e).val($(e).val().replace(/\D/g, ''));
+    if ($(e).attr("id") == "subj-type")
+      RGZ.officeDepartmentChanged();
   };
 
   RGZ.footMouseOver = function() {
