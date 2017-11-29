@@ -79,16 +79,18 @@
             <option value="4">Заклопача</option>
           </select>
           <div id="subj-select">
-            <div id="subj-1">
+            <div class="subj-1">
               <span class="hidden-sm-down">БР.&nbsp;ПРЕДМЕТА:</span>
               <span class="hidden-md-up">БР.&nbsp;ПР.:</span>
               &nbsp;952&nbsp;-&nbsp;02&nbsp;-&nbsp;
             </div>
-            <div id="subj-2"><input id="subj-type" type="text"></div>
-            <div id="subj-3">&nbsp;-&nbsp;</div>
-            <div id="subj-4"><input id="subj-id" type="text"></div>
-            <div id="subj-5">&nbsp;/&nbsp;</div>
-            <div id="subj-6"><input id="subj-year" type="text"></div>
+            <div class="subj-input-container">
+              <div class="subj-2"><input id="subj-type" type="text" maxlength="3" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);"></div>
+              <div class="subj-3">-</div>
+              <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);"></div>
+              <div class="subj-5">/</div>
+              <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);"></div>
+            </div>
           </div>
           <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchOfficeTimes();">ПРЕТРАГА</div></div>
           <select id="office-day-select" class="gone" onchange="$RGZ.bookOfficeDay();">
@@ -128,7 +130,8 @@
         "height": "84vh"
       });
     }
-    //vvvvvvvvvvvvv
+    if (!$("#book-offices").hasClass("gone"))
+      $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
   });
 
   RGZ.checkboxClicked = function(e) {
@@ -157,6 +160,7 @@
       setTimeout(function() {
         $("#book-counters").addClass("gone");
         $("#book-offices").removeClass("gone");
+        $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
         setTimeout(function() {
           $("#book-offices").css({
             "opacity": "1"
@@ -307,7 +311,10 @@
     }, 10);
   };
 
-  RGZ.fillBookContent = function() {};
+
+  RGZ.numbersOnly = function(e) {
+    $(e).val($(e).val().replace(/\D/g, ''));
+  };
 
   RGZ.footMouseOver = function() {
     $("#foot").css({

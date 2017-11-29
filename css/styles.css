@@ -523,11 +523,15 @@ input {
   margin: 0 25% 4vh 25%;
 }
 
-#subj-select>div {
+#subj-select>div, #subj-select>div>div {
   position: relative;
   display: inline-block;
   height: 7vh;
   float: left;
+}
+
+.subj-input-container {
+  position: relative;
 }
 
 #subj-select input {
@@ -543,31 +547,32 @@ input {
   background-color: rgba(255, 255, 255, 0.5);
   border-bottom: 0.6vh solid #1A3360;
   text-align-last: center;
+  text-align: center;
   -webkit-transition: opacity 0.4s ease;
   -moz-transition: opacity 0.4s ease;
   transition: opacity 0.4s ease;
 }
 
-#subj-1 {
+.subj-1 {
   white-space: nowrap;
   overflow: hidden !important;
-  max-width: 50%;
 }
 
-#subj-2 {
-  width: 10%;
-}
-
-#subj-3, #subj-5 {
-  max-width: 5%;
-}
-
-#subj-4 {
+.subj-2 {
   width: 20%;
 }
 
-#subj-6 {
-  width: 10%;
+.subj-3, .subj-5 {
+  width: 5%;
+  text-align: center;
+}
+
+.subj-4 {
+  width: 40%;
+}
+
+.subj-6 {
+  width: 30%;
 }
 
 #counter-day-select, #office-day-select, #counter-select, #office-select, #subj-select {
