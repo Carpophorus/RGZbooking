@@ -64,12 +64,12 @@
           </select>
           <div id="book-counter-aux" class="aux-container gone">
             <input id="book-counter-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-            <input id="book-counter-subj" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
+            <input id="book-counter-reason" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
             <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
             <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
             <div id="book-counter-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
             <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
-            <div class="form-button">ЗАКАЖИ</div>
+            <div class="form-button" onclick="$RGZ.bookCounter();">ЗАКАЖИ</div>
           </div>
         </div>
         <div id="book-offices" class="gone">
@@ -101,12 +101,12 @@
           </select>
           <div id="book-office-aux" class="aux-container gone">
             <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-            <input id="book-office-id" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
+            <input id="book-office-reason" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
             <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
             <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
             <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
             <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
-            <div class="form-button">ЗАКАЖИ</div>
+            <div class="form-button" onclick="$RGZ.bookOffice();">ЗАКАЖИ</div>
           </div>
         </div>
       `);
@@ -207,19 +207,36 @@
 
   RGZ.fetchCounterTimes = function() {
     //memorise value of select?
+    if ($("#counter-select option:selected").val() == 0) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате прво изабрати службу у којој желите да закажете шалтерски термин.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
     $("#counter-select").prop("disabled", true);
     $("#book-counter-aux, #counter-time-select, #counter-day-select").css({
       "opacity": "0"
     });
     setTimeout(function() {
       $("#book-counter-aux, #counter-time-select, #counter-day-select").addClass("gone");
-      $("#book-counter-aux>input").val("");
       $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
     }, 500);
     $(".content-box-loader").css({
       "opacity": "1",
       "padding-top": "45vh"
     });
+    RGZ.counterDepartmentChanged(); //fixxxxxx
     setTimeout(function() {
       //api call
       setTimeout(function() { //this when response received
@@ -252,19 +269,36 @@
 
   RGZ.fetchOfficeTimes = function() {
     //memorise value of select?
-    $("#office-select").prop("disabled", true);
+    if ($("#office-select option:selected").val() == 0 || $("#subj-type").val() == "" || $("#subj-id").val() == "" || $("#subj-year").val() == "") {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате прво изабрати службу у којој желите да закажете канцеларијски термин и уписати број свог предмета.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", true);
     $("#book-office-aux, #office-time-select, #office-day-select").css({
       "opacity": "0"
     });
     setTimeout(function() {
       $("#book-office-aux, #office-time-select, #office-day-select").addClass("gone");
-      $("#book-office-aux>input").val("");
       $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
     }, 500);
     $(".content-box-loader").css({
       "opacity": "1",
       "padding-top": "56vh"
     });
+    RGZ.officeDepartmentChanged(); //fixxxxxx
     setTimeout(function() {
       //api call
       setTimeout(function() { //this when response received
@@ -290,7 +324,7 @@
         $(".content-box-loader").css({
           "opacity": "0"
         });
-        $("#office-select").prop("disabled", false);
+        $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
     }, 500);
   };
@@ -434,6 +468,154 @@
   RGZ.footerMobileOutsideClick = function() {
     if ($("#foot-mobile").hasClass("clicked"))
       RGZ.footerMobileClick($("#foot-mobile"));
+  };
+
+  RGZ.bookCounter = function() {
+    if (bookingForbidden == true) return;
+    if ($("#book-counter-name").val() == "" || $("#book-counter-reason").val() == "" || $("#book-counter-check i").hasClass("fa-square-o")) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    $.confirm({
+      title: 'ПОТВРДА',
+      content: 'Да ли желите да закажете термин на шалтеру са унетим параметрима?<br><br><span>Молимо Вас да проверите све податке унете у претходном кораку пре заказивања. Када почне процес заказивања, молимо Вас да останете на страници до приказивања повратних информација.</span>',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      autoClose: 'no|20000',
+      buttons: {
+        no: {
+          text: 'НЕ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: 'ДА',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            $.confirm({
+              title: 'МОЛИМО САЧЕКАЈТЕ',
+              content: 'Обрада Вашег захтева је у току...',
+              theme: 'supervan',
+              buttons: {
+                ok: {
+                  text: 'ОК',
+                  btnClass: 'gone',
+                  action: function() {}
+                }
+              }
+            });
+            setTimeout(function() {
+              $(".jconfirm").remove();
+              $.confirm({
+                title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
+                content: 'Детаљи...',
+                theme: 'supervan',
+                buttons: {
+                  ok: {
+                    text: 'ОК',
+                    btnClass: 'btn-white-rgz',
+                    keys: ['enter'],
+                    action: function() {
+                      RGZ.counterDepartmentChanged(); //same for fail
+                      $("#book-counter-aux>input").val(""); //not for fail
+                    }
+                  }
+                }
+              }); //or failure
+            }, 2500); //this delay only simulating network response
+          }
+        },
+      }
+    });
+  };
+
+  RGZ.bookOffice = function() {
+    if (bookingForbidden == true) return;
+    if ($("#book-office-name").val() == "" || $("#book-office-reason").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    $.confirm({
+      title: 'ПОТВРДА',
+      content: 'Да ли желите да закажете канцеларијски термин са унетим параметрима?<br><br><span>Молимо Вас да проверите све податке унете у претходном кораку пре заказивања. Када почне процес заказивања, молимо Вас да останете на страници до приказивања повратних информација.</span>',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      autoClose: 'no|20000',
+      buttons: {
+        no: {
+          text: 'НЕ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: 'ДА',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            $.confirm({
+              title: 'МОЛИМО САЧЕКАЈТЕ',
+              content: 'Обрада Вашег захтева је у току...',
+              theme: 'supervan',
+              buttons: {
+                ok: {
+                  text: 'ОК',
+                  btnClass: 'gone',
+                  action: function() {}
+                }
+              }
+            });
+            setTimeout(function() {
+              $(".jconfirm").remove();
+              $.confirm({
+                title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
+                content: 'Детаљи...',
+                theme: 'supervan',
+                buttons: {
+                  ok: {
+                    text: 'ОК',
+                    btnClass: 'btn-white-rgz',
+                    keys: ['enter'],
+                    action: function() {
+                      RGZ.officeDepartmentChanged(); //same for fail
+                      $("#book-office-aux>input").val(""); //not for fail
+                    }
+                  }
+                }
+              }); //or failure
+            }, 2500); //this delay only simulating network response
+          }
+        },
+      }
+    });
   };
 
   global.$RGZ = RGZ;

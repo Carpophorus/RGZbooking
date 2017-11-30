@@ -1,9 +1,9 @@
 .hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 .gone {
-  display: none;
+  display: none !important;
 }
 
 body {
@@ -450,6 +450,57 @@ input {
   padding: 10vh 25%;
 }
 
+.jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-title-c {
+  font-size: 3.5vh;
+  line-height: 1;
+  padding-bottom: 0;
+}
+
+.jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-title-c .jconfirm-title {
+  font-family: 'Russo One', sans-serif;
+  padding-bottom: 5vh;
+}
+
+.jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-content-pane {
+  margin-bottom: 5vh;
+}
+
+.jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-content-pane span {
+  font-size: 1.7vh;
+  line-height: 1.3;
+  display: inline-block;
+  text-align: justify;
+}
+
+.jconfirm .jconfirm-box .jconfirm-buttons {
+  padding-bottom: 2vh;
+}
+
+.jconfirm.jconfirm-supervan .jconfirm-box .jconfirm-buttons button {
+  font-family: 'Russo One', sans-serif;
+  font-size: 2.5vh;
+  border-radius: 0;
+  border: 0.5vh solid white;
+  padding: 0;
+  margin: 0 0.5vh 1vh 0.5vh;
+  height: 7vh;
+  line-height: 6.2vh;
+  background-color: transparent;
+  -webkit-transition: background-color 0.5s ease, color 0.5s ease;
+  -moz-transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.jconfirm.jconfirm-supervan .jconfirm-bg {
+  background-color: #333;
+  opacity: 0.9;
+}
+
+.jconfirm .jconfirm-box .jconfirm-buttons button.btn-white-rgz:hover {
+  background-color: white;
+  color: #333
+}
+
 .btn-group>label {
   border-radius: 0;
   width: 50%;
@@ -639,6 +690,10 @@ input {
   }
   .btn-group {
     padding: 10vh 5vh;
+  }
+  .jconfirm .jconfirm-box .jconfirm-buttons button.btn-white-rgz {
+    background-color: white;
+    color: #333
   }
   #book-counters, #book-offices {
     padding: 0 5vh;
