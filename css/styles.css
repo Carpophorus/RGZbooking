@@ -374,9 +374,6 @@ input {
   height: 86vh;
   opacity: 0;
   text-align: center;
-  -webkit-transition: opacity 0.2s linear;
-  -moz-transition: opacity 0.2s linear;
-  transition: opacity 0.2s linear;
 }
 
 .content-box-loader-inner-container {
@@ -632,9 +629,6 @@ input {
 
 #book-counter-aux, #book-office-aux {
   padding: 6vh 25% 0 25%;
-  -webkit-transition: opacity 1s ease;
-  -moz-transition: opacity 1s ease;
-  transition: opacity 1s ease;
 }
 
 .aux-container input {

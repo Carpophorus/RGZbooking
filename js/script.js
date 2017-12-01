@@ -2,6 +2,7 @@
   RGZ = {};
 
   var bookingForbidden = false;
+  var nav = 0;
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -33,12 +34,7 @@
   };
 
   document.addEventListener("DOMContentLoaded", function(event) {
-    $("#book-content>.content-box-loader").css({
-      "opacity": "1"
-    });
-    $(".content-box-content").css({
-      "opacity": "0"
-    });
+    appear($("#book-content>.content-box-loader"), 200);
     setTimeout(function() {
       insertHtml("#book-content>.content-box-content", `
         <div class="btn-group" data-toggle="buttons">
@@ -110,15 +106,13 @@
           </div>
         </div>
       `);
-      $(".content-box-loader").css({
-        "opacity": "0"
-      });
+      disappear($(".content-box-loader"), 200);
       setTimeout(function() {
-        $("#book-content>.content-box-content").css({
-          "opacity": "1"
-        });
+        appear($("#book-content>.content-box-content"));
       }, 200);
     }, 3000); //this delay only simulating network response, fetch counters and offices for first dropdown in both sections
+    RGZ.footMouseOver();
+    setTimeout(RGZ.footMouseOut, 2000);
   });
 
   $(window).resize(function() {
@@ -144,34 +138,20 @@
   };
 
   RGZ.bookSwitch = function(n) {
-    if (n == 0) {
+    if (n == 0 && nav == 1) {
+      disappear($("#book-offices"), 500);
       setTimeout(function() {
-        $("#book-offices").addClass("gone");
-        $("#book-counters").removeClass("gone");
-        setTimeout(function() {
-          $("#book-counters").css({
-            "opacity": "1"
-          });
-        }, 10);
-      }, 500);
-      $("#book-offices").css({
-        "opacity": "0"
-      });
+        appear($("#book-counters"), 500);
+      }, 510);
+      nav = 0;
     }
-    if (n == 1) {
+    if (n == 1 && nav == 0) {
+      disappear($("#book-counters"), 500);
       setTimeout(function() {
-        $("#book-counters").addClass("gone");
-        $("#book-offices").removeClass("gone");
+        appear($("#book-offices"), 500);
         $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
-        setTimeout(function() {
-          $("#book-offices").css({
-            "opacity": "1"
-          });
-        }, 10);
-      }, 500);
-      $("#book-counters").css({
-        "opacity": "0"
-      });
+      }, 510);
+      nav = 1;
     }
   };
 
@@ -225,18 +205,13 @@
       return;
     }
     $("#counter-select").prop("disabled", true);
-    $("#book-counter-aux, #counter-time-select, #counter-day-select").css({
-      "opacity": "0"
-    });
-    setTimeout(function() {
-      $("#book-counter-aux, #counter-time-select, #counter-day-select").addClass("gone");
-      $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
-    }, 500);
     $(".content-box-loader").css({
-      "opacity": "1",
       "padding-top": "45vh"
     });
-    RGZ.counterDepartmentChanged(); //fixxxxxx
+    setTimeout(function() {
+      appear($(".content-box-loader"), 200);
+    }, 500);
+    RGZ.counterDepartmentChanged();
     setTimeout(function() {
       //api call
       setTimeout(function() { //this when response received
@@ -253,15 +228,8 @@
           <option disabled value="0">ПРВО ИЗАБЕРИТЕ ДАТУМ</option>
         `;
         insertHtml("#counter-time-select", selectTimeHtml);
-        $("#counter-time-select, #counter-day-select").removeClass("gone");
-        setTimeout(function() {
-          $("#counter-time-select, #counter-day-select").css({
-            "opacity": "1"
-          });
-        }, 10);
-        $(".content-box-loader").css({
-          "opacity": "0"
-        });
+        appear($("#counter-time-select, #counter-day-select"), 500);
+        disappear($(".content-box-loader"), 200);
         $("#counter-select").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
     }, 500);
@@ -287,18 +255,13 @@
       return;
     }
     $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", true);
-    $("#book-office-aux, #office-time-select, #office-day-select").css({
-      "opacity": "0"
-    });
-    setTimeout(function() {
-      $("#book-office-aux, #office-time-select, #office-day-select").addClass("gone");
-      $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
-    }, 500);
     $(".content-box-loader").css({
-      "opacity": "1",
       "padding-top": "56vh"
     });
-    RGZ.officeDepartmentChanged(); //fixxxxxx
+    setTimeout(function() {
+      appear($(".content-box-loader"), 200);
+    }, 500);
+    RGZ.officeDepartmentChanged();
     setTimeout(function() {
       //api call
       setTimeout(function() { //this when response received
@@ -315,15 +278,8 @@
           <option disabled value="0">ПРВО ИЗАБЕРИТЕ ДАТУМ</option>
         `;
         insertHtml("#office-time-select", selectTimeHtml);
-        $("#office-time-select, #office-day-select").removeClass("gone");
-        setTimeout(function() {
-          $("#office-time-select, #office-day-select").css({
-            "opacity": "1"
-          });
-        }, 10);
-        $(".content-box-loader").css({
-          "opacity": "0"
-        });
+        appear($("#office-time-select, #office-day-select"), 500);
+        disappear($(".content-box-loader"), 200);
         $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", false);
       }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
     }, 500);
@@ -350,9 +306,7 @@
       scrollTop: $("#book-counter-aux").offset().top - $(".btn-group").offset().top
     }, 1500);
     setTimeout(function() {
-      $("#book-counter-aux").css({
-        "opacity": "1"
-      })
+      appear($("#book-counter-aux"), 1000);
     }, 10);
   };
 
@@ -377,9 +331,7 @@
       scrollTop: $("#book-office-aux").offset().top - $(".btn-group").offset().top
     }, 1500);
     setTimeout(function() {
-      $("#book-office-aux").css({
-        "opacity": "1"
-      })
+      appear($("#book-office-aux"), 1000);
     }, 10);
   };
 
@@ -533,6 +485,7 @@
                     action: function() {
                       RGZ.counterDepartmentChanged(); //same for fail
                       $("#book-counter-aux>input").val(""); //not for fail
+                      $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o"); //not for fail
                     }
                   }
                 }
@@ -607,6 +560,7 @@
                     action: function() {
                       RGZ.officeDepartmentChanged(); //same for fail
                       $("#book-office-aux>input").val(""); //not for fail
+                      $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o"); //not for fail
                     }
                   }
                 }
