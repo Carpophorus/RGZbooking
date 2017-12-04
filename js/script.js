@@ -34,6 +34,7 @@
   };
 
   document.addEventListener("DOMContentLoaded", function(event) {
+    if ($("#book-content").length == 0) return;
     appear($("#book-content>.content-box-loader"), 200);
     setTimeout(function() {
       insertHtml("#book-content>.content-box-content", `
@@ -108,7 +109,7 @@
       `);
       disappear($(".content-box-loader"), 200);
       setTimeout(function() {
-        appear($("#book-content>.content-box-content"));
+        appear($("#book-content>.content-box-content"), 500);
       }, 200);
     }, 3000); //this delay only simulating network response, fetch counters and offices for first dropdown in both sections
     RGZ.footMouseOver();
@@ -570,6 +571,52 @@
         },
       }
     });
+  };
+
+  RGZ.scheduleLogin = function() {
+    if ($("#schedule-username").val() == "" || $("#schedule-password").val() == "") {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате унети и корисничко име и шифру.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    disappear($(".content-box-content"), 500);
+    appear($(".content-box-loader"), 200);
+    $("#schedule-username, #schedule-password").attr("disabled", true);
+    setTimeout(function() {
+      $("#schedule-username, #schedule-password").attr("disabled", false);
+      if ($("#schedule-username").val() != "t" && $("#schedule-password").val() != "t") { //error
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Појавила се грешка приликом пријаве на систем. Проверите своје креденцијале и покушајте поново.<br><br>Контактирајте системске администраторе уколико се овај проблем често дешава.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+      } else {
+        //html generate
+      }
+      appear($(".content-box-content"), 500);
+      disappear($(".content-box-loader"), 200);
+    }, 2500); //this delay only simulating network response
   };
 
   global.$RGZ = RGZ;
