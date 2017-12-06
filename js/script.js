@@ -653,14 +653,25 @@
       ttHtml += `
         <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
           <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
-          <div class="col-3 col-lg-2 item-time">` + `14:` + i + `</div>
+          <div class="col-3 col-lg-2 item-time">` + `15:` + i + `</div>
           <div class="col-4 col-lg-7 item-name">Radibrat Radibratović</div>
           <div class="col-2 col-lg-1 item-y ` + ((i == 15) ? `arrival` : ``) + `" onclick="$RGZ.confirmArrival(this);"><i class="fa fa-check"></i></div>
           <div class="col-2 col-lg-1 item-n ` + ((i == 15) ? `arrival-counter` : ``) + `" onclick="$RGZ.confirmArrival(this);"><i class="fa fa-times"></i></div>
         </div>
         <div id="expansion-` + i + `" class="expansion collapse">
           <div class="row">
-            ...
+            <div class="expansion-info col-12 col-md-6">
+              <div class="expansion-label">датум:</div>
+              <div class="expansion-info-data">10.11.2017. 08:51</div>
+              <div class="expansion-label">име и презиме:</div>
+              <div class="expansion-info-data">Radibrat Radibratović</div>
+              <div class="expansion-label">e-mail:</div>
+              <div class="expansion-info-data">rr69@gmail.com</div>
+              <div class="expansion-label">телефон:</div>
+              <div class="expansion-info-data">069/555-78-03</div>
+              <div class="expansion-label">служба:</div>
+              <div class="expansion-info-data">Београд</div>
+            </div>
           </div>
         </div>
       `;
@@ -682,11 +693,11 @@
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();
+    confirmArrivalClicked = true;
     if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
       confirmArrivalClicked = false;
       return;
     } else if (hours * 100 + minutes - 5 < Number($(e).parent().find(".item-time").html().replace(':', ''))) { //and later date
-      confirmArrivalClicked = false;
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Не можете потврдити долазак клијента у будућности.<br><br><span>Предвиђено је максимално кашњење од 5 минута.</span>',
@@ -702,8 +713,7 @@
         }
       });
       return;
-    } else
-      confirmArrivalClicked = true;
+    }
     $.confirm({
       title: 'ПАЖЊА!',
       content: 'Да ли сте сигурни да желите да евидентирате да клијент (' + $(e).parent().find(".item-name").html() + (($(e).hasClass("item-y")) ? ') ЈЕСТЕ' : ') НИЈЕ') + ' ДОШАО у заказано време (' + $(e).parent().find(".item-time").html() + ')?',
@@ -737,7 +747,16 @@
       confirmArrivalClicked = false;
       return;
     }
-    //expand or contract
+    var wasExpanded = $(e).hasClass("expanded");
+    $(".schedule-item").removeClass("expanded");
+    $(".expansion").collapse('hide');
+    if (wasExpanded == false) {
+      $(e).addClass("expanded");
+      $("#expansion-" + n).collapse('show');
+      $("#schedule-items").animate({
+        scrollTop: $(e).index() / 2 * 7 * window.innerHeight / 100
+      }, 500);
+    }
   };
 
   RGZ.schedulePrint = function() {

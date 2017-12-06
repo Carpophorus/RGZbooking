@@ -831,6 +831,51 @@ input {
   }
 }
 
+.schedule-item {
+  height: 7vh;
+  line-height: 7vh;
+  font-weight: 700;
+  -webkit-transition: margin 0.5s ease, background-color 0.5s ease;
+  -moz-transition: margin 0.5s ease, background-color 0.5s ease;
+  transition: margin 0.5s ease, background-color 0.5s ease;
+}
+
+.schedule-item:nth-child(4n+1), .expansion>div {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.schedule-item:nth-child(4n+3) {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+#schedule-items .expanded {
+  background-color: white;
+  margin-top: 7vh;
+}
+
+.expansion {
+  position: relative;
+}
+
+.expansion>div {
+  margin: 0 0 7vh 7vh;
+  padding: 3vh 5vh 1.5vh 5vh;
+}
+
+.expansion-info {
+  line-height: 4vh;
+}
+
+.expansion-label {
+  font-weight: 700;
+  color: #1A3360;
+}
+
+.expansion-info-data {
+  padding-left: 5vh;
+  margin-bottom: 2vh;
+}
+
 @-webkit-keyframes pulsing {
   from {
     opacity: 1
