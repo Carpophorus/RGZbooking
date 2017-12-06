@@ -596,7 +596,7 @@
     $("#schedule-username, #schedule-password").attr("disabled", true);
     setTimeout(function() {
       $("#schedule-username, #schedule-password").attr("disabled", false);
-      if ($("#schedule-username").val() != "t" && $("#schedule-password").val() != "t") { //error
+      if ($("#schedule-username").val() != "t" || $("#schedule-password").val() != "t") { //error
         $.confirm({
           title: 'ГРЕШКА!',
           content: 'Појавила се грешка приликом пријаве на систем. Проверите своје креденцијале и покушајте поново.<br><br>Контактирајте системске администраторе уколико се овај проблем често дешава.',
@@ -612,11 +612,181 @@
           }
         });
       } else {
-        //html generate
+        insertHtml("#schedule-content .content-box-content", `
+          <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
+          <div id="schedule-logout" class="schedule-navi-button" onclick="RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
+          <div id="schedule-searchbar" class="row">
+            <div class="col-lg-4 hidden-md-down"></div>
+            <div class="col-12 col-lg-4">
+              <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
+                <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+                <option value="1">Шалтер 1</option>
+                <option value="2">Шалтер 2</option>
+                <option value="3">Шалтер 3</option>
+                <option value="4">Шалтер 4</option>
+                <option value="5">Правник</option>
+                <option value="6">Начелник</option>
+              </select>
+            </div>
+            <div class="col-lg-4 hidden-md-down"></div>
+          </div>
+          <div id="timetable" class="gone"></div>
+        `);
       }
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
     }, 2500); //this delay only simulating network response
+  };
+
+  RGZ.scheduleSearch = function() {
+    disappear($("#timetable"), 500);
+    var ttHtml = `
+      <div id="schedule-header" class="row">
+        <div class="col-1"></div>
+        <div class="col-3 col-lg-2"><span class="hidden-sm-down">време</span><i class="hidden-md-up fa fa-clock-o"></i></div>
+        <div class="col-4 col-lg-7"><span class="hidden-sm-down">име и презиме</span><i class="hidden-md-up fa fa-user"></i></div>
+        <div class="col-4 col-lg-2"><span class="hidden-sm-down">потврда доласка</span><i class="hidden-md-up fa fa-check"></i><span class="hidden-md-up" id="slash">&nbsp;/&nbsp;</span><i class="hidden-md-up fa fa-times"></i></div>
+      </div>
+      <div id="schedule-items">
+    `;
+    for (var i = 10; i < 59; i = i + 5) { //from response array
+      ttHtml += `
+        <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
+          <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
+          <div class="col-3 col-lg-2 item-time">` + `14:` + i + `</div>
+          <div class="col-4 col-lg-7 item-name">Radibrat Radibratović</div>
+          <div class="col-2 col-lg-1 item-y ` + ((i == 15) ? `arrival` : ``) + `" onclick="$RGZ.confirmArrival(this);"><i class="fa fa-check"></i></div>
+          <div class="col-2 col-lg-1 item-n ` + ((i == 15) ? `arrival-counter` : ``) + `" onclick="$RGZ.confirmArrival(this);"><i class="fa fa-times"></i></div>
+        </div>
+        <div id="expansion-` + i + `" class="expansion collapse">
+          <div class="row">
+            ...
+          </div>
+        </div>
+      `;
+    }
+    ttHtml += `
+      </div>
+    `;
+    insertHtml("#timetable", ttHtml);
+    setTimeout(function() {
+      appear($("#timetable"), 500);
+      appear($("#schedule-print"), 500);
+      setTimeout(RGZ.currentClientIndicator, 10);
+    }, 600);
+  };
+
+  var confirmArrivalClicked = false;
+  RGZ.confirmArrival = function(e) {
+    var date = new Date();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
+      confirmArrivalClicked = false;
+      return;
+    } else if (hours * 100 + minutes - 5 < Number($(e).parent().find(".item-time").html().replace(':', ''))) { //and later date
+      confirmArrivalClicked = false;
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Не можете потврдити долазак клијента у будућности.<br><br><span>Предвиђено је максимално кашњење од 5 минута.</span>',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    } else
+      confirmArrivalClicked = true;
+    $.confirm({
+      title: 'ПАЖЊА!',
+      content: 'Да ли сте сигурни да желите да евидентирате да клијент (' + $(e).parent().find(".item-name").html() + (($(e).hasClass("item-y")) ? ') ЈЕСТЕ' : ') НИЈЕ') + ' ДОШАО у заказано време (' + $(e).parent().find(".item-time").html() + ')?',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      autoClose: 'no|10000',
+      buttons: {
+        no: {
+          text: 'НЕ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: 'ДА',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            //send api request
+            //maybe change local array
+            $(e).addClass("arrival");
+            $(e).parent().find((($(e).hasClass("item-y")) ? ".item-n" : ".item-y")).addClass("arrival-counter");
+          }
+        }
+      }
+    });
+  };
+
+  RGZ.scheduleItemClicked = function(n, e) {
+    if (confirmArrivalClicked == true) {
+      confirmArrivalClicked = false;
+      return;
+    }
+    //expand or contract
+  };
+
+  RGZ.schedulePrint = function() {
+    //
+  };
+
+  RGZ.currentClientIndicator = function() {
+    //if later date: return
+    var date = new Date();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    setTimeout(RGZ.currentClientIndicator, (61 - seconds) * 1000);
+    var minDiff = 333333;
+    var timeAux = hours * 100 + minutes;
+    $(".schedule-item").each(function() {
+      var timeFromString = Number($(this).find(".item-time").html().replace(':', ''));
+      if (timeAux - timeFromString >= 0 && timeAux - timeFromString < minDiff) {
+        minDiff = timeAux - timeFromString;
+        $(".item-indicator i").addClass("hidden");
+        $(this).find(".item-indicator i").removeClass("hidden");
+      }
+    });
+  };
+
+  RGZ.scheduleLogout = function() {
+    $.confirm({
+      title: 'ПАЖЊА!',
+      content: 'Да ли сте сигурни да желите да се одјавите?',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      autoClose: 'no|10000',
+      buttons: {
+        no: {
+          text: 'НЕ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: 'ДА',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            location.reload();
+          }
+        }
+      }
+    });
   };
 
   global.$RGZ = RGZ;

@@ -66,8 +66,8 @@
         <div class="row">
           <div class="col-2 col-md-4"></div>
           <div class="col-8 col-md-4">
-            <input type="text" id="schedule-username" placeholder="корисничко име" onfocus="this.placeholder=''" onblur="this.placeholder='корисничко име'">
-            <input type="password" id="schedule-password" placeholder="лозинка" onfocus="this.placeholder=''" onblur="this.placeholder='лозинка'">
+            <input type="text" id="schedule-username" placeholder="корисничко име" onfocus="this.placeholder=''" onblur="this.placeholder='корисничко име'" onkeydown="if (event.keyCode == 13) $RGZ.scheduleLogin();">
+            <input type="password" id="schedule-password" placeholder="лозинка" onfocus="this.placeholder=''" onblur="this.placeholder='лозинка'" onkeydown="if (event.keyCode == 13) $RGZ.scheduleLogin();">
             <div class="form-button" onclick="$RGZ.scheduleLogin();"><i class="fa fa-sign-in"></i>&nbsp;&nbsp;&nbsp;ПРИЈАВА</div>
           </div>
           <div class="col-2 col-md-4"></div>

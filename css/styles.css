@@ -702,6 +702,156 @@ input {
   width: 100%;
 }
 
+.schedule-navi-button {
+  width: 7.2vh;
+  height: 7.2vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  color: #666;
+  line-height: 7.2vh;
+  font-size: 3.3vh;
+  text-align: center;
+  z-index: 1001;
+  -webkit-transition: background-color 0.5s ease, color 0.5s ease;
+  -moz-transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.schedule-navi-button:hover {
+  background-color: #1A3360;
+  color: white;
+  cursor: pointer;
+}
+
+#schedule-print {
+  right: 7.2vh;
+}
+
+#timetable {
+  opacity: 0;
+}
+
+#schedule-searchbar {
+  padding-top: 3vh !important;
+  display: inline-flex;
+}
+
+#schedule-searchbar>div {
+  padding: 0 3vh;
+}
+
+#schedule-searchbar>div>select, #schedule-searchbar>div>.form-search-button {
+  width: 100%;
+  margin: 0;
+}
+
+#schedule-searchbar>div>select {
+  height: 7vh;
+  text-align: center;
+  text-align-last: center;
+  font-family: 'Russo One', sans-serif;
+  line-height: 7vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #333;
+}
+
+#timetable .row>div {
+  padding: 0 3vh;
+}
+
+#timetable .row>.item-indicator, #schedule-header>div:first-child {
+  padding: 0 !important;
+}
+
+.item-indicator {
+  color: darkorange;
+}
+
+#schedule-header {
+  height: 4vh;
+  font-size: 2vh;
+  font-weight: 700;
+  color: #1A3360;
+  border-bottom: 1px solid #1A3360;
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+#schedule-items {
+  overflow-y: auto;
+  max-height: 76vh;
+}
+
+#schedule-header>div:last-child, #schedule-header>div:first-child, #schedule-items .schedule-item>div:first-child, #schedule-items .schedule-item>.item-y, #schedule-items .schedule-item>.item-n {
+  text-align: center;
+}
+
+#schedule-items .schedule-item>.item-y:hover, #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-y.arrival, #schedule-items .schedule-item>.item-n.arrival {
+  cursor: pointer;
+  background-color: green;
+  color: white;
+  -webkit-transition: background-color 0.5s ease, color 0.5s ease;
+  -moz-transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+#schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-n.arrival {
+  background-color: red;
+}
+
+#schedule-items .schedule-item>.arrival {
+  cursor: default !important;
+}
+
+#schedule-items .schedule-item>.arrival-counter:hover {
+  cursor: default;
+  background-color: transparent;
+  color: #333;
+}
+
+.item-name {
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+.pulse {
+  animation: pulsing 1s alternate infinite ease-in;
+  -webkit-animation: pulsing 1s alternate infinite ease-in;
+}
+
+@keyframes pulsing {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
+}
+
+@-webkit-keyframes pulsing {
+  from {
+    opacity: 1
+  }
+  to {
+    opacity: 0
+  }
+}
+
+@media (min-width: 991.5px) {
+  #schedule-searchbar {
+    padding-bottom: 3vh;
+  }
+  #schedule-searchbar>div:first-child {
+    padding-right: 0;
+  }
+  #schedule-searchbar>div:last-child {
+    padding-left: 0;
+  }
+}
+
 @media (max-width: 991.5px) {
   #navi {
     min-height: 8vh;
@@ -725,6 +875,20 @@ input {
   }
   #schedule-content>.content-box-content>.row {
     padding-top: 29vh;
+  }
+  .schedule-navi-button {
+    width: 8.2vh;
+    height: 8.2vh;
+    line-height: 8.2vh;
+  }
+  #schedule-print {
+    right: 8.2vh;
+  }
+  #schedule-searchbar>div {
+    padding-bottom: 3vh;
+  }
+  #schedule-items {
+    max-height: 75vh;
   }
   .btn-group {
     padding: 10vh 5vh;
@@ -750,6 +914,22 @@ input {
   #book-content .form-button, #book-content .form-search-button, #schedule-content .form-button, #schedule-content .form-search-button {
     background-color: #1A3360;
     color: #F4F8E6;
+  }
+}
+
+@media (max-width: 766.5px) {
+  #schedule-header {
+    height: 6vh;
+    font-size: 3.5vh;
+  }
+  #schedule-items {
+    max-height: 73vh;
+  }
+}
+
+@media (max-width: 767.5px) and (min-width: 766.5px) {
+  #schedule-header i, #schedule-header #slash {
+    display: none;
   }
 }
 
