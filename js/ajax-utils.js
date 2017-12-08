@@ -39,6 +39,7 @@
     };
     request.open("POST", requestUrl, true);
     request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     request.send(data);
   };
 
@@ -62,7 +63,9 @@
               text: 'ОК',
               btnClass: 'btn-white-rgz',
               keys: ['enter'],
-              action: function() {}
+              action: function() {
+                $(".jconfirm").remove();
+              }
             }
           }
         });

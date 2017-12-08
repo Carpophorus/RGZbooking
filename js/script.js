@@ -179,7 +179,12 @@
     //
     console.log(token);
     if (nav == 0) {
-      var data = objectfromarraybytimevalue;
+      var data = RGZ.salteriTermini[$("#counter-time-select option:selected").attr("value")];
+      data.ime = $("#book-counter-name").val();
+      data.dokumentId = $("#book-counter-reason option:selected").attr("value");
+      data.tel = $("#book-counter-phone").val();
+      data.email = $("#book-counter-mail").val();
+      console.log(data);
       $ajaxUtils.sendPostRequestWithData(
         RGZ.apiRoot + "salteri/zakazitermin" + "?token=" + encodeURIComponent(token),
         function(responseArray, status) {
