@@ -40,6 +40,10 @@ input {
   outline: 0;
 }
 
+.grecaptcha-badge {
+  bottom: 8vh !important;
+}
+
 #navi {
   background-color: #F4F8E6;
   width: 100%;
@@ -908,6 +912,9 @@ input {
 }
 
 @media (max-width: 991.5px) {
+  .grecaptcha-badge {
+    bottom: 9vh !important;
+  }
   #navi {
     min-height: 8vh;
     line-height: 8vh;
