@@ -635,6 +635,16 @@ input {
   padding: 6vh 25% 0 25%;
 }
 
+#book-counter-aux select {
+  font-family: 'Open Sans', sans-serif;
+  text-align: left;
+  text-align-last: left;
+  margin: 0;
+  margin-bottom: 4vh;
+  width: 100%;
+  padding: 0 2vh;
+}
+
 .aux-container input {
   display: block;
   width: 100%;
