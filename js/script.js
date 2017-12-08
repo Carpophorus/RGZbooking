@@ -86,7 +86,6 @@
           <input type="radio" name="options" id="option2" autocomplete="off">КАНЦЕЛАРИЈЕ
         </label>
       </div>
-      <div id="recaptcha" class="g-recaptcha" data-sitekey="6LeCFDwUAAAAAJSTJOXrAP7yfBEcnJNSkkAFvZAR" data-callback="onSubmit" data-size="invisible"></div>
       <div id="book-counters">
         <select id="counter-select" onchange="$RGZ.counterDepartmentChanged();">
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
