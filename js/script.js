@@ -6,11 +6,13 @@
   RGZ.zahtevi = '';
   RGZ.kancelarijeSluzbe = '';
   RGZ.salteriTermini = '';
+  RGZ.kancelarijeTermini = '';
 
   var bookingForbidden = false;
   var nav = 0;
   var confirmArrivalClicked = false;
   var fetchCounterTimesClicked = false;
+  var fetchOfficeTimesClicked = false;
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -118,10 +120,10 @@
       <div id="book-offices" class="gone">
         <select id="office-select" onchange="$RGZ.officeDepartmentChanged();">
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
-          <option value="1">Ада</option>
-          <option value="2">Београд</option>
-          <option value="3">Сурдулица</option>
-          <option value="4">Заклопача</option>
+    `;
+    for (var i = 0; i < RGZ.kancelarijeSluzbe.length; i++)
+      bookHtml += `<option value="` + RGZ.kancelarijeSluzbe[i].id + `">` + RGZ.kancelarijeSluzbe[i].sluzba + `</option>`;
+    bookHtml += `
         </select>
         <div id="subj-select">
           <div class="subj-1">
@@ -144,7 +146,6 @@
         </select>
         <div id="book-office-aux" class="aux-container gone">
           <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-          <input id="book-office-reason" placeholder="разлог заказивања ✱" onfocus="this.placeholder=''" onblur="this.placeholder='разлог заказивања ✱'">
           <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'">
           <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
           <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
@@ -176,22 +177,32 @@
   });
 
   RGZ.recaptchaCallback = function(token) {
-    //
-    console.log(token);
     if (nav == 0) {
       var data = RGZ.salteriTermini[$("#counter-time-select option:selected").attr("value")];
       data.ime = $("#book-counter-name").val();
       data.dokumentId = $("#book-counter-reason option:selected").attr("value");
       data.tel = $("#book-counter-phone").val();
       data.email = $("#book-counter-mail").val();
-      console.log(data);
+      data = JSON.stringify(data);
       $ajaxUtils.sendPostRequestWithData(
         RGZ.apiRoot + "salteri/zakazitermin" + "?token=" + encodeURIComponent(token),
         function(responseArray, status) {
           $(".jconfirm").remove();
+          var detailsText = `
+            Детаљи заказаног термина:
+            <br><br>
+            <ul>
+              <li>име: ` + responseArray.ime + `</li>
+              <li>датум: ` + responseArray.datum.substring(8, 10) + '.' + responseArray.datum.substring(5, 7) + '.' + responseArray.datum.substring(0, 4) + '.' + `</li>
+              <li>време: ` + responseArray.termin + `</li>
+              <li>број/име шалтера: ` + responseArray.salter + `</li>
+              <li>назив службе: ` + responseArray.sluzba + `</li>
+              <li>адреса службе: ` + responseArray.adresa + `</li>
+            </ul>
+          `;
           $.confirm({
             title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
-            content: 'Детаљи...',
+            content: detailsText,
             theme: 'supervan',
             buttons: {
               ok: {
@@ -199,13 +210,60 @@
                 btnClass: 'btn-white-rgz',
                 keys: ['enter'],
                 action: function() {
-                  RGZ.counterDepartmentChanged(); //same for fail
-                  $("#book-counter-aux>input").val(""); //not for fail
-                  $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o"); //not for fail
+                  RGZ.counterDepartmentChanged();
+                  $("#book-counter-aux>input").val("");
+                  $("#book-counter-aux>select option:selected").prop("selected", false);
+                  $("#book-counter-aux>select option:first-child").prop("selected", true);
+                  $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
                 }
               }
             }
-          }); //or failure
+          });
+        },
+        true, data /*, RGZ.bearer*/
+      );
+    } else if (nav == 1) {
+      var data = RGZ.kancelarijeTermini[$("#office-time-select option:selected").attr("value")];
+      data.ime = $("#book-office-name").val();
+      data.tel = $("#book-office-phone").val();
+      data.email = $("#book-office-mail").val();
+      data = JSON.stringify(data);
+      $ajaxUtils.sendPostRequestWithData(
+        RGZ.apiRoot + "kancelarije/zakazitermin" + "?token=" + encodeURIComponent(token),
+        function(responseArray, status) {
+          $(".jconfirm").remove();
+          var detailsText = `
+            Детаљи заказаног термина:
+            <br><br>
+            <ul>
+              <li>име: ` + responseArray.ime + `</li>
+              <li>датум: ` + responseArray.datum.substring(8, 10) + '.' + responseArray.datum.substring(5, 7) + '.' + responseArray.datum.substring(0, 4) + '.' + `</li>
+              <li>време: ` + responseArray.termin + `</li>
+              <li>бр. предмета: ` + responseArray.broj_dok + `</li>
+              <li>надлежна канцеларија: ` + responseArray.kancelarija + `</li>
+              <li>назив службе: ` + responseArray.sluzba + `</li>
+              <li>адреса службе: ` + responseArray.adresa + `</li>
+            </ul>
+          `;
+          $.confirm({
+            title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
+            content: detailsText,
+            theme: 'supervan',
+            buttons: {
+              ok: {
+                text: 'ОК',
+                btnClass: 'btn-white-rgz',
+                keys: ['enter'],
+                action: function() {
+                  RGZ.officeDepartmentChanged();
+                  $("#book-office-aux>input").val("");
+                  $("#book-office-aux>select option:selected").prop("selected", false);
+                  $("#book-office-aux>select option:first-child").prop("selected", true);
+                  $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
+                }
+              }
+            }
+          });
         },
         true, data /*, RGZ.bearer*/
       );
@@ -257,6 +315,10 @@
   }
 
   RGZ.officeDepartmentChanged = function() {
+    if (fetchOfficeTimesClicked == true) {
+      fetchOfficeTimesClicked = false;
+      return;
+    }
     bookingForbidden = true;
     $("#office-day-select, #office-time-select").prop("disabled", true);
     setTimeout(function() {
@@ -332,10 +394,11 @@
         },
         true /*, RGZ.bearer*/
       );
-    }, 600);
+    }, 500);
   };
 
   RGZ.fetchOfficeTimes = function() {
+    fetchOfficeTimesClicked = true;
     if ($("#office-select option:selected").val() == 0 || $("#subj-type").val() == "" || $("#subj-id").val() == "" || $("#subj-year").val() == "") {
       $.confirm({
         title: 'ГРЕШКА!',
@@ -362,25 +425,35 @@
     }, 500);
     RGZ.officeDepartmentChanged();
     setTimeout(function() {
-      //api call
-      setTimeout(function() { //this when response received
-        //generate html
-        var selectDayHtml = `
-          <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ДАТУМ...</option>
-          <option value="1">17.11.2017.</option>
-          <option value="2">18.11.2017.</option>
-          <option value="3">19.11.2017.</option>
-        `;
-        insertHtml("#office-day-select", selectDayHtml);
-        var selectTimeHtml = `
-          <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ТЕРМИН...</option>
-          <option disabled value="0">ПРВО ИЗАБЕРИТЕ ДАТУМ</option>
-        `;
-        insertHtml("#office-time-select", selectTimeHtml);
-        appear($("#office-time-select, #office-day-select"), 500);
-        disappear($(".content-box-loader"), 200);
-        $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", false);
-      }, 2600); //this delay only simulating network response, fetch times for selected counter and insert into second dropdown
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&broj_dok=" + encodeURIComponent("952-02-" + $("#subj-type").val() + "-" + $("#subj-id").val() + "-" + $("#subj-year").val()),
+        function(responseArray, status) {
+          RGZ.kancelarijeTermini = responseArray;
+          var datumi = [];
+          for (var i = 0; i < RGZ.kancelarijeTermini.length; i++) {
+            if (!datumi.includes(RGZ.kancelarijeTermini[i].datum)) {
+              datumi.push(RGZ.kancelarijeTermini[i].datum);
+            }
+          }
+          var selectDayHtml = `
+            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ДАТУМ...</option>
+          `;
+          for (var i = 0; i < datumi.length; i++) {
+            var localizedDate = datumi[i].substring(8, 10) + '.' + datumi[i].substring(5, 7) + '.' + datumi[i].substring(0, 4) + '.';
+            selectDayHtml += `<option value="` + datumi[i] + `">` + localizedDate + `</option>`;
+          }
+          insertHtml("#office-day-select", selectDayHtml);
+          var selectTimeHtml = `
+            <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ТЕРМИН...</option>
+            <option disabled value="0">ПРВО ИЗАБЕРИТЕ ДАТУМ</option>
+          `;
+          insertHtml("#office-time-select", selectTimeHtml);
+          appear($("#office-time-select, #office-day-select"), 500);
+          disappear($(".content-box-loader"), 200);
+          $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", false);
+        },
+        true /*, RGZ.bearer*/
+      );
     }, 500);
   };
 
@@ -405,16 +478,12 @@
   };
 
   RGZ.bookOfficeDay = function() {
-    //fetch times for selected day from json
     var selectTimeHtml = `
       <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ТЕРМИН...</option>
-      <option value="6">12:00</option>
-      <option value="7">13:00</option>
-      <option value="8">14:00</option>
-      <option value="9">15:00</option>
-      <option value="10">16:00</option>
-      <option value="11">17:00</option>
     `;
+    for (var i = 0; i < RGZ.kancelarijeTermini.length; i++)
+      if (RGZ.kancelarijeTermini[i].datum == $("#office-day-select option:selected").attr("value"))
+        selectTimeHtml += `<option value="` + i + `">` + RGZ.kancelarijeTermini[i].termin + `</option>`;
     insertHtml("#office-time-select", selectTimeHtml);
   };
 
@@ -565,6 +634,7 @@
               }
             });
             setTimeout(function() {
+              grecaptcha.reset();
               grecaptcha.execute();
             }, 10);
           }
@@ -575,7 +645,7 @@
 
   RGZ.bookOffice = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-office-name").val() == "" || $("#book-office-reason").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
+    if ($("#book-office-name").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
@@ -623,25 +693,29 @@
               }
             });
             setTimeout(function() {
-              $(".jconfirm").remove();
-              $.confirm({
-                title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
-                content: 'Детаљи...',
-                theme: 'supervan',
-                buttons: {
-                  ok: {
-                    text: 'ОК',
-                    btnClass: 'btn-white-rgz',
-                    keys: ['enter'],
-                    action: function() {
-                      RGZ.officeDepartmentChanged(); //same for fail
-                      $("#book-office-aux>input").val(""); //not for fail
-                      $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o"); //not for fail
-                    }
-                  }
-                }
-              }); //or failure
-            }, 2500); //this delay only simulating network response
+              grecaptcha.reset();
+              grecaptcha.execute();
+            }, 10);
+            // setTimeout(function() {
+            //   $(".jconfirm").remove();
+            //   $.confirm({
+            //     title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
+            //     content: 'Детаљи...',
+            //     theme: 'supervan',
+            //     buttons: {
+            //       ok: {
+            //         text: 'ОК',
+            //         btnClass: 'btn-white-rgz',
+            //         keys: ['enter'],
+            //         action: function() {
+            //           RGZ.officeDepartmentChanged(); //same for fail
+            //           $("#book-office-aux>input").val(""); //not for fail
+            //           $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o"); //not for fail
+            //         }
+            //       }
+            //     }
+            //   }); //or failure
+            // }, 2500); //this delay only simulating network response
           }
         },
       }

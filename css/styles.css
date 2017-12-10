@@ -477,6 +477,11 @@ input {
   text-align: justify;
 }
 
+.jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-content-pane ul {
+  display: inline-block;
+  text-align: left;
+}
+
 .jconfirm .jconfirm-box .jconfirm-buttons {
   padding-bottom: 2vh;
 }
