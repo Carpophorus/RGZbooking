@@ -922,6 +922,7 @@ input {
   line-height: 7vh;
   height: 7vh;
   color: white;
+  margin-top: 4vh;
 }
 
 #forgot-password:hover {

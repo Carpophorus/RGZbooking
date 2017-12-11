@@ -798,24 +798,18 @@
     disappear($(".content-box-content"), 500);
     appear($(".content-box-loader"), 200);
     $("#schedule-username, #schedule-password").attr("disabled", true);
+    var data = "username=" + encodeURIComponent($("#schedule-username").val()) + "&password=" + encodeURIComponent($("#schedule-password").val()) + "&grant_type=password&client_id=837rgz";
+    data = JSON.stringify(data);
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token",
+      function(responseArray, status) {
+        console.log(responseArray);
+      },
+      true, data /*, RGZ.bearer*/
+    );
     setTimeout(function() {
       $("#schedule-username, #schedule-password").attr("disabled", false);
-      if ($("#schedule-username").val() != "t" || $("#schedule-password").val() != "t") { //error
-        $.confirm({
-          title: 'ГРЕШКА!',
-          content: 'Појавила се грешка приликом пријаве на систем. Проверите своје креденцијале и покушајте поново.<br><br>Контактирајте системске администраторе уколико се овај проблем често дешава.',
-          theme: 'supervan',
-          backgroundDismiss: 'true',
-          buttons: {
-            ok: {
-              text: 'ОК',
-              btnClass: 'btn-white-rgz',
-              keys: ['enter'],
-              action: function() {}
-            }
-          }
-        });
-      } else {
+      if ($("#schedule-username").val() != "t" || $("#schedule-password").val() != "t") {} else {
         insertHtml("#schedule-content .content-box-content", `
           <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
           <div id="schedule-password-change" class="schedule-navi-button hidden-md-down" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
@@ -861,7 +855,7 @@
           keys: ['enter'],
           action: function() {
             $ajaxUtils.sendPutRequest(
-              RGZ.apiRoot + "korisnici/izmenisifru" + "?novaSifra=" + $("#password-change-input-box").val(),
+              RGZ.apiRoot + "korisnici/izmenisifru" + "?novaSifra=" + encodeURIComponent($("#password-change-input-box").val()),
               function(responseArray, status) {
                 $(".jconfirm").remove();
                 $.confirm({

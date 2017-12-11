@@ -79,7 +79,7 @@
 
   function handleResponse(request, responseHandler, isJsonResponse) {
     if (request.readyState == 4) {
-      if (request.status == 200) {
+      if (request.status == 200 || request.status == 204) {
         if (isJsonResponse == undefined)
           isJsonResponse = true;
         if (isJsonResponse)
