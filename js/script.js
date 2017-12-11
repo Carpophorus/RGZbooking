@@ -696,28 +696,83 @@
               grecaptcha.reset();
               grecaptcha.execute();
             }, 10);
-            // setTimeout(function() {
-            //   $(".jconfirm").remove();
-            //   $.confirm({
-            //     title: 'ЗАКАЗИВАЊЕ УСПЕШНО!',
-            //     content: 'Детаљи...',
-            //     theme: 'supervan',
-            //     buttons: {
-            //       ok: {
-            //         text: 'ОК',
-            //         btnClass: 'btn-white-rgz',
-            //         keys: ['enter'],
-            //         action: function() {
-            //           RGZ.officeDepartmentChanged(); //same for fail
-            //           $("#book-office-aux>input").val(""); //not for fail
-            //           $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o"); //not for fail
-            //         }
-            //       }
-            //     }
-            //   }); //or failure
-            // }, 2500); //this delay only simulating network response
           }
         },
+      }
+    });
+  };
+
+  RGZ.scheduleForgotPassword = function() {
+    if ($("#schedule-username").val() == "") {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате унети корисничко име за налог којем се ресетује шифра.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    $.confirm({
+      title: 'ПОТВРДА',
+      content: 'Да ли сте сигурни да желите да ресетујете шифру за налог са корисничким именом "' + $("#schedule-username").val() + '"?<br><br><span>Нова шифра ће бити послата на одговарајућу e-mail адресу.</span>',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      autoClose: 'no|10000',
+      buttons: {
+        no: {
+          text: 'НЕ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: 'ДА',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            $.confirm({
+              title: 'МОЛИМО САЧЕКАЈТЕ',
+              content: 'Обрада Вашег захтева је у току...',
+              theme: 'supervan',
+              buttons: {
+                ok: {
+                  text: 'ОК',
+                  btnClass: 'gone',
+                  action: function() {}
+                }
+              }
+            });
+            $ajaxUtils.sendPutRequest(
+              RGZ.apiRoot + "korisnici/resetujSifru" + "?korisnik=" + $("#schedule-username").val(),
+              function(responseArray, status) {
+                $(".jconfirm").remove();
+                $.confirm({
+                  title: 'ЛОЗИНКА РЕСЕТОВАНА',
+                  content: 'Лозинка за налог са корисничким именом "' + $("#schedule-username").val() + '" успешно је промењена.<br><br><span>Користите подразумевану лозинку приликом наредне пријаве на систем путем овог налога.</span>',
+                  theme: 'supervan',
+                  backgroundDismiss: 'true',
+                  buttons: {
+                    ok: {
+                      text: 'ОК',
+                      btnClass: 'btn-white-prm',
+                      keys: ['enter'],
+                      action: function() {}
+                    }
+                  }
+                });
+              },
+              true /*, RGZ.bearer*/
+            );
+          }
+        }
       }
     });
   };
@@ -762,8 +817,9 @@
         });
       } else {
         insertHtml("#schedule-content .content-box-content", `
-          <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
-          <div id="schedule-logout" class="schedule-navi-button" onclick="RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
+          <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
+          <div id="schedule-password-change" class="schedule-navi-button hidden-md-down" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
+          <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
           <div id="schedule-searchbar" class="row">
             <div class="col-lg-4 hidden-md-down"></div>
             <div class="col-12 col-lg-4">
@@ -785,6 +841,50 @@
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
     }, 2500); //this delay only simulating network response
+  };
+
+  RGZ.schedulePasswordChange = function() {
+    $.confirm({
+      title: 'ПРОМЕНА ЛОЗИНКЕ',
+      content: 'Нова лозинка:<br><br><input id="password-change-input-box" type="password">',
+      theme: 'supervan',
+      buttons: {
+        no: {
+          text: '<i class="fa fa-times"></i>',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: '<i class="fa fa-check"></i>',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            $ajaxUtils.sendPutRequest(
+              RGZ.apiRoot + "korisnici/izmenisifru" + "?novaSifra=" + $("#password-change-input-box").val(),
+              function(responseArray, status) {
+                $(".jconfirm").remove();
+                $.confirm({
+                  title: 'ЛОЗИНКА ПРОМЕЊЕНА',
+                  content: 'Лозинка за текући налог успешно је промењена.<br><br><span>Користите нову лозинку приликом наредне пријаве на систем путем овог налога.</span>',
+                  theme: 'supervan',
+                  backgroundDismiss: 'true',
+                  buttons: {
+                    ok: {
+                      text: 'ОК',
+                      btnClass: 'btn-white-prm',
+                      keys: ['enter'],
+                      action: function() {}
+                    }
+                  }
+                });
+              },
+              true /*, RGZ.bearer*/
+            );
+          }
+        }
+      }
+    });
   };
 
   RGZ.scheduleSearch = function() {
@@ -908,7 +1008,103 @@
   };
 
   RGZ.schedulePrint = function() {
-    //
+    $.confirm({
+      title: 'ПОТВРДА',
+      content: `Уколико желите додатак наслову на документу за штампу, унесите га у ово поље:<br><br><input id="print-title" type="text" placeholder="наслов" onfocus="this.placeholder = ''" onblur="this.placeholder = 'наслов'">`,
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      buttons: {
+        cancel: {
+          text: '<i class="fa fa-times"></i>',
+          btnClass: 'btn-white-prm',
+          keys: ['esc'],
+          action: function() {}
+        },
+        print: {
+          text: '<i class="fa fa-print"></i>',
+          btnClass: 'btn-white-prm',
+          keys: ['enter'],
+          action: function() {
+            var printTitle = "date and &bull; other info" + " &bull; " + $("#print-title").val();
+            var html4print = `
+                <head><title>` + printTitle + `</title></head>
+                <body>
+                  <div class="header">
+                    <div class="inner-s">р.б.</div>
+                    <div class="inner-xl">бр. предмета</div>
+                    <div class="inner-l">датум</div>
+                    <div class="inner-xl">име и презиме</div>
+                    <div class="inner-xl">e-mail</div>
+                    <div class="inner-l">телефон</div>
+                    <div class="inner-l">служба</div>
+                    <div class="inner-l">статус</div>
+                    <div class="inner-l">одговор</div>
+                  </div>
+              `;
+            for (var i = 0; i < 50; i++) {
+              html4print += `
+                  <div class="outer">
+                    <div class="inner-s">` + `123` + `</div>
+                    <div class="inner-xl">` + `95-74993678/2017` + `</div>
+                    <div class="inner-l">` + `10.11.2017. 08:51` + `</div>
+                    <div class="inner-xl">` + `Radibrat Radibratović` + `</div>
+                    <div class="inner-xl">` + `rr69@gmail.com` + `</div>
+                    <div class="inner-l">` + `069/555-78-03` + `</div>
+                    <div class="inner-l">` + `Велика Плана` + `</div>
+                    <div class="inner-l">` + `Непрослеђен` + `</div>
+                    <div class="inner-l">` + `Нема одговора` + `</div>
+                  </div>
+                `;
+            }
+            html4print += `
+                </body>
+                <style>
+                  body {
+                    margin: 0;
+                    -webkit-print-color-adjust: exact;
+                  }
+                  .header, .outer {
+                    position: relative;
+                    width: 100%;
+                    font-size: 65%;
+                    overflow: auto;
+                  }
+                  .header {
+                    color: white;
+                    font-weight: bold;
+                    background-color: #444;
+                  }
+                  .outer:nth-child(odd) {
+                    background-color: #eee !important;
+                  }
+                  .header>div, .outer>div {
+                    float: left;
+                    white-space: nowrap;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis;
+                    line-height: 2;
+                  }
+                  .inner-s {
+                    width: 5%;
+                  }
+                  .inner-l {
+                    width: 10%;
+                  }
+                  .inner-xl {
+                    width: 15%;
+                  }
+                </style>
+              `;
+
+            w = window.open("");
+            w.document.write(html4print);
+            w.print();
+            w.close();
+          }
+        }
+      }
+    });
+    //generate html (prompt for all or screen?)
   };
 
   RGZ.currentClientIndicator = function() {

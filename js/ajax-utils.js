@@ -56,6 +56,16 @@
     request.send(null);
   };
 
+  ajaxUtils.sendPutRequest = function(requestUrl, responseHandler, isJsonResponse, bearer) {
+    var request = getRequestObject();
+    request.onreadystatechange = function() {
+      handleResponse(request, responseHandler, isJsonResponse);
+    };
+    request.open("PUT", requestUrl, true);
+    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    request.send(null);
+  };
+
   ajaxUtils.sendPostRequestWithData = function(requestUrl, responseHandler, isJsonResponse, data, bearer) {
     var request = getRequestObject();
     request.onreadystatechange = function() {
