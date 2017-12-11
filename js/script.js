@@ -1,12 +1,15 @@
 (function(global) {
   RGZ = {};
 
+  RGZ.bearer = '';
+
   RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
   RGZ.kancelarijeSluzbe = '';
   RGZ.salteriTermini = '';
   RGZ.kancelarijeTermini = '';
+  RGZ.zakazaniTermini = '';
 
   var bookingForbidden = false;
   var nav = 0;
@@ -799,42 +802,93 @@
     appear($(".content-box-loader"), 200);
     $("#schedule-username, #schedule-password").attr("disabled", true);
     var data = "username=" + encodeURIComponent($("#schedule-username").val()) + "&password=" + encodeURIComponent($("#schedule-password").val()) + "&grant_type=password&client_id=837rgz";
-    data = JSON.stringify(data);
-    $ajaxUtils.sendPostRequestWithData(
-      RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token",
-      function(responseArray, status) {
-        console.log(responseArray);
-      },
-      true, data /*, RGZ.bearer*/
-    );
-    setTimeout(function() {
-      $("#schedule-username, #schedule-password").attr("disabled", false);
-      if ($("#schedule-username").val() != "t" || $("#schedule-password").val() != "t") {} else {
-        insertHtml("#schedule-content .content-box-content", `
-          <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
-          <div id="schedule-password-change" class="schedule-navi-button hidden-md-down" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
-          <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
-          <div id="schedule-searchbar" class="row">
-            <div class="col-lg-4 hidden-md-down"></div>
-            <div class="col-12 col-lg-4">
-              <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
-                <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
-                <option value="1">Шалтер 1</option>
-                <option value="2">Шалтер 2</option>
-                <option value="3">Шалтер 3</option>
-                <option value="4">Шалтер 4</option>
-                <option value="5">Правник</option>
-                <option value="6">Начелник</option>
-              </select>
+    $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
+      RGZ.bearer = response.access_token;
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "korisnici/zakazaniTermini",
+        function(responseArray, status) {
+          RGZ.zakazaniTermini = responseArray;
+          var qualifiedSalteri = [];
+          for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
+            if (!qualifiedSalteri.includes(RGZ.zakazaniTermini[i].salter)) {
+              qualifiedSalteri.push(RGZ.zakazaniTermini[i].salter);
+            }
+          }
+          var scheduleContentHtml = `
+            <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
+            <div id="schedule-password-change" class="schedule-navi-button hidden-md-down" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
+            <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
+            <div id="schedule-searchbar" class="row">
+              <div class="col-lg-4 hidden-md-down"></div>
+              <div class="col-12 col-lg-4">
+                <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
+                  <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+          `;
+          for (var i = 0; i < qualifiedSalteri.length; i++)
+            scheduleContentHtml += `<option>` + qualifiedSalteri[i] + `</option>`
+          scheduleContentHtml += `
+                </select>
+              </div>
+              <div class="col-lg-4 hidden-md-down"></div>
             </div>
-            <div class="col-lg-4 hidden-md-down"></div>
-          </div>
-          <div id="timetable" class="gone"></div>
-        `);
+            <div id="timetable" class="gone"></div>
+          `;
+          insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
+          setTimeout(function() {
+            appear($(".content-box-content"), 500);
+            disappear($(".content-box-loader"), 200);
+          }, 500);
+        },
+        true, RGZ.bearer
+      );
+    }).fail(function(response) {
+      if (response.status == 400) {
+        var errorText = response.responseJSON.error;
+        setTimeout(function() {
+          appear($(".content-box-content"), 500);
+          disappear($(".content-box-loader"), 200);
+        }, 500);
+        $(".jconfirm").remove();
+        $("input, select").prop("disabled", false);
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: errorText + '.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+      } else {
+        setTimeout(function() {
+          appear($(".content-box-content"), 500);
+          disappear($(".content-box-loader"), 200);
+        }, 500);
+        $(".jconfirm").remove();
+        $("input, select").prop("disabled", false);
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Десила се грешка у систему, покушајте поново касније.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {
+                $(".jconfirm").remove();
+              }
+            }
+          }
+        });
       }
-      appear($(".content-box-content"), 500);
-      disappear($(".content-box-loader"), 200);
-    }, 2500); //this delay only simulating network response
+    });
   };
 
   RGZ.schedulePasswordChange = function() {
@@ -883,6 +937,7 @@
 
   RGZ.scheduleSearch = function() {
     disappear($("#timetable"), 500);
+    disappear($("#schedule-print"), 500);
     var ttHtml = `
       <div id="schedule-header" class="row">
         <div class="col-1"></div>
@@ -892,37 +947,42 @@
       </div>
       <div id="schedule-items">
     `;
-    for (var i = 10; i < 59; i = i + 5) { //from response array
-      ttHtml += `
-        <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
-          <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
-          <div class="col-3 col-lg-2 item-time">` + `15:` + i + `</div>
-          <div class="col-4 col-lg-7 item-name">Radibrat Radibratović</div>
-          <div class="col-2 col-lg-1 item-y ` + ((i == 15) ? `arrival` : ``) + `" onclick="$RGZ.confirmArrival(this);"><i class="fa fa-check"></i></div>
-          <div class="col-2 col-lg-1 item-n ` + ((i == 15) ? `arrival-counter` : ``) + `" onclick="$RGZ.confirmArrival(this);"><i class="fa fa-times"></i></div>
-        </div>
-        <div id="expansion-` + i + `" class="expansion collapse">
-          <div class="row">
-            <div class="expansion-info col-12 col-md-6">
-              <div class="expansion-label">датум:</div>
-              <div class="expansion-info-data">10.11.2017. 08:51</div>
-              <div class="expansion-label">име и презиме:</div>
-              <div class="expansion-info-data">Radibrat Radibratović</div>
-              <div class="expansion-label">e-mail:</div>
-              <div class="expansion-info-data">rr69@gmail.com</div>
-              <div class="expansion-label">телефон:</div>
-              <div class="expansion-info-data">069/555-78-03</div>
-              <div class="expansion-label">служба:</div>
-              <div class="expansion-info-data">Београд</div>
+    for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
+      if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val())
+        ttHtml += `
+          <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
+            <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
+            <div class="col-3 col-lg-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
+            <div class="col-4 col-lg-7 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
+            <div class="col-2 col-lg-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `);"><i class="fa fa-check"></i></div>
+            <div class="col-2 col-lg-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `);"><i class="fa fa-times"></i></div>
+          </div>
+          <div id="expansion-` + i + `" class="expansion collapse">
+            <div class="row">
+              <div class="expansion-info col-12 col-md-6">
+                <div class="expansion-label">датум и време:</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].datum.substring(3, 5) + `.` + RGZ.zakazaniTermini[i].datum.substring(0, 2) + `.` + RGZ.zakazaniTermini[i].datum.substring(6, 11) + `. ` + RGZ.zakazaniTermini[i].termin + `</div>
+                <div class="expansion-label">име и презиме:</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].ime + `</div>` + ((RGZ.zakazaniTermini[i].email != "" && RGZ.zakazaniTermini[i].email != null) ? `
+                <div class="expansion-label">e-mail:</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].email + `</div>
+                ` : ``) + ((RGZ.zakazaniTermini[i].tel != "" && RGZ.zakazaniTermini[i].tel != null) ? `
+                <div class="expansion-label">телефон:</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].tel + `</div>
+                ` : ``) + `
+                <div class="expansion-label">документ:</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].dokument + `</div>
+              </div>
             </div>
           </div>
-        </div>
-      `;
+        `;
     }
     ttHtml += `
       </div>
     `;
-    insertHtml("#timetable", ttHtml);
+    setTimeout(function() {
+      insertHtml("#timetable", ttHtml);
+    }, 500);
     setTimeout(function() {
       appear($("#timetable"), 500);
       appear($("#schedule-print"), 500);

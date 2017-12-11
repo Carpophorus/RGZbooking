@@ -923,6 +923,9 @@ input {
   height: 7vh;
   color: white;
   margin-top: 4vh;
+  -webkit-transition: color 0.5s ease;
+  -moz-transition: color 0.5s ease;
+  transition: color 0.5s ease;
 }
 
 #forgot-password:hover {
