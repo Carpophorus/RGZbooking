@@ -363,9 +363,8 @@
     $(".content-box-loader").css({
       "padding-top": "45vh"
     });
-    setTimeout(function() {
-      appear($(".content-box-loader"), 200);
-    }, 500);
+    appear($(".content-box-loader"), 200);
+    disappear($("#counter-time-select, #counter-day-select"), 500);
     RGZ.counterDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
@@ -423,9 +422,8 @@
     $(".content-box-loader").css({
       "padding-top": "56vh"
     });
-    setTimeout(function() {
-      appear($(".content-box-loader"), 200);
-    }, 500);
+    appear($(".content-box-loader"), 200);
+    disappear($("#office-time-select, #office-day-select"), 500);
     RGZ.officeDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
