@@ -47,7 +47,7 @@ input {
 #navi {
   background-color: #F4F8E6;
   width: 100%;
-  min-height: 7vh;
+  min-height: 7.2vh;
   font-size: 3.3vh;
   line-height: 7vh;
   text-align: center;
@@ -755,8 +755,12 @@ input {
   color: #333;
 }
 
-#schedule-print {
+#schedule-refresh {
   right: 14.4vh;
+}
+
+#schedule-print {
+  right: 21.6vh;
 }
 
 #timetable {
@@ -951,7 +955,7 @@ input {
   }
   #navi {
     min-height: 8vh;
-    line-height: 8vh;
+    line-height: 7.8vh;
   }
   #navi>img {
     height: 6vh;
@@ -980,8 +984,11 @@ input {
   #schedule-password-change {
     right: 8.2vh;
   }
-  #schedule-print {
+  #schedule-refresh {
     right: 16.4vh;
+  }
+  #schedule-print {
+    right: 24.6vh;
   }
   #schedule-searchbar>div {
     padding-bottom: 3vh;

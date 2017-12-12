@@ -814,16 +814,17 @@
           }
           var scheduleContentHtml = `
             <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
-            <div id="schedule-password-change" class="schedule-navi-button hidden-md-down" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
+            <div id="schedule-refresh" class="schedule-navi-button" onclick="$RGZ.scheduleRefresh(false);"><i class="fa fa-refresh"></i></div>
+            <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
             <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
             <div id="schedule-searchbar" class="row">
               <div class="col-lg-4 hidden-md-down"></div>
               <div class="col-12 col-lg-4">
                 <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
-                  <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+                  <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
           `;
           for (var i = 0; i < qualifiedSalteri.length; i++)
-            scheduleContentHtml += `<option>` + qualifiedSalteri[i] + `</option>`
+            scheduleContentHtml += `<option>` + qualifiedSalteri[i] + `</option>`;
           scheduleContentHtml += `
                 </select>
               </div>
@@ -835,6 +836,10 @@
           setTimeout(function() {
             appear($(".content-box-content"), 500);
             disappear($(".content-box-loader"), 200);
+            disappear($("#navi-landing"), 500);
+            setTimeout(function() {
+              RGZ.scheduleRefresh(true);
+            }, 600000);
           }, 500);
         },
         true, RGZ.bearer
@@ -887,6 +892,46 @@
         });
       }
     });
+  };
+
+  RGZ.scheduleRefresh = function(repeat) {
+    $("#schedule-refresh i").addClass("fa-spin");
+    setTimeout(function() {
+      $("#schedule-refresh i").removeClass("fa-spin");
+    }, 3000);
+    var selectedVal = $("#schedule-co option:selected").val();
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "korisnici/zakazaniTermini",
+      function(responseArray, status) {
+        RGZ.zakazaniTermini = responseArray;
+        var qualifiedSalteri = [];
+        for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
+          if (!qualifiedSalteri.includes(RGZ.zakazaniTermini[i].salter)) {
+            qualifiedSalteri.push(RGZ.zakazaniTermini[i].salter);
+          }
+        }
+        var scheduleCoHtml = `
+          <option disabled hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+        `;
+        var found = false;
+        for (var i = 0; i < qualifiedSalteri.length; i++) {
+          if (qualifiedSalteri[i] == selectedVal) found = true;
+          scheduleCoHtml += `<option ` + ((qualifiedSalteri[i] == selectedVal) ? `selected` : ``) + `>` + qualifiedSalteri[i] + `</option>`;
+        }
+        insertHtml("#schedule-co", scheduleCoHtml);
+        if (found == false) {
+          $("#schedule-co option:first-child").prop("selected", true);
+        } else {
+          RGZ.scheduleSearch();
+        }
+      },
+      true, RGZ.bearer
+    );
+    if (repeat == true) {
+      setTimeout(function() {
+        RGZ.scheduleRefresh(true);
+      }, 600000);
+    }
   };
 
   RGZ.schedulePasswordChange = function() {
