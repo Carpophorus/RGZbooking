@@ -77,6 +77,17 @@
     request.send(data);
   };
 
+  ajaxUtils.sendPutRequestWithData = function(requestUrl, responseHandler, isJsonResponse, data, bearer) {
+    var request = getRequestObject();
+    request.onreadystatechange = function() {
+      handleResponse(request, responseHandler, isJsonResponse);
+    };
+    request.open("PUT", requestUrl, true);
+    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    request.send(data);
+  };
+
   function handleResponse(request, responseHandler, isJsonResponse) {
     if (request.readyState == 4) {
       if (request.status == 200 || request.status == 204) {

@@ -2,6 +2,7 @@
   RGZ = {};
 
   RGZ.bearer = '';
+  RGZ.loginInfo = '';
 
   RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
   RGZ.salteriSluzbe = '';
@@ -802,6 +803,7 @@
     var data = "username=" + encodeURIComponent($("#schedule-username").val()) + "&password=" + encodeURIComponent($("#schedule-password").val()) + "&grant_type=password&client_id=837rgz";
     $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
       RGZ.bearer = response.access_token;
+      RGZ.loginInfo = response;
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "korisnici/zakazaniTermini",
         function(responseArray, status) {
@@ -997,14 +999,14 @@
             <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
             <div class="col-3 col-lg-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
             <div class="col-4 col-lg-7 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
-            <div class="col-2 col-lg-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `);"><i class="fa fa-check"></i></div>
-            <div class="col-2 col-lg-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `);"><i class="fa fa-times"></i></div>
+            <div class="col-2 col-lg-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `);"><i class="fa fa-check"></i></div>
+            <div class="col-2 col-lg-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `);"><i class="fa fa-times"></i></div>
           </div>
           <div id="expansion-` + i + `" class="expansion collapse">
             <div class="row">
-              <div class="expansion-info col-12 col-md-6">
+              <div class="expansion-info col-12">
                 <div class="expansion-label">датум и време:</div>
-                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].datum.substring(3, 5) + `.` + RGZ.zakazaniTermini[i].datum.substring(0, 2) + `.` + RGZ.zakazaniTermini[i].datum.substring(6, 11) + `. ` + RGZ.zakazaniTermini[i].termin + `</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].datum.substring(8, 10) + `.` + RGZ.zakazaniTermini[i].datum.substring(5, 7) + `.` + RGZ.zakazaniTermini[i].datum.substring(0, 4) + `. ` + RGZ.zakazaniTermini[i].termin + `</div>
                 <div class="expansion-label">име и презиме:</div>
                 <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].ime + `</div>` + ((RGZ.zakazaniTermini[i].email != "" && RGZ.zakazaniTermini[i].email != null) ? `
                 <div class="expansion-label">e-mail:</div>
@@ -1033,7 +1035,7 @@
     }, 600);
   };
 
-  RGZ.confirmArrival = function(e) {
+  RGZ.confirmArrival = function(e, dbID, localID) {
     var date = new Date();
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -1077,8 +1079,9 @@
           btnClass: 'btn-white-rgz',
           keys: ['enter'],
           action: function() {
+            var data = JSON.parse(`{"id": ` + dbID + `, "potvrda": ` + (($(e).hasClass("item-y")) ? `true` : `false`) + `}`);
+            RGZ.zakazaniTermini[localID].potvrda = (($(e).hasClass("item-y")) ? true : false);
             //send api request
-            //maybe change local array
             $(e).addClass("arrival");
             $(e).parent().find((($(e).hasClass("item-y")) ? ".item-n" : ".item-y")).addClass("arrival-counter");
           }
@@ -1122,37 +1125,39 @@
           btnClass: 'btn-white-prm',
           keys: ['enter'],
           action: function() {
-            var printTitle = "date and &bull; other info" + " &bull; " + $("#print-title").val();
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth();
+            var year = date.getFullYear();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var printTitle = RGZ.loginInfo.sluzba + " &bull; " + $("#schedule-co").val() + " &bull; " + RGZ.loginInfo.name + " &bull; " + day + `.` + month + `.` + year + `. ` + hours + `:` + minutes + (($("#print-title").val() != "") ? (" &bull; " + $("#print-title").val()) : "");
             var html4print = `
-                <head><title>` + printTitle + `</title></head>
+                <head><title>ЗАКАЗАНИ ТЕРМИНИ</title></head>
                 <body>
+                  <div class="print-title">` + printTitle + `</div>
                   <div class="header">
-                    <div class="inner-s">р.б.</div>
-                    <div class="inner-xl">бр. предмета</div>
-                    <div class="inner-l">датум</div>
-                    <div class="inner-xl">име и презиме</div>
-                    <div class="inner-xl">e-mail</div>
-                    <div class="inner-l">телефон</div>
-                    <div class="inner-l">служба</div>
-                    <div class="inner-l">статус</div>
-                    <div class="inner-l">одговор</div>
+                    <div class="inner-s">&nbsp;&nbsp;&nbsp;време</div>
+                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;име и презиме</div>
+                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;документ / бр. предмета</div>
+                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;e-mail</div>
+                    <div class="inner-l">&nbsp;&nbsp;&nbsp;телефон</div>
+                    <div class="inner-l">потврда доласка</div>
                   </div>
               `;
-            for (var i = 0; i < 50; i++) {
-              html4print += `
+            for (var i = 0; i < RGZ.zakazaniTermini.length; i++)
+              if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val())
+                html4print += `
                   <div class="outer">
-                    <div class="inner-s">` + `123` + `</div>
-                    <div class="inner-xl">` + `95-74993678/2017` + `</div>
-                    <div class="inner-l">` + `10.11.2017. 08:51` + `</div>
-                    <div class="inner-xl">` + `Radibrat Radibratović` + `</div>
-                    <div class="inner-xl">` + `rr69@gmail.com` + `</div>
-                    <div class="inner-l">` + `069/555-78-03` + `</div>
-                    <div class="inner-l">` + `Велика Плана` + `</div>
-                    <div class="inner-l">` + `Непрослеђен` + `</div>
-                    <div class="inner-l">` + `Нема одговора` + `</div>
+                    <div class="inner-s">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].termin + `</div>
+                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].ime + `</div>
+                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].dokument + `</div>
+                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].email + `</div>
+                    <div class="inner-l">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].tel + `</div>
+                    <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `✔` : ``) + `</div>
+                    <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `✘` : ``) + `</div>
                   </div>
                 `;
-            }
             html4print += `
                 </body>
                 <style>
@@ -1160,11 +1165,17 @@
                     margin: 0;
                     -webkit-print-color-adjust: exact;
                   }
-                  .header, .outer {
+                  .header, .outer, .print-title {
                     position: relative;
                     width: 100%;
                     font-size: 65%;
                     overflow: auto;
+                  }
+                  .print-title {
+                    text-align: center;
+                    font-size: 75%;
+                    font-weight: 600;
+                    padding: 20px;
                   }
                   .header {
                     color: white;
@@ -1181,14 +1192,20 @@
                     text-overflow: ellipsis;
                     line-height: 2;
                   }
-                  .inner-s {
-                    width: 5%;
+                  .inner-xs, .header>div:last-child {
+                    text-align: center !important;
                   }
-                  .inner-l {
+                  .inner-xs {
+                    width: 7.5%;
+                  }
+                  .inner-s {
                     width: 10%;
                   }
-                  .inner-xl {
+                  .inner-l {
                     width: 15%;
+                  }
+                  .inner-xl {
+                    width: 20%;
                   }
                 </style>
               `;
@@ -1201,7 +1218,6 @@
         }
       }
     });
-    //generate html (prompt for all or screen?)
   };
 
   RGZ.currentClientIndicator = function() {
