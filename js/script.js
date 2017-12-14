@@ -107,7 +107,7 @@
         </select>
         <div id="book-counter-aux" class="aux-container gone">
           <input id="book-counter-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-          <select id="book-counter-reason" onchange="$RGZ.counterReasonChanged();">
+          <select id="book-counter-reason" class="book-counter-reason-lighter" onchange="$RGZ.counterReasonChanged();">
             <option disabled value="0" selected hidden>врста захтева ✱</option>
     `;
     for (var i = 0; i < RGZ.zahtevi.length; i++)
@@ -309,13 +309,11 @@
     setTimeout(function() {
       bookingForbidden = false;
       $("#counter-day-select, #counter-time-select").prop("disabled", false);
-    }, 1000);
-    setTimeout(function() {
-      disappear($("#counter-day-select, #counter-time-select, #book-counter-aux"), 500);
     }, 500);
+    disappear($("#counter-day-select, #counter-time-select, #book-counter-aux"), 500);
     $(".content-box-content").animate({
       scrollTop: 0
-    }, 1000);
+    }, 500);
   }
 
   RGZ.officeDepartmentChanged = function() {
@@ -328,17 +326,15 @@
     setTimeout(function() {
       bookingForbidden = false;
       $("#office-day-select, #office-time-select").prop("disabled", false);
-    }, 1000);
-    setTimeout(function() {
-      disappear($("#office-day-select, #office-time-select, #book-office-aux"), 500);
     }, 500);
+    disappear($("#office-day-select, #office-time-select, #book-office-aux"), 500);
     $(".content-box-content").animate({
       scrollTop: 0
-    }, 1000);
+    }, 500);
   }
 
   RGZ.counterReasonChanged = function() {
-    //
+    $("#book-counter-reason").removeClass("book-counter-reason-lighter");
   };
 
   RGZ.fetchCounterTimes = function() {
@@ -365,7 +361,10 @@
       "padding-top": "45vh"
     });
     appear($(".content-box-loader"), 200);
-    disappear($("#counter-time-select, #counter-day-select"), 500);
+    disappear($("#counter-time-select, #counter-day-select, #book-counter-aux"), 500);
+    $(".content-box-content").animate({
+      scrollTop: 0
+    }, 500);
     RGZ.counterDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
@@ -424,7 +423,10 @@
       "padding-top": "56vh"
     });
     appear($(".content-box-loader"), 200);
-    disappear($("#office-time-select, #office-day-select"), 500);
+    disappear($("#office-time-select, #office-day-select, #book-office-aux"), 500);
+    $(".content-box-content").animate({
+      scrollTop: 0
+    }, 500);
     RGZ.officeDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
@@ -780,7 +782,6 @@
   };
 
   dataFetchedAux = function() {
-    console.log(RGZ.zakazaniTermini); //TODO delete
     var qualified = [];
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
       if (RGZ.zakazaniTermini[i].salter != undefined) {

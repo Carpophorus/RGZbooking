@@ -1033,6 +1033,32 @@ input {
   }
 }
 
+.book-counter-reason-lighter {
+  color: #777 !important;
+}
+
+#book-counter-reason>option {
+  color: #333 !important;
+}
+
+::-webkit-input-placeholder {
+  color: #777;
+}
+
+:-ms-input-placeholder {
+  color: #777;
+}
+
+::-moz-placeholder {
+  color: #777;
+  opacity: 1;
+}
+
+:-moz-placeholder {
+  color: #777;
+  opacity: 1;
+}
+
 @media (max-width: 767.5px) and (min-width: 766.5px) {
   #schedule-header i, #schedule-header #slash {
     display: none;
