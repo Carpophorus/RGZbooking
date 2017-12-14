@@ -10,7 +10,7 @@
   RGZ.kancelarijeSluzbe = '';
   RGZ.salteriTermini = '';
   RGZ.kancelarijeTermini = '';
-  RGZ.zakazaniTermini = '';
+  RGZ.zakazaniTermini = [];
 
   var bookingForbidden = false;
   var nav = 0;
@@ -758,7 +758,7 @@
                 $(".jconfirm").remove();
                 $.confirm({
                   title: 'ЛОЗИНКА РЕСЕТОВАНА',
-                  content: 'Лозинка за налог са корисничким именом "' + $("#schedule-username").val() + '" успешно је промењена.<br><br><span>Користите подразумевану лозинку приликом наредне пријаве на систем путем овог налога.</span>',
+                  content: 'Лозинка за налог са корисничким именом "' + $("#schedule-username").val() + '" успешно је промењена.<br><br><span>Користите нову лозинку приликом наредне пријаве на систем путем овог налога.</span>',
                   theme: 'supervan',
                   backgroundDismiss: 'true',
                   buttons: {
@@ -777,6 +777,49 @@
         }
       }
     });
+  };
+
+  dataFetchedAux = function() {
+    console.log(RGZ.zakazaniTermini); //TODO delete
+    var qualified = [];
+    for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
+      if (RGZ.zakazaniTermini[i].salter != undefined) {
+        if (!qualified.includes(RGZ.zakazaniTermini[i].salter))
+          qualified.push(RGZ.zakazaniTermini[i].salter);
+      } else {
+        if (!qualified.includes(RGZ.zakazaniTermini[i].kancelarija))
+          qualified.push(RGZ.zakazaniTermini[i].kancelarija);
+      }
+    }
+    var scheduleContentHtml = `
+      <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
+      <div id="schedule-refresh" class="schedule-navi-button" onclick="$RGZ.scheduleRefresh(false);"><i class="fa fa-refresh"></i></div>
+      <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
+      <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
+      <div id="schedule-searchbar" class="row">
+        <div class="col-lg-4 hidden-md-down"></div>
+        <div class="col-12 col-lg-4">
+          <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
+            <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+    `;
+    for (var i = 0; i < qualified.length; i++)
+      scheduleContentHtml += `<option>` + qualified[i] + `</option>`;
+    scheduleContentHtml += `
+          </select>
+        </div>
+        <div class="col-lg-4 hidden-md-down"></div>
+      </div>
+      <div id="timetable" class="gone"></div>
+    `;
+    insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
+    setTimeout(function() {
+      appear($(".content-box-content"), 500);
+      disappear($(".content-box-loader"), 200);
+      disappear($("#navi-landing"), 500);
+      setTimeout(function() {
+        RGZ.scheduleRefresh(true);
+      }, 600000);
+    }, 500);
   };
 
   RGZ.scheduleLogin = function() {
@@ -804,45 +847,35 @@
     $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
       RGZ.bearer = response.access_token;
       RGZ.loginInfo = response;
+      RGZ.zakazaniTermini = [];
+      var sync = 0;
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "korisnici/zakazaniTermini",
         function(responseArray, status) {
-          RGZ.zakazaniTermini = responseArray;
-          var qualifiedSalteri = [];
-          for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
-            if (!qualifiedSalteri.includes(RGZ.zakazaniTermini[i].salter)) {
-              qualifiedSalteri.push(RGZ.zakazaniTermini[i].salter);
-            }
+          for (var m = 0; m < responseArray.length; m++) {
+            responseArray[m]["isOffice"] = false;
+            RGZ.zakazaniTermini.push(responseArray[m]);
           }
-          var scheduleContentHtml = `
-            <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
-            <div id="schedule-refresh" class="schedule-navi-button" onclick="$RGZ.scheduleRefresh(false);"><i class="fa fa-refresh"></i></div>
-            <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
-            <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
-            <div id="schedule-searchbar" class="row">
-              <div class="col-lg-4 hidden-md-down"></div>
-              <div class="col-12 col-lg-4">
-                <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
-                  <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
-          `;
-          for (var i = 0; i < qualifiedSalteri.length; i++)
-            scheduleContentHtml += `<option>` + qualifiedSalteri[i] + `</option>`;
-          scheduleContentHtml += `
-                </select>
-              </div>
-              <div class="col-lg-4 hidden-md-down"></div>
-            </div>
-            <div id="timetable" class="gone"></div>
-          `;
-          insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
-          setTimeout(function() {
-            appear($(".content-box-content"), 500);
-            disappear($(".content-box-loader"), 200);
-            disappear($("#navi-landing"), 500);
-            setTimeout(function() {
-              RGZ.scheduleRefresh(true);
-            }, 600000);
-          }, 500);
+          sync = sync + 1;
+          if (sync == 2)
+            dataFetchedAux();
+        },
+        true, RGZ.bearer
+      );
+      var date = new Date();
+      var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+      var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+      var year = date.getFullYear();
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(year + "-" + month + "-" + day),
+        function(responseArray, status) {
+          for (var n = 0; n < responseArray.length; n++) {
+            responseArray[n]["isOffice"] = true;
+            RGZ.zakazaniTermini.push(responseArray[n]);
+          }
+          sync = sync + 1;
+          if (sync == 2)
+            dataFetchedAux();
         },
         true, RGZ.bearer
       );
@@ -896,36 +929,67 @@
     });
   };
 
+  dataRefreshAux = function() {
+    var qualified = [];
+    for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
+      if (RGZ.zakazaniTermini[i].salter != undefined) {
+        if (!qualified.includes(RGZ.zakazaniTermini[i].salter))
+          qualified.push(RGZ.zakazaniTermini[i].salter);
+      } else {
+        if (!qualified.includes(RGZ.zakazaniTermini[i].kancelarija))
+          qualified.push(RGZ.zakazaniTermini[i].kancelarija);
+      }
+    }
+    var scheduleCoHtml = `
+      <option disabled hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+    `;
+    var found = false;
+    for (var i = 0; i < qualified.length; i++) {
+      if (qualified[i] == $("#schedule-co option:selected").val()) found = true;
+      scheduleCoHtml += `<option ` + ((qualified[i] == $("#schedule-co option:selected").val()) ? `selected` : ``) + `>` + qualified[i] + `</option>`;
+    }
+    insertHtml("#schedule-co", scheduleCoHtml);
+    if (found == false) {
+      $("#schedule-co option:first-child").prop("selected", true);
+    } else {
+      RGZ.scheduleSearch();
+    }
+  };
+
   RGZ.scheduleRefresh = function(repeat) {
     $("#schedule-refresh i").addClass("fa-spin");
     setTimeout(function() {
       $("#schedule-refresh i").removeClass("fa-spin");
     }, 3000);
-    var selectedVal = $("#schedule-co option:selected").val();
+    RGZ.zakazaniTermini = [];
+    var sync = 0;
     $ajaxUtils.sendGetRequest(
       RGZ.apiRoot + "korisnici/zakazaniTermini",
       function(responseArray, status) {
-        RGZ.zakazaniTermini = responseArray;
-        var qualifiedSalteri = [];
-        for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
-          if (!qualifiedSalteri.includes(RGZ.zakazaniTermini[i].salter)) {
-            qualifiedSalteri.push(RGZ.zakazaniTermini[i].salter);
-          }
+        for (var m = 0; m < responseArray.length; m++) {
+          responseArray[m]["isOffice"] = false;
+          RGZ.zakazaniTermini.push(responseArray[m]);
         }
-        var scheduleCoHtml = `
-          <option disabled hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
-        `;
-        var found = false;
-        for (var i = 0; i < qualifiedSalteri.length; i++) {
-          if (qualifiedSalteri[i] == selectedVal) found = true;
-          scheduleCoHtml += `<option ` + ((qualifiedSalteri[i] == selectedVal) ? `selected` : ``) + `>` + qualifiedSalteri[i] + `</option>`;
+        sync = sync + 1;
+        if (sync == 2)
+          dataRefreshAux();
+      },
+      true, RGZ.bearer
+    );
+    var date = new Date();
+    var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+    var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+    var year = date.getFullYear();
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(year + "-" + month + "-" + day),
+      function(responseArray, status) {
+        for (var n = 0; n < responseArray.length; n++) {
+          responseArray[n]["isOffice"] = true;
+          RGZ.zakazaniTermini.push(responseArray[n]);
         }
-        insertHtml("#schedule-co", scheduleCoHtml);
-        if (found == false) {
-          $("#schedule-co option:first-child").prop("selected", true);
-        } else {
-          RGZ.scheduleSearch();
-        }
+        sync = sync + 1;
+        if (sync == 2)
+          dataRefreshAux();
       },
       true, RGZ.bearer
     );
@@ -993,14 +1057,14 @@
       <div id="schedule-items">
     `;
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
-      if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val())
+      if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val() || RGZ.zakazaniTermini[i].kancelarija == $("#schedule-co").val())
         ttHtml += `
           <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
             <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
             <div class="col-3 col-lg-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
             <div class="col-4 col-lg-7 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
-            <div class="col-2 col-lg-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `);"><i class="fa fa-check"></i></div>
-            <div class="col-2 col-lg-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `);"><i class="fa fa-times"></i></div>
+            <div class="col-2 col-lg-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-check"></i></div>
+            <div class="col-2 col-lg-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-times"></i></div>
           </div>
           <div id="expansion-` + i + `" class="expansion collapse">
             <div class="row">
@@ -1035,7 +1099,7 @@
     }, 600);
   };
 
-  RGZ.confirmArrival = function(e, dbID, localID) {
+  RGZ.confirmArrival = function(e, dbID, localID, isOffice) {
     var date = new Date();
     var hours = date.getHours();
     var minutes = date.getMinutes();
@@ -1044,7 +1108,7 @@
     if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
       confirmArrivalClicked = false;
       return;
-    } else if (hours * 100 + minutes - 5 < Number($(e).parent().find(".item-time").html().replace(':', ''))) { //and later date
+    } else if (hours * 100 + minutes - 5 < Number($(e).parent().find(".item-time").html().replace(':', ''))) { //TODO or later date
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Не можете потврдити долазак клијента у будућности.<br><br><span>Предвиђено је максимално кашњење од 5 минута.</span>',
@@ -1080,8 +1144,13 @@
           keys: ['enter'],
           action: function() {
             var data = JSON.parse(`{"id": ` + dbID + `, "potvrda": ` + (($(e).hasClass("item-y")) ? `true` : `false`) + `}`);
+            data = JSON.stringify(data);
             RGZ.zakazaniTermini[localID].potvrda = (($(e).hasClass("item-y")) ? true : false);
-            //send api request
+            $ajaxUtils.sendPutRequestWithData(
+              RGZ.apiRoot + "korisnici/potvrdaTermina" + ((isOffice == true) ? "Kancelarije" : "") + "/" + dbID,
+              function(responseArray, status) {},
+              true, data, RGZ.bearer
+            );
             $(e).addClass("arrival");
             $(e).parent().find((($(e).hasClass("item-y")) ? ".item-n" : ".item-y")).addClass("arrival-counter");
           }
@@ -1126,11 +1195,11 @@
           keys: ['enter'],
           action: function() {
             var date = new Date();
-            var day = date.getDate();
-            var month = date.getMonth();
+            var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+            var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
             var year = date.getFullYear();
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
+            var hours = ((date.getHours() < 10) ? "0" : "") + date.getHours();
+            var minutes = ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();
             var printTitle = RGZ.loginInfo.sluzba + " &bull; " + $("#schedule-co").val() + " &bull; " + RGZ.loginInfo.name + " &bull; " + day + `.` + month + `.` + year + `. ` + hours + `:` + minutes + (($("#print-title").val() != "") ? (" &bull; " + $("#print-title").val()) : "");
             var html4print = `
                 <head><title>ЗАКАЗАНИ ТЕРМИНИ</title></head>
@@ -1144,70 +1213,79 @@
                     <div class="inner-l">&nbsp;&nbsp;&nbsp;телефон</div>
                     <div class="inner-l">потврда доласка</div>
                   </div>
+                  <div class="print-items">
               `;
             for (var i = 0; i < RGZ.zakazaniTermini.length; i++)
-              if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val())
+              if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val() || RGZ.zakazaniTermini[i].kancelarija == $("#schedule-co").val())
                 html4print += `
-                  <div class="outer">
-                    <div class="inner-s">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].termin + `</div>
-                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].ime + `</div>
-                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].dokument + `</div>
-                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].email + `</div>
-                    <div class="inner-l">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].tel + `</div>
-                    <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `✔` : ``) + `</div>
-                    <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `✘` : ``) + `</div>
-                  </div>
+                    <div class="outer">
+                      <div class="inner-s">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].termin + `</div>
+                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].ime + `</div>
+                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].dokument + `</div>
+                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].email + `</div>
+                      <div class="inner-l">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].tel + `</div>
+                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `✔` : `&nbsp;`) + `</div>
+                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `✘` : `&nbsp;`) + `</div>
+                    </div>
                 `;
             html4print += `
+                  </div>
+                  <style>
+                    body {
+                      margin: 0;
+                      -webkit-print-color-adjust: exact;
+                    }
+                    .header, .outer, .print-title {
+                      position: relative;
+                      width: 100%;
+                      font-size: 65%;
+                      overflow: auto;
+                    }
+                    .print-title {
+                      text-align: center;
+                      font-size: 75%;
+                      font-weight: 600;
+                      padding: 20px;
+                    }
+                    .header {
+                      color: white;
+                      font-weight: bold;
+                      background-color: #444;
+                      border-right: 1px solid #444;
+                      border-left: 1px solid #444;
+                    }
+                    .print-items {
+                      border: 1px solid #ddd;
+                      border-top: 0;
+                    }
+                    .outer:nth-child(odd) {
+                      background-color: #eee !important;
+                    }
+                    .header>div, .outer>div {
+                      float: left;
+                      white-space: nowrap;
+                      overflow: hidden !important;
+                      text-overflow: ellipsis;
+                      line-height: 2;
+                    }
+                    .inner-xs, .header>div:last-child {
+                      text-align: center !important;
+                    }
+                    .inner-xs {
+                      width: calc(7.5% - 1px);
+                      border-left: 1px solid #ddd;
+                    }
+                    .inner-s {
+                      width: 10%;
+                    }
+                    .inner-l {
+                      width: 15%;
+                    }
+                    .inner-xl {
+                      width: 20%;
+                    }
+                  </style>
                 </body>
-                <style>
-                  body {
-                    margin: 0;
-                    -webkit-print-color-adjust: exact;
-                  }
-                  .header, .outer, .print-title {
-                    position: relative;
-                    width: 100%;
-                    font-size: 65%;
-                    overflow: auto;
-                  }
-                  .print-title {
-                    text-align: center;
-                    font-size: 75%;
-                    font-weight: 600;
-                    padding: 20px;
-                  }
-                  .header {
-                    color: white;
-                    font-weight: bold;
-                    background-color: #444;
-                  }
-                  .outer:nth-child(odd) {
-                    background-color: #eee !important;
-                  }
-                  .header>div, .outer>div {
-                    float: left;
-                    white-space: nowrap;
-                    overflow: hidden !important;
-                    text-overflow: ellipsis;
-                    line-height: 2;
-                  }
-                  .inner-xs, .header>div:last-child {
-                    text-align: center !important;
-                  }
-                  .inner-xs {
-                    width: 7.5%;
-                  }
-                  .inner-s {
-                    width: 10%;
-                  }
-                  .inner-l {
-                    width: 15%;
-                  }
-                  .inner-xl {
-                    width: 20%;
-                  }
-                </style>
               `;
 
             w = window.open("");
@@ -1221,7 +1299,7 @@
   };
 
   RGZ.currentClientIndicator = function() {
-    //if later date: return
+    //TODO: return if later date
     var date = new Date();
     var hours = date.getHours();
     var minutes = date.getMinutes();
