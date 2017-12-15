@@ -1,6 +1,7 @@
 (function(global) {
   RGZ = {};
 
+  RGZ.ssTokenLabel = 'RGZtoken';
   RGZ.bearer = '';
   RGZ.loginInfo = '';
 
@@ -48,38 +49,43 @@
   };
 
   document.addEventListener("DOMContentLoaded", function(event) {
-    if ($("#book-content").length == 0) return;
-    appear($("#book-content>.content-box-loader"), 200);
-    var sync = 0;
-    $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "salteri/sluzbe",
-      function(responseArray, status) {
-        RGZ.salteriSluzbe = responseArray;
-        sync = sync + 1;
-        if (sync == 3) RGZ.loadBookContent();
-      },
-      true /*, RGZ.bearer*/
-    );
-    $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "salteri/zahtevi",
-      function(responseArray, status) {
-        RGZ.zahtevi = responseArray;
-        sync = sync + 1;
-        if (sync == 3) RGZ.loadBookContent();
-      },
-      true /*, RGZ.bearer*/
-    );
-    $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "kancelarije/sluzbe",
-      function(responseArray, status) {
-        RGZ.kancelarijeSluzbe = responseArray;
-        sync = sync + 1;
-        if (sync == 3) RGZ.loadBookContent();
-      },
-      true /*, RGZ.bearer*/
-    );
-    RGZ.footMouseOver();
-    setTimeout(RGZ.footMouseOut, 2000);
+    if ($("#book-content").length > 0) {
+      appear($("#book-content>.content-box-loader"), 200);
+      var sync = 0;
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "salteri/sluzbe",
+        function(responseArray, status) {
+          RGZ.salteriSluzbe = responseArray;
+          sync = sync + 1;
+          if (sync == 3) RGZ.loadBookContent();
+        },
+        true /*, RGZ.bearer*/
+      );
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "salteri/zahtevi",
+        function(responseArray, status) {
+          RGZ.zahtevi = responseArray;
+          sync = sync + 1;
+          if (sync == 3) RGZ.loadBookContent();
+        },
+        true /*, RGZ.bearer*/
+      );
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "kancelarije/sluzbe",
+        function(responseArray, status) {
+          RGZ.kancelarijeSluzbe = responseArray;
+          sync = sync + 1;
+          if (sync == 3) RGZ.loadBookContent();
+        },
+        true /*, RGZ.bearer*/
+      );
+      RGZ.footMouseOver();
+      setTimeout(RGZ.footMouseOut, 2000);
+    } else if ($(".schedule").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != '') {
+      RGZ.scheduleAux();
+    } else if ($(".admin").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != '') {
+      RGZ.adminAux();
+    }
   });
 
   RGZ.loadBookContent = function() {
@@ -706,8 +712,8 @@
     });
   };
 
-  RGZ.scheduleForgotPassword = function() {
-    if ($("#schedule-username").val() == "") {
+  RGZ.forgotPassword = function() {
+    if ($("#username").val() == "") {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате унети корисничко име за налог којем се ресетује шифра.',
@@ -726,7 +732,7 @@
     }
     $.confirm({
       title: 'ПОТВРДА',
-      content: 'Да ли сте сигурни да желите да ресетујете шифру за налог са корисничким именом "' + $("#schedule-username").val() + '"?<br><br><span>Нова шифра ће бити послата на одговарајућу e-mail адресу.</span>',
+      content: 'Да ли сте сигурни да желите да ресетујете шифру за налог са корисничким именом "' + $("#username").val() + '"?<br><br><span>Нова шифра ће бити послата на одговарајућу e-mail адресу.</span>',
       theme: 'supervan',
       backgroundDismiss: 'true',
       autoClose: 'no|10000',
@@ -755,12 +761,12 @@
               }
             });
             $ajaxUtils.sendPutRequest(
-              RGZ.apiRoot + "korisnici/resetujSifru" + "?korisnik=" + $("#schedule-username").val(),
+              RGZ.apiRoot + "korisnici/resetujSifru" + "?korisnik=" + $("#username").val(),
               function(responseArray, status) {
                 $(".jconfirm").remove();
                 $.confirm({
                   title: 'ЛОЗИНКА РЕСЕТОВАНА',
-                  content: 'Лозинка за налог са корисничким именом "' + $("#schedule-username").val() + '" успешно је промењена.<br><br><span>Користите нову лозинку приликом наредне пријаве на систем путем овог налога.</span>',
+                  content: 'Лозинка за налог са корисничким именом "' + $("#username").val() + '" успешно је промењена.<br><br><span>Користите нову лозинку приликом наредне пријаве на систем путем овог налога.</span>',
                   theme: 'supervan',
                   backgroundDismiss: 'true',
                   buttons: {
@@ -796,7 +802,7 @@
       <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>
       <div id="schedule-refresh" class="schedule-navi-button" onclick="$RGZ.scheduleRefresh(false);"><i class="fa fa-refresh"></i></div>
       <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
-      <div id="schedule-logout" class="schedule-navi-button" onclick="$RGZ.scheduleLogout();"><i class="fa fa-sign-out"></i></div>
+      <div id="logout" class="schedule-navi-button" onclick="$RGZ.logout();"><i class="fa fa-sign-out"></i></div>
       <div id="schedule-searchbar" class="row">
         <div class="col-lg-4 hidden-md-down"></div>
         <div class="col-12 col-lg-4">
@@ -823,8 +829,54 @@
     }, 500);
   };
 
-  RGZ.scheduleLogin = function() {
-    if ($("#schedule-username").val() == "" || $("#schedule-password").val() == "") {
+  RGZ.scheduleAux = function() {
+    var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
+    RGZ.bearer = tokens.access_token;
+    RGZ.loginInfo = tokens;
+    RGZ.zakazaniTermini = [];
+    var sync = 0;
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "korisnici/zakazaniTermini",
+      function(responseArray, status) {
+        for (var m = 0; m < responseArray.length; m++) {
+          responseArray[m]["isOffice"] = false;
+          RGZ.zakazaniTermini.push(responseArray[m]);
+        }
+        sync = sync + 1;
+        if (sync == 2)
+          dataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
+    var date = new Date();
+    var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+    var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+    var year = date.getFullYear();
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(year + "-" + month + "-" + day),
+      function(responseArray, status) {
+        for (var n = 0; n < responseArray.length; n++) {
+          responseArray[n]["isOffice"] = true;
+          RGZ.zakazaniTermini.push(responseArray[n]);
+        }
+        sync = sync + 1;
+        if (sync == 2)
+          dataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
+  };
+
+  RGZ.adminAux = function() {
+    console.log("admin");
+    var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
+    RGZ.bearer = tokens.access_token;
+    RGZ.loginInfo = tokens;
+    //
+  };
+
+  RGZ.login = function() {
+    if ($("#username").val() == "" || $("#password").val() == "") {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате унети и корисничко име и шифру.',
@@ -843,43 +895,19 @@
     }
     disappear($(".content-box-content"), 500);
     appear($(".content-box-loader"), 200);
-    $("#schedule-username, #schedule-password").attr("disabled", true);
-    var data = "username=" + encodeURIComponent($("#schedule-username").val()) + "&password=" + encodeURIComponent($("#schedule-password").val()) + "&grant_type=password&client_id=837rgz";
+    $("#username, #password").attr("disabled", true);
+    var data = "username=" + encodeURIComponent($("#username").val()) + "&password=" + encodeURIComponent($("#password").val()) + "&grant_type=password&client_id=837rgz";
     $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
-      RGZ.bearer = response.access_token;
-      RGZ.loginInfo = response;
-      RGZ.zakazaniTermini = [];
-      var sync = 0;
-      $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "korisnici/zakazaniTermini",
-        function(responseArray, status) {
-          for (var m = 0; m < responseArray.length; m++) {
-            responseArray[m]["isOffice"] = false;
-            RGZ.zakazaniTermini.push(responseArray[m]);
-          }
-          sync = sync + 1;
-          if (sync == 2)
-            dataFetchedAux();
-        },
-        true, RGZ.bearer
-      );
-      var date = new Date();
-      var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
-      var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
-      var year = date.getFullYear();
-      $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(year + "-" + month + "-" + day),
-        function(responseArray, status) {
-          for (var n = 0; n < responseArray.length; n++) {
-            responseArray[n]["isOffice"] = true;
-            RGZ.zakazaniTermini.push(responseArray[n]);
-          }
-          sync = sync + 1;
-          if (sync == 2)
-            dataFetchedAux();
-        },
-        true, RGZ.bearer
-      );
+      window.sessionStorage.setItem(RGZ.ssTokenLabel, JSON.stringify(response));
+      if (response.rola < 3 && ~window.location.pathname.indexOf('termini')) {
+        location.pathname = '/admin/index.html';
+      } else if (response.rola < 3 && ~window.location.pathname.indexOf('admin')) {
+        RGZ.adminAux();
+      } else if (response.rola >= 3 && ~window.location.pathname.indexOf('termini')) {
+        RGZ.scheduleAux();
+      } else if (response.rola >= 3 && ~window.location.pathname.indexOf('admin')) {
+        location.pathname = '/termini/index.html';
+      }
     }).fail(function(response) {
       if (response.status == 400) {
         var errorText = response.responseJSON.error;
@@ -1318,7 +1346,7 @@
     });
   };
 
-  RGZ.scheduleLogout = function() {
+  RGZ.logout = function() {
     $.confirm({
       title: 'ПАЖЊА!',
       content: 'Да ли сте сигурни да желите да се одјавите?',
@@ -1337,6 +1365,7 @@
           btnClass: 'btn-white-rgz',
           keys: ['enter'],
           action: function() {
+            sessionStorage.removeItem(RGZ.ssTokenLabel);
             location.reload();
           }
         }
