@@ -776,12 +776,12 @@ input {
   padding: 0 3vh;
 }
 
-#schedule-searchbar>div>select, #schedule-searchbar>div>.form-search-button {
+#schedule-searchbar>div select, #schedule-searchbar>div>.form-search-button {
   width: 100%;
   margin: 0;
 }
 
-#schedule-searchbar>div>select {
+#schedule-searchbar>div select {
   height: 7vh;
   text-align: center;
   text-align-last: center;
@@ -789,6 +789,16 @@ input {
   line-height: 7vh;
   background-color: rgba(255, 255, 255, 0.5);
   color: #333;
+}
+
+#admin-doc, #admin-hol {
+  margin-bottom: 4vh !important;
+  font-family: 'Open Sans', sans-serif !important;
+  border-bottom: 0.6vh solid #1A3360;
+}
+
+.datepicker {
+  margin-top: 9vh;
 }
 
 #timetable .row>div {
@@ -935,6 +945,26 @@ input {
 #forgot-password:hover {
   cursor: pointer;
   color: #1A3360;
+}
+
+#admin-dep {
+  margin-top: 4vh !important;
+  opacity: 0;
+}
+
+#admin-action-form {
+  margin-top: 10vh;
+}
+
+#admin-action-form .form-label {
+  color: #1A3360;
+  font-size: 2vh;
+  font-weight: 700;
+  line-height: 3vh;
+}
+
+#admin-action-form .form-search-button {
+  margin-top: 6vh !important;
 }
 
 @media (min-width: 991.5px) {

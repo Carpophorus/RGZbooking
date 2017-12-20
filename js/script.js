@@ -13,6 +13,11 @@
   RGZ.kancelarijeTermini = '';
   RGZ.zakazaniTermini = [];
 
+  RGZ.adminRole = '';
+  RGZ.adminSluzbe = '';
+  RGZ.adminPraznici = '';
+  RGZ.adminDokumenti = '';
+
   var bookingForbidden = false;
   var nav = 0;
   var confirmArrivalClicked = false;
@@ -829,6 +834,324 @@
     }, 500);
   };
 
+  RGZ.adminSearch = function() {
+    //fill dropdowns; disappear before?
+    appear($("#admin-action-form"), 500);
+  };
+
+  inputMissing = function() {
+    $.confirm({
+      title: 'ГРЕШКА!',
+      content: 'Морате унети/одабрати вредности свих поља.',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      buttons: {
+        ok: {
+          text: 'ОК',
+          btnClass: 'btn-white-prm',
+          keys: ['enter'],
+          action: function() {}
+        }
+      }
+    });
+  };
+
+  pleaseWait = function() {
+    $.confirm({
+      title: 'МОЛИМО САЧЕКАЈТЕ',
+      content: 'Обрада Вашег захтева је у току...',
+      theme: 'supervan',
+      buttons: {
+        ok: {
+          text: 'ОК',
+          btnClass: 'gone',
+          action: function() {}
+        }
+      }
+    });
+  };
+
+  confirmSuccess = function() {
+    $.confirm({
+      title: 'ПОТВРДА',
+      content: 'Измене у систему успешно реализоване.',
+      theme: 'supervan',
+      buttons: {
+        ok: {
+          text: 'ОК',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {}
+        }
+      }
+    });
+  };
+
+  RGZ.newDep = function() {
+    if ($("#dep-name").val() == "" || $("#dep-address").val() == "") {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot + "admin/novasluzba",
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/sluzbe",
+          function(responseArray, status) {
+            RGZ.adminSluzbe = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.newHol = function() {
+    if ($("#hol-day").val() == "") {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"id": "33", "datum": "' + $("#hol-day").val().substring(6, 10) + "-" + $("#hol-day").val().substring(3, 5) + "-" + $("#hol-day").val().substring(0, 2) + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot + "admin/novipraznik",
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/praznici",
+          function(responseArray, status) {
+            RGZ.adminPraznici = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.delHol = function() {
+    if ($("#admin-hol option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    pleaseWait();
+    $ajaxUtils.sendDeleteRequest(
+      RGZ.apiRoot + "admin/obrisiPraznik" + "/" + $("#admin-hol option:selected").val(),
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/praznici",
+          function(responseArray, status) {
+            RGZ.adminPraznici = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+            var selectHtml = `
+              <option value="0" disabled selected hidden> </option>
+            `;
+            for (var i = 0; i < RGZ.adminPraznici.length; i++)
+              selectHtml += `<option value="` + RGZ.adminPraznici[i].id + `">` + RGZ.adminPraznici[i].datum.substring(8, 10) + `.` + RGZ.adminPraznici[i].datum.substring(5, 7) + `.` + RGZ.adminPraznici[i].datum.substring(0, 4) + `.</option>`;
+            insertHtml("#admin-hol", selectHtml);
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, RGZ.bearer
+    );
+  };
+
+  RGZ.newDoc = function() {
+    if ($("#hol-day").val() == "") {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"id": "33", "opis": "' + $("#doc-name").val() + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot + "admin/noviDokument",
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/dokumenti",
+          function(responseArray, status) {
+            RGZ.adminDokumenti = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.editDoc = function() {
+    if ($("#doc-name").val() == "" || $("#admin-doc option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"id": "' + $("#admin-doc option:selected").val() + '", "opis": "' + $("#doc-name").val() + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPutRequestWithData(
+      RGZ.apiRoot + "admin/izmeniDokument" + "/" + $("#admin-doc option:selected").val(),
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/dokumenti",
+          function(responseArray, status) {
+            RGZ.adminDokumenti = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.adminDocChanged = function() {
+    $("#doc-name").val($("#admin-doc option:selected").html());
+  };
+
+  RGZ.adminAction = function() {
+    disappear($("#admin-dep, #admin-action-form"), 500);
+    $(".content-box-content").animate({
+      scrollTop: 0
+    }, 500);
+    setTimeout(function() {
+      if ($("#admin-action").val() == 2 || $("#admin-action").val() == 3 || $("#admin-action").val() == 4 || $("#admin-action").val() == 5 || $("#admin-action").val() == 6 || $("#admin-action").val() == 11 || $("#admin-action").val() == 12) {
+        var adminDepHtml = '<option disabled selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>';
+        for (var i = 0; i < RGZ.adminSluzbe.length; i++)
+          adminDepHtml += `<option value="` + RGZ.adminSluzbe[i].id + `">` + RGZ.adminSluzbe[i].sluzba + `</option>`;
+        insertHtml("#admin-dep", adminDepHtml);
+        appear($("#admin-dep"), 500);
+      } else {
+        var formHtml = '';
+        if ($("#admin-action").val() == 1) {
+          //nova služba
+          formHtml = `
+            <div class="form-label">Назив службе:</div>
+            <input id="dep-name" type="text">
+            <div class="form-label">Адреса службе:</div>
+            <input id="dep-address" type="text">
+            <div class="form-search-button" onclick="$RGZ.newDep();">ОК</div>
+          `;
+        } else if ($("#admin-action").val() == 7) {
+          //novi praznik
+          formHtml = `
+            <div class="form-label">Нерадни дан:</div>
+            <input id="hol-day" type="text" readonly>
+            <div class="form-search-button" onclick="$RGZ.newHol();">ОК</div>
+          `;
+        } else if ($("#admin-action").val() == 8) {
+          //brisanje praznika
+          formHtml = `
+            <div class="form-label">Радни дан:</div>
+            <select id="admin-hol">
+              <option value="0" disabled selected hidden> </option>
+          `;
+          for (var i = 0; i < RGZ.adminPraznici.length; i++)
+            formHtml += `<option value="` + RGZ.adminPraznici[i].id + `">` + RGZ.adminPraznici[i].datum.substring(8, 10) + `.` + RGZ.adminPraznici[i].datum.substring(5, 7) + `.` + RGZ.adminPraznici[i].datum.substring(0, 4) + `.</option>`;
+          formHtml += `
+            </select>
+            <div class="form-search-button" onclick="$RGZ.delHol();">ОК</div>
+          `;
+        } else if ($("#admin-action").val() == 9) {
+          //novi dokument
+          formHtml = `
+            <div class="form-label">Назив документа:</div>
+            <input id="doc-name" type="text">
+            <div class="form-search-button" onclick="$RGZ.newDoc();">ОК</div>
+          `;
+        } else if ($("#admin-action").val() == 10) {
+          //izmena dokumenta
+          formHtml = `
+            <div class="form-label">Стари назив документа:</div>
+            <select id="admin-doc" onchange="$RGZ.adminDocChanged();">
+              <option value="0" disabled selected hidden> </option>
+          `;
+          for (var i = 0; i < RGZ.adminDokumenti.length; i++)
+            formHtml += `<option value="` + RGZ.adminDokumenti[i].id + `">` + RGZ.adminDokumenti[i].opis + `</option>`;
+          formHtml += `
+            </select>
+            <div class="form-label">Нови назив документа:</div>
+            <input id="doc-name" type="text">
+            <div class="form-search-button" onclick="$RGZ.editDoc();">ОК</div>
+          `;
+        }
+        insertHtml("#admin-action-form", formHtml);
+        setTimeout(function() {
+          if ($("#admin-action").val() == 7)
+            $("#hol-day").datepicker({
+              format: "dd.mm.yyyy.",
+              autoclose: true,
+              todayBtn: true,
+              language: "sr",
+              startDate: "+1d",
+              daysOfWeekDisabled: [0, 6]
+            });
+        }, 10);
+        appear($("#admin-action-form"), 500);
+      }
+    }, 550);
+  };
+
+  adminDataFetchedAux = function() {
+    console.log(RGZ.adminRole);
+    console.log(RGZ.adminSluzbe);
+    console.log(RGZ.adminPraznici);
+    console.log(RGZ.adminDokumenti);
+    var scheduleContentHtml = `
+      <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
+      <div id="logout" class="schedule-navi-button" onclick="$RGZ.logout();"><i class="fa fa-sign-out"></i></div>
+      <div id="schedule-searchbar" class="row">
+        <div class="col-lg-3 hidden-md-down"></div>
+        <div class="col-12 col-lg-6">
+          <select id="admin-action" onchange="$RGZ.adminAction();">
+            <option value="0" disabled selected hidden>ИЗАБЕРИТЕ ВРСТУ ИЗМЕНЕ...</option>
+    `;
+    if (RGZ.loginInfo.rola == 1)
+      scheduleContentHtml += `
+            <option value="1">Нова служба</option>
+            <option value="2">Измени службу.</option>
+      `;
+    scheduleContentHtml += `
+            <option value="3">Нови шалтер.</option>
+            <option value="4">Измена шалтера.</option>
+            <option value="5">Нови корисник.</option>
+            <option value="6">Измена корисника.</option>
+            <option value="7">Нови празник</option>
+            <option value="8">Брисање празника</option>
+            <option value="9">Нови документ</option>
+            <option value="10">Измена документа</option>
+            <option value="11">Нова канцеларија.</option>
+            <option value="12">Измена канцеларије.</option>
+          </select>
+          <select id="admin-dep" onchange="$RGZ.adminSearch();" class="gone">
+            <option disabled selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
+    `;
+    scheduleContentHtml += `
+          </select>
+          <div id="admin-action-form" class="gone"></div>
+        </div>
+        <div class="col-lg-3 hidden-md-down"></div>
+      </div>
+    `;
+    insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
+    setTimeout(function() {
+      appear($(".content-box-content"), 500);
+      disappear($(".content-box-loader"), 200);
+      disappear($("#navi-landing"), 500);
+    }, 500);
+  };
+
   RGZ.scheduleAux = function() {
     var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
     RGZ.bearer = tokens.access_token;
@@ -868,11 +1191,50 @@
   };
 
   RGZ.adminAux = function() {
-    console.log("admin");
     var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
-    //
+    var sync = 0;
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "admin/role",
+      function(responseArray, status) {
+        RGZ.adminRole = responseArray;
+        sync = sync + 1;
+        if (sync == 4)
+          adminDataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "admin/sluzbe",
+      function(responseArray, status) {
+        RGZ.adminSluzbe = responseArray;
+        sync = sync + 1;
+        if (sync == 4)
+          adminDataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "admin/praznici",
+      function(responseArray, status) {
+        RGZ.adminPraznici = responseArray;
+        sync = sync + 1;
+        if (sync == 4)
+          adminDataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "admin/dokumenti",
+      function(responseArray, status) {
+        RGZ.adminDokumenti = responseArray;
+        sync = sync + 1;
+        if (sync == 4)
+          adminDataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
   };
 
   RGZ.login = function() {

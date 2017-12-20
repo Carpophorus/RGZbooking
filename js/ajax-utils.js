@@ -66,6 +66,16 @@
     request.send(null);
   };
 
+  ajaxUtils.sendDeleteRequest = function(requestUrl, responseHandler, isJsonResponse, bearer) {
+    var request = getRequestObject();
+    request.onreadystatechange = function() {
+      handleResponse(request, responseHandler, isJsonResponse);
+    };
+    request.open("DELETE", requestUrl, true);
+    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    request.send(null);
+  };
+
   ajaxUtils.sendPostRequestWithData = function(requestUrl, responseHandler, isJsonResponse, data, bearer) {
     var request = getRequestObject();
     request.onreadystatechange = function() {
@@ -90,13 +100,13 @@
 
   function handleResponse(request, responseHandler, isJsonResponse) {
     if (request.readyState == 4) {
-      if (request.status == 200 || request.status == 204) {
+      if (request.status == 200 || request.status == 201 || request.status == 204) {
         if (isJsonResponse == undefined)
           isJsonResponse = true;
         if (isJsonResponse)
-          responseHandler(JSON.parse(request.responseText), request.status);
+          responseHandler(JSON.parse((request.status == 204) ? null : request.responseText), request.status);
         else
-          responseHandler(request.responseText, request.status);
+          responseHandler((request.status == 204) ? null : request.responseText, request.status);
       } else if (request.status == 400) {
         var errorText = JSON.parse(request.responseText).Message;
         setTimeout(function() {
