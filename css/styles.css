@@ -791,10 +791,19 @@ input {
   color: #333;
 }
 
-#admin-doc, #admin-hol {
+#admin-doc, #admin-hol, #admin-cnt, #usr-role, #usr-status {
   margin-bottom: 4vh !important;
   font-family: 'Open Sans', sans-serif !important;
   border-bottom: 0.6vh solid #1A3360;
+}
+
+#admin-action-form .form-search-button {
+  margin-bottom: 7vh;
+}
+
+.admin #schedule-searchbar {
+  max-height: 100%;
+  overflow-y: auto;
 }
 
 .datepicker {

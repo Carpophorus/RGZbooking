@@ -116,7 +116,7 @@
         $("input, select").prop("disabled", false);
         $.confirm({
           title: 'ГРЕШКА!',
-          content: errorText + '.',
+          content: errorText,
           theme: 'supervan',
           backgroundDismiss: 'true',
           buttons: {

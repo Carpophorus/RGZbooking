@@ -834,8 +834,209 @@
     }, 500);
   };
 
+  RGZ.editDep = function() {
+    if ($("#dep-name").val() == "" || $("#dep-address").val() == "") {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"id": "' + $("#admin-dep option:selected").val() + '", "sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPutRequestWithData(
+      RGZ.apiRoot + "admin/izmeniSluzbu" + "/" + $("#admin-dep option:selected").val(),
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/sluzbe",
+          function(responseArray, status) {
+            RGZ.adminSluzbe = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+            $("#admin-dep option:selected").html($("#dep-name").val());
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.newCnt = function() {
+    if ($("#cnt-name").val() == "") {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"id": "33", "opis": "' + $("#cnt-name").val() + '", "sluzbaId": "' + $("#admin-dep option:selected").val() + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot + "admin/novisalter",
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/sluzbe",
+          function(responseArray, status) {
+            RGZ.adminSluzbe = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.adminCntChanged = function() {
+    $("#cnt-name").val($("#admin-cnt option:selected").html());
+  };
+
+  RGZ.editCnt = function() {
+    if ($("#cnt-name").val() == "" || $("#admin-cnt option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    var data = JSON.parse('{"id": "' + $("#admin-cnt option:selected").val() + '", "opis": "' + $("#cnt-name").val() + '", "sluzbaId": "' + $("#admin-dep option:selected").val() + '"}');
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPutRequestWithData(
+      RGZ.apiRoot + "admin/izmeniSalter" + "/" + $("#admin-cnt option:selected").val(),
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/sluzbe",
+          function(responseArray, status) {
+            RGZ.adminSluzbe = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+            $("#admin-cnt option:selected").html($("#cnt-name").val());
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  };
+  /*
+
+  (($("#usr-status option:selected").val() == 1) ? `"true"` : `"false"`)
+
+  <div class="form-label">Статус:</div>
+  <select id="usr-status">
+    <option value="0" disabled selected hidden> </option>
+    <option value="1">АКТИВАН</option>
+    <option value="2">НЕАКТИВАН</option>
+  </select>
+
+  */
+
+  RGZ.newUsr = function() {
+    if ($("#usr-name").val() == "" || $("#usr-mail").val() == "" || $("#usr-status option:selected").val() == 0 || $("#usr-role option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    //TODO validate e-mail
+    var data = JSON.parse(`
+      {
+        "id": "33",
+        "korisnicko_ime": "` + $("#usr-name").val() + `",
+        "aktivan": "true",
+        "potvrda": "0",
+        "greske": "0",
+        "vreme_blokade": "1992-02-01T07:10:33.0000000+01:00",
+        "email": "` + $("#usr-mail").val() + `",
+        "rola": "` + $("#usr-role option:selected").val() + `",
+        "sluzbaId": "` + $("#admin-dep option:selected").val() + `"
+      }
+    `);
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot + "admin/novikorisnik",
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/sluzbe",
+          function(responseArray, status) {
+            RGZ.adminSluzbe = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
+  }
+
+  RGZ.editUsr = function() {
+    //
+  };
+
   RGZ.adminSearch = function() {
-    //fill dropdowns; disappear before?
+    var dep = '';
+    for (var i = 0; i < RGZ.adminSluzbe.length; i++)
+      if (RGZ.adminSluzbe[i].id == $("#admin-dep option:selected").val()) {
+        dep = RGZ.adminSluzbe[i];
+        break;
+      }
+    var formHtml = '';
+    if ($("#admin-action").val() == 2) {
+      //izmena službe
+      formHtml = `
+        <div class="form-label">Назив службе:</div>
+        <input id="dep-name" type="text">
+        <div class="form-label">Адреса службе:</div>
+        <input id="dep-address" type="text">
+        <div class="form-search-button" onclick="$RGZ.editDep();">ОК</div>
+      `;
+    } else if ($("#admin-action").val() == 3) {
+      //novi šalter
+      formHtml = `
+        <div class="form-label">Назив шалтера:</div>
+        <input id="cnt-name" type="text">
+        <div class="form-search-button" onclick="$RGZ.newCnt();">ОК</div>
+      `;
+    } else if ($("#admin-action").val() == 4) {
+      //izmena šaltera
+      formHtml = `
+        <div class="form-label">Стари назив шалтера:</div>
+        <select id="admin-cnt" onchange="$RGZ.adminCntChanged();">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = 0; i < dep.rgz_salteri.length; i++)
+        formHtml += `<option value="` + dep.rgz_salteri[i].id + `">` + dep.rgz_salteri[i].opis + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-label">Нови назив шалтера:</div>
+        <input id="cnt-name" type="text">
+        <div class="form-search-button" onclick="$RGZ.editCnt();">ОК</div>
+      `;
+    } else if ($("#admin-action").val() == 5) {
+      //novi korisnik
+      formHtml = `
+        <div class="form-label">Корисничко име:</div>
+        <input id="usr-name" type="text">
+        <div class="form-label">e-mail:</div>
+        <input id="usr-mail" type="text">
+        <div class="form-label">Улога:</div>
+        <select id="usr-role">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 1 : RGZ.adminRole.length); i++)
+        formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-search-button" onclick="$RGZ.newUsr();">ОК</div>
+      `;
+    } else if ($("#admin-action").val() == 6) {
+      //izmena korisnika
+    } else if ($("#admin-action").val() == 11) {
+      //nova kancelarija
+    } else if ($("#admin-action").val() == 12) {
+      //izmena kancelarije
+    }
+    insertHtml("#admin-action-form", formHtml);
+    if ($("#admin-action").val() == 2) {
+      $("#dep-name").val(dep.sluzba);
+      $("#dep-address").val(dep.adresa);
+    }
     appear($("#admin-action-form"), 500);
   };
 
@@ -1008,6 +1209,7 @@
             RGZ.adminDokumenti = responseArray;
             $(".jconfirm").remove();
             confirmSuccess();
+            $("#admin-doc option:selected").html($("#doc-name").val());
           },
           true, RGZ.bearer
         );
@@ -1028,8 +1230,10 @@
     setTimeout(function() {
       if ($("#admin-action").val() == 2 || $("#admin-action").val() == 3 || $("#admin-action").val() == 4 || $("#admin-action").val() == 5 || $("#admin-action").val() == 6 || $("#admin-action").val() == 11 || $("#admin-action").val() == 12) {
         var adminDepHtml = '<option disabled selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>';
-        for (var i = 0; i < RGZ.adminSluzbe.length; i++)
+        for (var i = 0; i < RGZ.adminSluzbe.length; i++) {
+          if (RGZ.loginInfo.rola != 1 && RGZ.adminSluzbe[i].id == 11) continue;
           adminDepHtml += `<option value="` + RGZ.adminSluzbe[i].id + `">` + RGZ.adminSluzbe[i].sluzba + `</option>`;
+        }
         insertHtml("#admin-dep", adminDepHtml);
         appear($("#admin-dep"), 500);
       } else {
@@ -1120,19 +1324,19 @@
     if (RGZ.loginInfo.rola == 1)
       scheduleContentHtml += `
             <option value="1">Нова служба</option>
-            <option value="2">Измени службу.</option>
+            <option value="2">Измени службу</option>
       `;
     scheduleContentHtml += `
-            <option value="3">Нови шалтер.</option>
-            <option value="4">Измена шалтера.</option>
-            <option value="5">Нови корисник.</option>
-            <option value="6">Измена корисника.</option>
+            <option value="3">Нови шалтер</option>
+            <option value="4">Измена шалтера</option>
+            <option value="5">Нови корисник</option>
+            <option value="6">Измена корисника</option>
             <option value="7">Нови празник</option>
             <option value="8">Брисање празника</option>
             <option value="9">Нови документ</option>
             <option value="10">Измена документа</option>
-            <option value="11">Нова канцеларија.</option>
-            <option value="12">Измена канцеларије.</option>
+            <option value="11">Нова канцеларија</option>
+            <option value="12">Измена канцеларије</option>
           </select>
           <select id="admin-dep" onchange="$RGZ.adminSearch();" class="gone">
             <option disabled selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
@@ -1192,6 +1396,7 @@
 
   RGZ.adminAux = function() {
     var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
+    if (tokens == null) return;
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
     var sync = 0;
