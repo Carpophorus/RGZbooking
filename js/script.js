@@ -23,6 +23,7 @@
   var confirmArrivalClicked = false;
   var fetchCounterTimesClicked = false;
   var fetchOfficeTimesClicked = false;
+  var dep = '';
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -914,16 +915,10 @@
       true, data, RGZ.bearer
     );
   };
+
   /*
 
   (($("#usr-status option:selected").val() == 1) ? `"true"` : `"false"`)
-
-  <div class="form-label">Статус:</div>
-  <select id="usr-status">
-    <option value="0" disabled selected hidden> </option>
-    <option value="1">АКТИВАН</option>
-    <option value="2">НЕАКТИВАН</option>
-  </select>
 
   */
 
@@ -965,12 +960,31 @@
     );
   }
 
+  RGZ.adminUsrChanged = function() {
+    var usr = '';
+    for (var i = 0; i < dep.rgz_Korisnici.length; i++) {
+      if ($("#admin-usr option:selected").val() == dep.rgz_Korisnici[i].id) {
+        usr = dep.rgz_Korisnici[i];
+        break;
+      }
+    }
+    console.log(usr);
+    $("#usr-name").val(usr.korisnicko_ime);
+    $("#usr-mail").val(usr.email);
+    $("#usr-status option").prop("selected", false);
+    $("#usr-status option:nth-child(" + ((usr.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
+    $("#usr-role option").prop("selected", false);
+    $("#usr-role option").each(function() {
+      if ($(this).val() == usr.rola)
+        $(this).prop("selected", true);
+    });
+  };
+
   RGZ.editUsr = function() {
-    //
+    //api call
   };
 
   RGZ.adminSearch = function() {
-    var dep = '';
     for (var i = 0; i < RGZ.adminSluzbe.length; i++)
       if (RGZ.adminSluzbe[i].id == $("#admin-dep option:selected").val()) {
         dep = RGZ.adminSluzbe[i];
@@ -1027,6 +1041,35 @@
       `;
     } else if ($("#admin-action").val() == 6) {
       //izmena korisnika
+      formHtml = `
+        <div class="form-label">Старо корисничко име:</div>
+        <select id="admin-usr" onchange="$RGZ.adminUsrChanged();">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = 0; i < dep.rgz_Korisnici.length; i++)
+        formHtml += `<option value="` + dep.rgz_Korisnici[i].id + `">` + dep.rgz_Korisnici[i].korisnicko_ime + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-label">Ново корисничко име:</div>
+        <input id="usr-name" type="text">
+        <div class="form-label">e-mail:</div>
+        <input id="usr-mail" type="text">
+        <div class="form-label">Статус:</div>
+        <select id="usr-status">
+          <option value="0" disabled selected hidden> </option>
+          <option value="1">АКТИВАН</option>
+          <option value="2">НЕАКТИВАН</option>
+        </select>
+        <div class="form-label">Улога:</div>
+        <select id="usr-role">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 1 : RGZ.adminRole.length); i++)
+        formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-search-button" onclick="$RGZ.editUsr();">ОК</div>
+      `;
     } else if ($("#admin-action").val() == 11) {
       //nova kancelarija
     } else if ($("#admin-action").val() == 12) {
