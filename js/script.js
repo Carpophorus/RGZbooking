@@ -92,6 +92,10 @@
     } else if ($(".admin").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != '') {
       RGZ.adminAux();
     }
+    // } else if (sessionStorage.getItem(RGZ.ssTokenLabel) == '') {
+    //   appear($(".content-box-content"), 500);
+    //   disappear($(".content-box-loader"), 200);
+    // }
   });
 
   RGZ.loadBookContent = function() {
@@ -1100,8 +1104,10 @@
       `;
     } else if ($("#admin-action").val() == 11) {
       //nova kancelarija
+      formHtml = `<div style="text-align: center; font-family: 'Russo One', sans serif">ФОРМА У ИЗРАДИ</div>`;
     } else if ($("#admin-action").val() == 12) {
       //izmena kancelarije
+      formHtml = `<div style="text-align: center; font-family: 'Russo One', sans serif">ФОРМА У ИЗРАДИ</div>`;
     }
     insertHtml("#admin-action-form", formHtml);
     if ($("#admin-action").val() == 2) {
@@ -1298,7 +1304,6 @@
         break;
       }
     }
-    console.log(doc);
     $("#doc-name").val(doc.opis);
     $("#doc-status option").prop("selected", false);
     $("#doc-status option:nth-child(" + ((doc.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
@@ -1555,13 +1560,13 @@
     $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
       window.sessionStorage.setItem(RGZ.ssTokenLabel, JSON.stringify(response));
       if (response.rola < 3 && ~window.location.pathname.indexOf('termini')) {
-        location.pathname = '/admin/index.html';
+        window.location.pathname = window.location.pathname.replace('termini', 'admin');
       } else if (response.rola < 3 && ~window.location.pathname.indexOf('admin')) {
         RGZ.adminAux();
       } else if (response.rola >= 3 && ~window.location.pathname.indexOf('termini')) {
         RGZ.scheduleAux();
       } else if (response.rola >= 3 && ~window.location.pathname.indexOf('admin')) {
-        location.pathname = '/termini/index.html';
+        window.location.pathname = window.location.pathname.replace('admin', 'termini');
       }
     }).fail(function(response) {
       if (response.status == 400) {
