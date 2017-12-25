@@ -791,7 +791,7 @@ input {
   color: #333;
 }
 
-#admin-doc, #admin-hol, #admin-cnt, #usr-role, #usr-status, #admin-usr {
+#admin-doc, #admin-hol, #admin-cnt, #usr-role, #usr-status, #admin-usr, #doc-status {
   margin-bottom: 4vh !important;
   font-family: 'Open Sans', sans-serif !important;
   border-bottom: 0.6vh solid #1A3360;

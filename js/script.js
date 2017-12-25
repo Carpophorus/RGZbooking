@@ -98,10 +98,10 @@
     var bookHtml = `
       <div class="btn-group" data-toggle="buttons">
         <label class="btn btn-primary active" onclick="RGZ.bookSwitch(0);">
-          <input type="radio" name="options" id="option1" autocomplete="off" checked>ШАЛТЕРИ
+          <input type="radio" name="options" id="option1" autocomplete="off" checked>ПРЕДАЈА&nbsp;ЗАХТЕВА
         </label>
         <label class="btn btn-primary" onclick="RGZ.bookSwitch(1);">
-          <input type="radio" name="options" id="option2" autocomplete="off">КАНЦЕЛАРИЈЕ
+          <input type="radio" name="options" id="option2" autocomplete="off">УВИД&nbsp;У&nbsp;ПРЕДМЕТ
         </label>
       </div>
       <div id="book-counters">
@@ -442,7 +442,7 @@
     RGZ.officeDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&broj_dok=" + encodeURIComponent("952-02-" + $("#subj-type").val() + "-" + $("#subj-id").val() + "-" + $("#subj-year").val()),
+        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&broj_dok=" + encodeURIComponent("952-02-" + $("#subj-type").val() + "-" + $("#subj-id").val() + "/" + $("#subj-year").val()),
         function(responseArray, status) {
           RGZ.kancelarijeTermini = responseArray;
           var datumi = [];
@@ -916,14 +916,8 @@
     );
   };
 
-  /*
-
-  (($("#usr-status option:selected").val() == 1) ? `"true"` : `"false"`)
-
-  */
-
   RGZ.newUsr = function() {
-    if ($("#usr-name").val() == "" || $("#usr-mail").val() == "" || $("#usr-status option:selected").val() == 0 || $("#usr-role option:selected").val() == 0) {
+    if ($("#usr-name").val() == "" || $("#usr-mail").val() == "" || $("#usr-role option:selected").val() == 0) {
       inputMissing();
       return;
     }
@@ -968,7 +962,6 @@
         break;
       }
     }
-    console.log(usr);
     $("#usr-name").val(usr.korisnicko_ime);
     $("#usr-mail").val(usr.email);
     $("#usr-status option").prop("selected", false);
@@ -981,7 +974,42 @@
   };
 
   RGZ.editUsr = function() {
-    //api call
+    if ($("#admin-usr option:selected").val() == 0 || $("#usr-name").val() == "" || $("#usr-mail").val() == "" || $("#usr-status option:selected").val() == 0 || $("#usr-role option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    //TODO validate e-mail
+    var data = JSON.parse(`
+      {
+        "id": "` + $("#admin-usr option:selected").val() + `",
+        "korisnicko_ime": "` + $("#usr-name").val() + `",
+        "aktivan": ` + (($("#usr-status option:selected").val() == 1) ? `"true"` : `"false"`) + `,
+        "potvrda": "0",
+        "greske": "0",
+        "vreme_blokade": "1992-02-01T07:10:33.0000000+01:00",
+        "email": "` + $("#usr-mail").val() + `",
+        "rola": "` + $("#usr-role option:selected").val() + `",
+        "sluzbaId": "` + $("#admin-dep option:selected").val() + `"
+      }
+    `);
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPutRequestWithData(
+      RGZ.apiRoot + "admin/izmeniKorisnika" + "/" + $("#admin-usr option:selected").val(),
+      function(responseArray, status) {
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "admin/sluzbe",
+          function(responseArray, status) {
+            RGZ.adminSluzbe = responseArray;
+            $(".jconfirm").remove();
+            confirmSuccess();
+            $("#admin-usr option:selected").html($("#usr-name").val());
+          },
+          true, RGZ.bearer
+        );
+      },
+      true, data, RGZ.bearer
+    );
   };
 
   RGZ.adminSearch = function() {
@@ -1215,7 +1243,7 @@
       inputMissing();
       return;
     }
-    var data = JSON.parse('{"id": "33", "opis": "' + $("#doc-name").val() + '"}');
+    var data = JSON.parse('{"id": "33", "opis": "' + $("#doc-name").val() + '", "aktivan": "true"}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPostRequestWithData(
@@ -1240,7 +1268,7 @@
       inputMissing();
       return;
     }
-    var data = JSON.parse('{"id": "' + $("#admin-doc option:selected").val() + '", "opis": "' + $("#doc-name").val() + '"}');
+    var data = JSON.parse('{"id": "' + $("#admin-doc option:selected").val() + '", "opis": "' + $("#doc-name").val() + '", "aktivan": ' + (($("#doc-status option:selected").val() == 1) ? "true" : "false") + '}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPutRequestWithData(
@@ -1263,6 +1291,17 @@
 
   RGZ.adminDocChanged = function() {
     $("#doc-name").val($("#admin-doc option:selected").html());
+    var doc = '';
+    for (var i = 0; i < RGZ.adminDokumenti.length; i++) {
+      if ($("#admin-doc option:selected").val() == RGZ.adminDokumenti[i].id) {
+        doc = RGZ.adminDokumenti[i];
+        break;
+      }
+    }
+    console.log(doc);
+    $("#doc-name").val(doc.opis);
+    $("#doc-status option").prop("selected", false);
+    $("#doc-status option:nth-child(" + ((doc.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
   };
 
   RGZ.adminAction = function() {
@@ -1330,6 +1369,12 @@
             </select>
             <div class="form-label">Нови назив документа:</div>
             <input id="doc-name" type="text">
+            <div class="form-label">Статус:</div>
+            <select id="doc-status">
+              <option value="0" disabled selected hidden> </option>
+              <option value="1">АКТИВАН</option>
+              <option value="2">НЕАКТИВАН</option>
+            </select>
             <div class="form-search-button" onclick="$RGZ.editDoc();">ОК</div>
           `;
         }
