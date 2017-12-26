@@ -87,15 +87,14 @@
       );
       RGZ.footMouseOver();
       setTimeout(RGZ.footMouseOut, 2000);
-    } else if ($(".schedule").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != '') {
+    } else if ($(".schedule").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
       RGZ.scheduleAux();
-    } else if ($(".admin").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != '') {
+    } else if ($(".admin").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
       RGZ.adminAux();
+    } else if (sessionStorage.getItem(RGZ.ssTokenLabel) == null) {
+      appear($(".content-box-content"), 500);
+      disappear($(".content-box-loader"), 200);
     }
-    // } else if (sessionStorage.getItem(RGZ.ssTokenLabel) == '') {
-    //   appear($(".content-box-content"), 500);
-    //   disappear($(".content-box-loader"), 200);
-    // }
   });
 
   RGZ.loadBookContent = function() {
@@ -232,6 +231,7 @@
                 action: function() {
                   RGZ.counterDepartmentChanged();
                   $("#book-counter-aux>input").val("");
+                  $("#book-counter-reason").addClass("book-counter-reason-lighter");
                   $("#book-counter-aux>select option:selected").prop("selected", false);
                   $("#book-counter-aux>select option:first-child").prop("selected", true);
                   $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
@@ -623,6 +623,26 @@
       });
       return;
     }
+    if ($("#book-counter-mail").val() != "") {
+      var mail = $("#book-counter-mail").val();
+      if (!(~mail.lastIndexOf("@") && ~mail.lastIndexOf(".") && mail.lastIndexOf("@") < mail.lastIndexOf("."))) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Ваша адреса електронске поште није у одговарајућем формату.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-prm',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+    }
     $.confirm({
       title: 'ПОТВРДА',
       content: 'Да ли желите да закажете термин на шалтеру са унетим параметрима?<br><br><span>Молимо Вас да проверите све податке унете у претходном кораку пре заказивања. Када почне процес заказивања, молимо Вас да останете на страници до приказивања повратних информација.</span>',
@@ -681,6 +701,26 @@
         }
       });
       return;
+    }
+    if ($("#book-office-mail").val() != "") {
+      var mail = $("#book-office-mail").val();
+      if (!(~mail.lastIndexOf("@") && ~mail.lastIndexOf(".") && mail.lastIndexOf("@") < mail.lastIndexOf("."))) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Ваша адреса електронске поште није у одговарајућем формату.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-prm',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
     }
     $.confirm({
       title: 'ПОТВРДА',
@@ -844,7 +884,24 @@
       inputMissing();
       return;
     }
-    var data = JSON.parse('{"id": "' + $("#admin-dep option:selected").val() + '", "sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '"}');
+    if ($("#dep-start").val() >= $("#dep-end").val()) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Време почетка и време краја радног времена нису у одговарајућем поретку.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    var data = JSON.parse('{"id": "' + $("#admin-dep option:selected").val() + '", "sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '", "pocetak_radnog_vremena": "' + $("#dep-start").val() + '", "kraj_radnog_vremena": "' + $("#dep-end").val() + '", "interval_za_saltere": "' + $("#dep-int").val() + '"}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPutRequestWithData(
@@ -870,7 +927,7 @@
       inputMissing();
       return;
     }
-    var data = JSON.parse('{"id": "33", "opis": "' + $("#cnt-name").val() + '", "sluzbaId": "' + $("#admin-dep option:selected").val() + '"}');
+    var data = JSON.parse('{"id": "33", "opis": "' + $("#cnt-name").val() + '", "sluzbaId": "' + $("#admin-dep option:selected").val() + '", "aktivan": "true"}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPostRequestWithData(
@@ -891,7 +948,16 @@
   };
 
   RGZ.adminCntChanged = function() {
-    $("#cnt-name").val($("#admin-cnt option:selected").html());
+    var cnt = '';
+    for (var i = 0; i < dep.rgz_salteri.length; i++) {
+      if ($("#admin-cnt option:selected").val() == dep.rgz_salteri[i].id) {
+        cnt = dep.rgz_salteri[i];
+        break;
+      }
+    }
+    $("#cnt-name").val(cnt.opis);
+    $("#cnt-status option").prop("selected", false);
+    $("#cnt-status option:nth-child(" + ((cnt.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
   };
 
   RGZ.editCnt = function() {
@@ -899,7 +965,7 @@
       inputMissing();
       return;
     }
-    var data = JSON.parse('{"id": "' + $("#admin-cnt option:selected").val() + '", "opis": "' + $("#cnt-name").val() + '", "sluzbaId": "' + $("#admin-dep option:selected").val() + '"}');
+    var data = JSON.parse('{"id": "' + $("#admin-cnt option:selected").val() + '", "opis": "' + $("#cnt-name").val() + '", "sluzbaId": "' + $("#admin-dep option:selected").val() + '", "aktivan": ' + (($("#cnt-status option:selected").val() == 1) ? "true" : "false") + '}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPutRequestWithData(
@@ -925,7 +991,24 @@
       inputMissing();
       return;
     }
-    //TODO validate e-mail
+    var mail = $("#usr-mail").val();
+    if (!(~mail.lastIndexOf("@") && ~mail.lastIndexOf(".") && mail.lastIndexOf("@") < mail.lastIndexOf("."))) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Адреса електронске поште запосленог није у одговарајућем формату.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
     var data = JSON.parse(`
       {
         "id": "33",
@@ -982,7 +1065,24 @@
       inputMissing();
       return;
     }
-    //TODO validate e-mail
+    var mail = $("#usr-mail").val();
+    if (!(~mail.lastIndexOf("@") && ~mail.lastIndexOf(".") && mail.lastIndexOf("@") < mail.lastIndexOf("."))) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Адреса електронске поште запосленог није у одговарајућем формату.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
     var data = JSON.parse(`
       {
         "id": "` + $("#admin-usr option:selected").val() + `",
@@ -1030,6 +1130,12 @@
         <input id="dep-name" type="text">
         <div class="form-label">Адреса службе:</div>
         <input id="dep-address" type="text">
+        <div class="form-label">Почетак радног времена:</div>
+        <input id="dep-start" type="text">
+        <div class="form-label">Крај радног времена:</div>
+        <input id="dep-end" type="text">
+        <div class="form-label">Интервал за шалтере [min]:</div>
+        <input id="dep-int" type="text" maxlength="2" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);">
         <div class="form-search-button" onclick="$RGZ.editDep();">ОК</div>
       `;
     } else if ($("#admin-action").val() == 3) {
@@ -1052,6 +1158,12 @@
         </select>
         <div class="form-label">Нови назив шалтера:</div>
         <input id="cnt-name" type="text">
+        <div class="form-label">Статус:</div>
+        <select id="cnt-status">
+          <option value="0" disabled selected hidden> </option>
+          <option value="1">АКТИВАН</option>
+          <option value="2">НЕАКТИВАН</option>
+        </select>
         <div class="form-search-button" onclick="$RGZ.editCnt();">ОК</div>
       `;
     } else if ($("#admin-action").val() == 5) {
@@ -1111,8 +1223,13 @@
     }
     insertHtml("#admin-action-form", formHtml);
     if ($("#admin-action").val() == 2) {
+      $("#dep-start").timepicker();
+      $("#dep-end").timepicker();
       $("#dep-name").val(dep.sluzba);
       $("#dep-address").val(dep.adresa);
+      $("#dep-start").val(dep.pocetak_radnog_vremena);
+      $("#dep-end").val(dep.kraj_radnog_vremena);
+      $("#dep-int").val(dep.interval_za_saltere);
     }
     appear($("#admin-action-form"), 500);
   };
@@ -1166,11 +1283,28 @@
   };
 
   RGZ.newDep = function() {
-    if ($("#dep-name").val() == "" || $("#dep-address").val() == "") {
+    if ($("#dep-name").val() == "" || $("#dep-address").val() == "" || $("#dep-start").val() == "" || $("#dep-end").val() == "" || $("#dep-int").val() == "") {
       inputMissing();
       return;
     }
-    var data = JSON.parse('{"sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '"}');
+    if ($("#dep-start").val() >= $("#dep-end").val()) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Време почетка и време краја радног времена нису у одговарајућем поретку.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    var data = JSON.parse('{"sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '", "pocetak_radnog_vremena": "' + $("#dep-start").val() + '", "kraj_radnog_vremena": "' + $("#dep-end").val() + '", "interval_za_saltere": "' + $("#dep-int").val() + '"}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPostRequestWithData(
@@ -1332,6 +1466,12 @@
             <input id="dep-name" type="text">
             <div class="form-label">Адреса службе:</div>
             <input id="dep-address" type="text">
+            <div class="form-label">Почетак радног времена:</div>
+            <input id="dep-start" type="text">
+            <div class="form-label">Крај радног времена:</div>
+            <input id="dep-end" type="text">
+            <div class="form-label">Интервал за шалтере [min]:</div>
+            <input id="dep-int" type="text" maxlength="2" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);">
             <div class="form-search-button" onclick="$RGZ.newDep();">ОК</div>
           `;
         } else if ($("#admin-action").val() == 7) {
@@ -1394,6 +1534,10 @@
               startDate: "+1d",
               daysOfWeekDisabled: [0, 6]
             });
+          else if ($("#admin-action").val() == 1) {
+            $("#dep-start").timepicker();
+            $("#dep-end").timepicker();
+          }
         }, 10);
         appear($("#admin-action-form"), 500);
       }
@@ -1558,15 +1702,15 @@
     $("#username, #password").attr("disabled", true);
     var data = "username=" + encodeURIComponent($("#username").val()) + "&password=" + encodeURIComponent($("#password").val()) + "&grant_type=password&client_id=837rgz";
     $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
-      window.sessionStorage.setItem(RGZ.ssTokenLabel, JSON.stringify(response));
-      if (response.rola < 3 && ~window.location.pathname.indexOf('termini')) {
-        window.location.pathname = window.location.pathname.replace('termini', 'admin');
-      } else if (response.rola < 3 && ~window.location.pathname.indexOf('admin')) {
+      sessionStorage.setItem(RGZ.ssTokenLabel, JSON.stringify(response));
+      if (response.rola < 3 && ~location.pathname.indexOf('termini')) {
+        location.pathname = location.pathname.replace('termini', 'admin');
+      } else if (response.rola < 3 && ~location.pathname.indexOf('admin')) {
         RGZ.adminAux();
-      } else if (response.rola >= 3 && ~window.location.pathname.indexOf('termini')) {
+      } else if (response.rola >= 3 && ~location.pathname.indexOf('termini')) {
         RGZ.scheduleAux();
-      } else if (response.rola >= 3 && ~window.location.pathname.indexOf('admin')) {
-        window.location.pathname = window.location.pathname.replace('admin', 'termini');
+      } else if (response.rola >= 3 && ~location.pathname.indexOf('admin')) {
+        location.pathname = location.pathname.replace('admin', 'termini');
       }
     }).fail(function(response) {
       if (response.status == 400) {
