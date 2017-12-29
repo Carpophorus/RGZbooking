@@ -791,10 +791,58 @@ input {
   color: #333;
 }
 
-#admin-doc, #admin-hol, #admin-cnt, #usr-role, #usr-status, #admin-usr, #doc-status, #cnt-status {
+#admin-action-form select {
   margin-bottom: 4vh !important;
   font-family: 'Open Sans', sans-serif !important;
   border-bottom: 0.6vh solid #1A3360;
+}
+
+.off-day-group {
+  padding-bottom: 4vh;
+}
+
+.off-day {
+  margin-top: 2vh;
+}
+
+.off-day-checklabel {
+  position: relative;
+  padding: 0 3vh 0 6vh;
+  height: 7vh;
+  width: 23vh;
+  color: #1A3360;
+  line-height: 6.2vh;
+  font-family: 'Russo One', sans-serif;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.off-day-checklabel i {
+  position: absolute;
+  left: 0;
+  padding-top: 1vh;
+  font-size: 5vh;
+}
+
+.off-day-times input {
+  display: inline-block;
+  width: calc(50% - 2.2vh) !important;
+  margin-bottom: 0 !important;
+}
+
+.off-day-times {
+  text-align: right;
+  display: inline-block;
+  width: calc(100% - 24vh);
+}
+
+.off-day-times div {
+  display: inline-block;
+  color: #1A3360;
+  line-height: 7vh;
+  width: 3vh;
+  text-align: center;
+  font-family: 'Russo One', sans-serif;
 }
 
 .timepicker .title {

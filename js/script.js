@@ -6,6 +6,7 @@
   RGZ.loginInfo = '';
 
   RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
+  // RGZ.apiRoot = 'http://10.0.13.48:5053/api/';
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
   RGZ.kancelarijeSluzbe = '';
@@ -24,6 +25,7 @@
   var fetchCounterTimesClicked = false;
   var fetchOfficeTimesClicked = false;
   var dep = '';
+  var off = '';
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -100,10 +102,10 @@
   RGZ.loadBookContent = function() {
     var bookHtml = `
       <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-primary active" onclick="RGZ.bookSwitch(0);">
+        <label class="btn btn-primary active" onclick="$RGZ.bookSwitch(0);">
           <input type="radio" name="options" id="option1" autocomplete="off" checked>ПРЕДАЈА&nbsp;ЗАХТЕВА
         </label>
-        <label class="btn btn-primary" onclick="RGZ.bookSwitch(1);">
+        <label class="btn btn-primary" onclick="$RGZ.bookSwitch(1);">
           <input type="radio" name="options" id="option2" autocomplete="off">УВИД&nbsp;У&nbsp;ПРЕДМЕТ
         </label>
       </div>
@@ -129,10 +131,10 @@
       bookHtml += `<option value="` + RGZ.zahtevi[i].id + `">` + RGZ.zahtevi[i].opis + `</option>`;
     bookHtml += `
           </select>
-          <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);">
+          <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-          <div id="book-counter-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
+          <div id="book-counter-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
           <div class="form-button" onclick="$RGZ.bookCounter();">ЗАКАЖИ</div>
         </div>
       </div>
@@ -151,11 +153,11 @@
             &nbsp;952&nbsp;-&nbsp;02&nbsp;-&nbsp;
           </div>
           <div class="subj-input-container">
-            <div class="subj-2"><input id="subj-type" type="text" maxlength="3" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);"></div>
+            <div class="subj-2"><input id="subj-type" type="text" maxlength="3" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
             <div class="subj-3">-</div>
-            <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);"></div>
+            <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
             <div class="subj-5">/</div>
-            <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);"></div>
+            <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
           </div>
         </div>
         <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchOfficeTimes();">ПРЕТРАГА</div></div>
@@ -165,10 +167,10 @@
         </select>
         <div id="book-office-aux" class="aux-container gone">
           <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
-          <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);">
+          <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-          <div id="book-office-check" onclick="RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
+          <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да имам потпуну и правилно попуњену документацију, као и исправно уплаћене таксе за захтев/упис/предмет због којег заказујем термин. У случају кашњења, доношења непотпуне/неправилне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничења да шалтер/служба неће извршити пријем лица уколико се захтев/предмет због којег се заказује термин не односи на то лице (осим у случају постојања одговарајућег овлашћења) и да се у време пријема не може извршити измена пријаве или неисправне документације, већ да је потребно поднети нову.</label>
           <div class="form-button" onclick="$RGZ.bookOffice();">ЗАКАЖИ</div>
         </div>
       </div>
@@ -960,6 +962,49 @@
     $("#cnt-status option:nth-child(" + ((cnt.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
   };
 
+  RGZ.adminOffChanged = function() {
+    off = '';
+    for (var i = 0; i < dep.rgz_sluzbe_kancelarije.length; i++) {
+      if ($("#admin-off option:selected").val() == dep.rgz_sluzbe_kancelarije[i].id) {
+        off = dep.rgz_sluzbe_kancelarije[i];
+        break;
+      }
+    }
+    $("#off-name").val(off.kancelarija);
+    $("#off-int").val(off.rgz_kancelarije_termini[0].interval);
+    $("#off-role option").prop("selected", false);
+    $("#off-role option:nth-child(" + ((off.rolaId == 4) ? "2" : "3") + ")").prop("selected", true);
+    $("#off-status option").prop("selected", false);
+    $("#off-status option:nth-child(" + ((off.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
+    $(".off-day-group input").val("");
+    $(".off-day-group i").removeClass("fa-check-square-o").addClass("fa-square-o");
+    for (var i = 0; i < off.rgz_kancelarije_termini.length; i++) {
+      var dayId = '';
+      switch (off.rgz_kancelarije_termini[i].dan) {
+        case 0:
+          dayId = 'monday';
+          break;
+        case 1:
+          dayId = 'tuesday';
+          break;
+        case 2:
+          dayId = 'wednesday';
+          break;
+        case 3:
+          dayId = 'thursday';
+          break;
+        case 4:
+          dayId = 'friday';
+          break;
+        default:
+          break;
+      }
+      $("#" + dayId + " i").removeClass("fa-square-o").addClass("fa-check-square-o");
+      $("#" + dayId + " .off-day-time-from").val(off.rgz_kancelarije_termini[i].pocetak);
+      $("#" + dayId + " .off-day-time-to").val(off.rgz_kancelarije_termini[i].kraj);
+    }
+  };
+
   RGZ.editCnt = function() {
     if ($("#cnt-name").val() == "" || $("#admin-cnt option:selected").val() == 0) {
       inputMissing();
@@ -1116,6 +1161,228 @@
     );
   };
 
+  RGZ.offDayClicked = function(e) {
+    if ($(e).find("i").hasClass("fa-square-o")) {
+      $(e).find("i").removeClass("fa-square-o");
+      $(e).find("i").addClass("fa-check-square-o");
+    } else {
+      $(e).find("i").addClass("fa-square-o");
+      $(e).find("i").removeClass("fa-check-square-o");
+    }
+  };
+
+  RGZ.newOff = function() {
+    if ($("#off-name").val() == "" || $("#off-int").val() == "" || $("#off-role option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    var daysCheck = false;
+    var daysArray = [];
+    var offInt = $("#off-int").val();
+    var selection = $(".fa-check-square-o");
+    if (selection.length > 0) daysCheck = true;
+    for (var i = 0; i < selection.length; i++) {
+      var dayContainer = $(selection[i]).parent().parent();
+      var dayId = $(dayContainer).attr("value");
+      var timeFrom = $(dayContainer).find(".off-day-times").find(".off-day-time-from").val();
+      var timeTo = $(dayContainer).find(".off-day-times").find(".off-day-time-to").val();
+      var dayItem = JSON.parse(`
+        {
+          "id": "33",
+          "kancelarijaId": "0",
+          "dan": "` + dayId + `",
+          "pocetak": "` + timeFrom + `",
+          "kraj": "` + timeTo + `",
+          "interval": "` + offInt + `"
+        }
+      `);
+      daysArray.push(dayItem);
+      if (timeFrom == '' || timeTo == '') {
+        daysCheck = false;
+        break;
+      }
+      if (timeFrom >= timeTo) {
+        daysCheck = false;
+        break;
+      }
+    }
+    if (daysCheck == false) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Радно време за рад са странкама није у одговарајућем формату.<br><br><span>Морате одабрати дане за рад са странкама приликом прављења нове канцеларије. Одабрани дани морају да имају уписано почетно и крајње време рада са странкама у одговарајућем поретку.</span>',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    var data = JSON.parse(`
+      {
+        "id": "33",
+        "sluzbaId": "` + $("#admin-dep option:selected").val() + `",
+        "kancelarija": "` + $("#off-name").val() + `",
+        "rolaId": ` + $("#off-role option:selected").val() + `,
+        "aktivan": "true"
+      }
+    `);
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPostRequestWithData(
+      RGZ.apiRoot + "admin/novakancelarija",
+      function(responseArray, status) {
+        var sync = 0;
+        for (var i = 0; i < daysArray.length; i++) {
+          daysArray[i].kancelarijaId = responseArray.id;
+          $ajaxUtils.sendPostRequestWithData(
+            RGZ.apiRoot + "admin/noviterminkancelarija",
+            function(responseArray, status) {
+              sync = sync + 1;
+              if (sync == daysArray.length) {
+                $ajaxUtils.sendGetRequest(
+                  RGZ.apiRoot + "admin/sluzbe",
+                  function(responseArray, status) {
+                    RGZ.adminSluzbe = responseArray;
+                    $(".jconfirm").remove();
+                    confirmSuccess();
+                  },
+                  true, RGZ.bearer
+                );
+              }
+            },
+            true, JSON.stringify(daysArray[i]), RGZ.bearer
+          );
+        }
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
+  RGZ.editOff = function() {
+    if ($("#off-name").val() == "" || $("#off-int").val() == "" || $("#off-role option:selected").val() == 0 || $("#off-status option:selected").val() == 0) {
+      inputMissing();
+      return;
+    }
+    var daysCheck = false;
+    var daysArray = [];
+    var offInt = $("#off-int").val();
+    var selection = $(".fa-check-square-o");
+    if (selection.length > 0) daysCheck = true;
+    for (var i = 0; i < selection.length; i++) {
+      var dayContainer = $(selection[i]).parent().parent();
+      var dayId = $(dayContainer).attr("value");
+      var timeFrom = $(dayContainer).find(".off-day-times").find(".off-day-time-from").val();
+      var timeTo = $(dayContainer).find(".off-day-times").find(".off-day-time-to").val();
+      var dayItem = JSON.parse(`
+        {
+          "id": "33",
+          "kancelarijaId": "0",
+          "dan": "` + dayId + `",
+          "pocetak": "` + timeFrom + `",
+          "kraj": "` + timeTo + `",
+          "interval": "` + offInt + `"
+        }
+      `);
+      daysArray.push(dayItem);
+      if (timeFrom == '' || timeTo == '') {
+        daysCheck = false;
+        break;
+      }
+      if (timeFrom >= timeTo) {
+        daysCheck = false;
+        break;
+      }
+    }
+    if (daysCheck == false) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Радно време за рад са странкама није у одговарајућем формату.<br><br><span>Морате одабрати дане за рад са странкама приликом прављења нове канцеларије. Одабрани дани морају да имају уписано почетно и крајње време рада са странкама у одговарајућем поретку.</span>',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    var data = JSON.parse(`
+      {
+        "id": "` + $("#admin-off option:selected").val() + `",
+        "sluzbaId": "` + $("#admin-dep option:selected").val() + `",
+        "kancelarija": "` + $("#off-name").val() + `",
+        "rolaId": ` + $("#off-role option:selected").val() + `,
+        "aktivan": "` + (($("#off-status option:selected").val() == 1) ? "true" : "false") + `"
+      }
+    `);
+    data = JSON.stringify(data);
+    pleaseWait();
+    $ajaxUtils.sendPutRequestWithData(
+      RGZ.apiRoot + "admin/izmeniKancelariju" + "/" + $("#admin-off option:selected").val(),
+      function(responseArray, status) {
+        var synco = 0;
+        for (var j = 0; j < off.rgz_kancelarije_termini.length; j++) {
+          $ajaxUtils.sendDeleteRequest(
+            RGZ.apiRoot + "admin/obrisiTermin" + "/" + off.rgz_kancelarije_termini[j].id,
+            function(responseArray, status) {
+              synco = synco + 1;
+              if (synco == off.rgz_kancelarije_termini.length) {
+                var sync = 0;
+                for (var i = 0; i < daysArray.length; i++) {
+                  daysArray[i].kancelarijaId = $("#admin-off option:selected").val();
+                  $ajaxUtils.sendPostRequestWithData(
+                    RGZ.apiRoot + "admin/noviterminkancelarija",
+                    function(responseArray, status) {
+                      sync = sync + 1;
+                      if (sync == daysArray.length) {
+                        $ajaxUtils.sendGetRequest(
+                          RGZ.apiRoot + "admin/sluzbe",
+                          function(responseArray, status) {
+                            RGZ.adminSluzbe = responseArray;
+                            for (var k = 0; k < RGZ.adminSluzbe.length; k++) {
+                              if (RGZ.adminSluzbe[k].id == $("#admin-dep option:selected").val()) {
+                                for (var l = 0; l < RGZ.adminSluzbe[k].rgz_sluzbe_kancelarije.length; l++) {
+                                  if (RGZ.adminSluzbe[k].rgz_sluzbe_kancelarije[l].id == $("#admin-off option:selected").val()) {
+                                    console.log(off);
+                                    off = RGZ.adminSluzbe[k].rgz_sluzbe_kancelarije[l];
+                                    console.log(off);
+                                    break;
+                                  }
+                                }
+                                break;
+                              }
+                            }
+                            $(".jconfirm").remove();
+                            confirmSuccess();
+                            $("#admin-off option:selected").html($("#off-name").val());
+                          },
+                          true, RGZ.bearer
+                        );
+                      }
+                    },
+                    true, JSON.stringify(daysArray[i]), RGZ.bearer
+                  );
+                }
+              }
+            },
+            true, RGZ.bearer
+          );
+        }
+      },
+      true, data, RGZ.bearer
+    );
+  };
+
   RGZ.adminSearch = function() {
     for (var i = 0; i < RGZ.adminSluzbe.length; i++)
       if (RGZ.adminSluzbe[i].id == $("#admin-dep option:selected").val()) {
@@ -1135,7 +1402,7 @@
         <div class="form-label">Крај радног времена:</div>
         <input id="dep-end" type="text">
         <div class="form-label">Интервал за шалтере [min]:</div>
-        <input id="dep-int" type="text" maxlength="2" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);">
+        <input id="dep-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
         <div class="form-search-button" onclick="$RGZ.editDep();">ОК</div>
       `;
     } else if ($("#admin-action").val() == 3) {
@@ -1216,10 +1483,168 @@
       `;
     } else if ($("#admin-action").val() == 11) {
       //nova kancelarija
-      formHtml = `<div style="text-align: center; font-family: 'Russo One', sans serif">ФОРМА У ИЗРАДИ</div>`;
+      formHtml = `
+        <div class="form-label">Назив канцеларије:</div>
+        <input id="off-name" type="text">
+        <div class="form-label">Функција канцеларијског службеника:</div>
+        <select id="off-role">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = 3; i < RGZ.adminRole.length; i++)
+        formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-label">Интервал [min]:</div>
+        <input id="off-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
+        <div class="form-label">Дани за пријем странака:</div>
+        <div class="off-day-group">
+          <div class="off-day" id="monday" value="0">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              понедељак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="tuesday" value="1">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              уторак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="wednesday" value="2">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              среда
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="thursday" value="3">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              четвртак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="friday" value="4">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              петак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="form-search-button" onclick="$RGZ.newOff();">ОК</div>
+      `;
     } else if ($("#admin-action").val() == 12) {
       //izmena kancelarije
-      formHtml = `<div style="text-align: center; font-family: 'Russo One', sans serif">ФОРМА У ИЗРАДИ</div>`;
+      formHtml = `
+        <div class="form-label">Стари назив канцеларије:</div>
+        <select id="admin-off" onchange="$RGZ.adminOffChanged();">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = 0; i < dep.rgz_sluzbe_kancelarije.length; i++)
+        formHtml += `<option value="` + dep.rgz_sluzbe_kancelarije[i].id + `">` + dep.rgz_sluzbe_kancelarije[i].kancelarija + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-label">Нови назив канцеларије:</div>
+        <input id="off-name" type="text">
+        <div class="form-label">Функција канцеларијског службеника:</div>
+        <select id="off-role">
+          <option value="0" disabled selected hidden> </option>
+      `;
+      for (var i = 3; i < RGZ.adminRole.length; i++)
+        formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
+      formHtml += `
+        </select>
+        <div class="form-label">Интервал [min]:</div>
+        <input id="off-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
+        <div class="form-label">Статус:</div>
+        <select id="off-status">
+          <option value="0" disabled selected hidden> </option>
+          <option value="1">АКТИВАН</option>
+          <option value="2">НЕАКТИВАН</option>
+        </select>
+        <div class="form-label">Дани за пријем странака:</div>
+        <div class="off-day-group">
+          <div class="off-day" id="monday" value="0">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              понедељак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="tuesday" value="1">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              уторак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="wednesday" value="2">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              среда
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="thursday" value="3">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              четвртак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+          <div class="off-day" id="friday" value="4">
+            <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
+              <i class="fa fa-square-o"></i>
+              петак
+            </div>
+            <div class="off-day-times">
+              <input class="off-day-time-from" type="text">
+              <div>-</div>
+              <input class="off-day-time-to" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="form-search-button" onclick="$RGZ.editOff();">ОК</div>
+      `;
     }
     insertHtml("#admin-action-form", formHtml);
     if ($("#admin-action").val() == 2) {
@@ -1230,6 +1655,9 @@
       $("#dep-start").val(dep.pocetak_radnog_vremena);
       $("#dep-end").val(dep.kraj_radnog_vremena);
       $("#dep-int").val(dep.interval_za_saltere);
+    } else if ($("#admin-action").val() == 11 || $("#admin-action").val() == 12) {
+      $(".off-day-time-from").timepicker();
+      $(".off-day-time-to").timepicker();
     }
     appear($("#admin-action-form"), 500);
   };
@@ -1471,7 +1899,7 @@
             <div class="form-label">Крај радног времена:</div>
             <input id="dep-end" type="text">
             <div class="form-label">Интервал за шалтере [min]:</div>
-            <input id="dep-int" type="text" maxlength="2" onkeyup="RGZ.numbersOnly(this);" onkeydown="RGZ.numbersOnly(this);">
+            <input id="dep-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
             <div class="form-search-button" onclick="$RGZ.newDep();">ОК</div>
           `;
         } else if ($("#admin-action").val() == 7) {
