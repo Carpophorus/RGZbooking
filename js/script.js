@@ -1168,6 +1168,7 @@
     } else {
       $(e).find("i").addClass("fa-square-o");
       $(e).find("i").removeClass("fa-check-square-o");
+      $(e).parent().find("input").val("");
     }
   };
 
