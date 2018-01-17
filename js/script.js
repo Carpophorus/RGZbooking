@@ -26,6 +26,12 @@
   var fetchOfficeTimesClicked = false;
   var dep = '';
   var off = '';
+  var scheduleDate = '';
+  var date = new Date();
+  var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+  var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+  var year = date.getFullYear();
+  var scheduleDateAux = ("" + year + "-" + month + "-" + day);
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -90,8 +96,12 @@
       RGZ.footMouseOver();
       setTimeout(RGZ.footMouseOut, 2000);
     } else if ($(".schedule").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
+      if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola < 3)
+        location.pathname = location.pathname.replace('termini', 'admin');
       RGZ.scheduleAux();
     } else if ($(".admin").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
+      if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola >= 3)
+        location.pathname = location.pathname.replace('admin', 'termini');
       RGZ.adminAux();
     } else if (sessionStorage.getItem(RGZ.ssTokenLabel) == null) {
       appear($(".content-box-content"), 500);
@@ -226,6 +236,57 @@
             content: detailsText,
             theme: 'supervan',
             buttons: {
+              print: {
+                text: '<i class="fa fa-print"></i>',
+                btnClass: 'btn-white-prm hidden-md-down',
+                action: function() {
+                  var date = new Date();
+                  var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+                  var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+                  var year = date.getFullYear();
+                  var hours = ((date.getHours() < 10) ? "0" : "") + date.getHours();
+                  var minutes = ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();
+                  var printTitle = "ЗАКАЗАНО " + day + `.` + month + `.` + year + `. ` + hours + `:` + minutes;
+                  var html4print = `
+                      <head><title>ЗАКАЗАНИ ТЕРМИН</title></head>
+                      <body>
+                        <div class="print-title">` + printTitle + `</div>
+                        <div class="details">
+                          ` + detailsText + `
+                        </div>
+                        <style>
+                          body {
+                            margin: 0;
+                            -webkit-print-color-adjust: exact;
+                          }
+                          .details {
+                            position: relative;
+                            width: 100%;
+                            font-size: 75%;
+                            overflow: auto;
+                          }
+                          .print-title {
+                            text-align: center;
+                            font-size: 75%;
+                            font-weight: 600;
+                            padding: 20px;
+                          }
+                        </style>
+                      </body>
+                    `;
+
+                  w = window.open("");
+                  w.document.write(html4print);
+                  w.print();
+                  w.close();
+                  RGZ.counterDepartmentChanged();
+                  $("#book-counter-aux>input").val("");
+                  $("#book-counter-reason").addClass("book-counter-reason-lighter");
+                  $("#book-counter-aux>select option:selected").prop("selected", false);
+                  $("#book-counter-aux>select option:first-child").prop("selected", true);
+                  $("#book-counter-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
+                }
+              },
               ok: {
                 text: 'ОК',
                 btnClass: 'btn-white-rgz',
@@ -272,6 +333,56 @@
             content: detailsText,
             theme: 'supervan',
             buttons: {
+              print: {
+                text: '<i class="fa fa-print"></i>',
+                btnClass: 'btn-white-prm hidden-md-down',
+                action: function() {
+                  var date = new Date();
+                  var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+                  var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+                  var year = date.getFullYear();
+                  var hours = ((date.getHours() < 10) ? "0" : "") + date.getHours();
+                  var minutes = ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();
+                  var printTitle = "ЗАКАЗАНО " + day + `.` + month + `.` + year + `. ` + hours + `:` + minutes;
+                  var html4print = `
+                      <head><title>ЗАКАЗАНИ ТЕРМИН</title></head>
+                      <body>
+                        <div class="print-title">` + printTitle + `</div>
+                        <div class="details">
+                          ` + detailsText + `
+                        </div>
+                        <style>
+                          body {
+                            margin: 0;
+                            -webkit-print-color-adjust: exact;
+                          }
+                          .details {
+                            position: relative;
+                            width: 100%;
+                            font-size: 75%;
+                            overflow: auto;
+                          }
+                          .print-title {
+                            text-align: center;
+                            font-size: 75%;
+                            font-weight: 600;
+                            padding: 20px;
+                          }
+                        </style>
+                      </body>
+                    `;
+
+                  w = window.open("");
+                  w.document.write(html4print);
+                  w.print();
+                  w.close();
+                  RGZ.officeDepartmentChanged();
+                  $("#book-office-aux>input").val("");
+                  $("#book-office-aux>select option:selected").prop("selected", false);
+                  $("#book-office-aux>select option:first-child").prop("selected", true);
+                  $("#book-office-check>i").removeClass("fa-check-square-o").addClass("fa-square-o");
+                }
+              },
               ok: {
                 text: 'ОК',
                 btnClass: 'btn-white-rgz',
@@ -839,6 +950,25 @@
     });
   };
 
+  calDataFetchedAux = function() {
+    var qualified = [];
+    for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
+      if (RGZ.zakazaniTermini[i].salter != undefined) {
+        if (!qualified.includes(RGZ.zakazaniTermini[i].salter))
+          qualified.push(RGZ.zakazaniTermini[i].salter);
+      } else {
+        if (!qualified.includes(RGZ.zakazaniTermini[i].kancelarija))
+          qualified.push(RGZ.zakazaniTermini[i].kancelarija);
+      }
+    }
+    var scheduleContentHtml = `
+      <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
+    `;
+    for (var i = 0; i < qualified.length; i++)
+      scheduleContentHtml += `<option>` + qualified[i] + `</option>`;
+    insertHtml("#schedule-co", scheduleContentHtml);
+  };
+
   dataFetchedAux = function() {
     var qualified = [];
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
@@ -856,9 +986,13 @@
       <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
       <div id="logout" class="schedule-navi-button" onclick="$RGZ.logout();"><i class="fa fa-sign-out"></i></div>
       <div id="schedule-searchbar" class="row">
-        <div class="col-lg-4 hidden-md-down"></div>
-        <div class="col-12 col-lg-4">
-          <select id="schedule-co" onchange="$RGZ.scheduleSearch();">
+        <div class="col-lg-3 hidden-md-down"></div>
+        <div class="col-12 col-lg-6">
+          <div id="schedule-cal" class="` + ((RGZ.loginInfo.rola > 3) ? "" : "gone") + `" onclick="$('#schedule-cal-input').focus();">
+            <i class="fa fa-calendar"></i>
+            <input id="schedule-cal-input">
+          </div>
+          <select id="schedule-co" onchange="$RGZ.scheduleSearch();" style="` + ((RGZ.loginInfo.rola > 3) ? "width: calc(100% - 8vh)" : "") + `">
             <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
     `;
     for (var i = 0; i < qualified.length; i++)
@@ -866,11 +1000,58 @@
     scheduleContentHtml += `
           </select>
         </div>
-        <div class="col-lg-4 hidden-md-down"></div>
+        <div class="col-lg-3 hidden-md-down"></div>
       </div>
       <div id="timetable" class="gone"></div>
     `;
     insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
+    $("#schedule-cal-input").datepicker({
+      format: "dd.mm.yyyy.",
+      autoclose: true,
+      todayBtn: true,
+      todayHighlight: true,
+      language: "sr",
+      startDate: "0d",
+      daysOfWeekDisabled: [0, 6]
+    }).on("show", function() {
+      scheduleDate = $("#schedule-cal-input").val();
+    }).on("hide", function() {
+      if (scheduleDate != $("#schedule-cal-input").val()) {
+        scheduleDateAux = scheduleDate = $("#schedule-cal-input").val().substring(6, 10) + "-" + $("#schedule-cal-input").val().substring(3, 5) + "-" + $("#schedule-cal-input").val().substring(0, 2);
+        RGZ.zakazaniTermini = [];
+        var date = new Date();
+        var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+        var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+        var year = date.getFullYear();
+        var sync = (("" + year + "-" + month + "-" + day) == scheduleDateAux) ? 2 : 1;
+        if (("" + year + "-" + month + "-" + day) == scheduleDateAux) $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "korisnici/zakazaniTermini",
+          function(responseArray, status) {
+            for (var m = 0; m < responseArray.length; m++) {
+              responseArray[m]["isOffice"] = false;
+              RGZ.zakazaniTermini.push(responseArray[m]);
+            }
+            sync = sync - 1;
+            if (sync == 0)
+              calDataFetchedAux();
+          },
+          true, RGZ.bearer
+        );
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(scheduleDateAux),
+          function(responseArray, status) {
+            for (var n = 0; n < responseArray.length; n++) {
+              responseArray[n]["isOffice"] = true;
+              RGZ.zakazaniTermini.push(responseArray[n]);
+            }
+            sync = sync - 1;
+            if (sync == 0)
+              calDataFetchedAux();
+          },
+          true, RGZ.bearer
+        );
+      }
+    });
     setTimeout(function() {
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
@@ -981,19 +1162,19 @@
     for (var i = 0; i < off.rgz_kancelarije_termini.length; i++) {
       var dayId = '';
       switch (off.rgz_kancelarije_termini[i].dan) {
-        case 0:
+        case 1:
           dayId = 'monday';
           break;
-        case 1:
+        case 2:
           dayId = 'tuesday';
           break;
-        case 2:
+        case 3:
           dayId = 'wednesday';
           break;
-        case 3:
+        case 4:
           dayId = 'thursday';
           break;
-        case 4:
+        case 5:
           dayId = 'friday';
           break;
         default:
@@ -1354,9 +1535,7 @@
                               if (RGZ.adminSluzbe[k].id == $("#admin-dep option:selected").val()) {
                                 for (var l = 0; l < RGZ.adminSluzbe[k].rgz_sluzbe_kancelarije.length; l++) {
                                   if (RGZ.adminSluzbe[k].rgz_sluzbe_kancelarije[l].id == $("#admin-off option:selected").val()) {
-                                    console.log(off);
                                     off = RGZ.adminSluzbe[k].rgz_sluzbe_kancelarije[l];
-                                    console.log(off);
                                     break;
                                   }
                                 }
@@ -1499,7 +1678,7 @@
         <input id="off-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
         <div class="form-label">Дани за пријем странака:</div>
         <div class="off-day-group">
-          <div class="off-day" id="monday" value="0">
+          <div class="off-day" id="monday" value="1">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               понедељак
@@ -1510,7 +1689,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="tuesday" value="1">
+          <div class="off-day" id="tuesday" value="2">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               уторак
@@ -1521,7 +1700,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="wednesday" value="2">
+          <div class="off-day" id="wednesday" value="3">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               среда
@@ -1532,7 +1711,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="thursday" value="3">
+          <div class="off-day" id="thursday" value="4">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               четвртак
@@ -1543,7 +1722,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="friday" value="4">
+          <div class="off-day" id="friday" value="5">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               петак
@@ -1588,7 +1767,7 @@
         </select>
         <div class="form-label">Дани за пријем странака:</div>
         <div class="off-day-group">
-          <div class="off-day" id="monday" value="0">
+          <div class="off-day" id="monday" value="1">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               понедељак
@@ -1599,7 +1778,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="tuesday" value="1">
+          <div class="off-day" id="tuesday" value="2">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               уторак
@@ -1610,7 +1789,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="wednesday" value="2">
+          <div class="off-day" id="wednesday" value="3">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               среда
@@ -1621,7 +1800,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="thursday" value="3">
+          <div class="off-day" id="thursday" value="4">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               четвртак
@@ -1632,7 +1811,7 @@
               <input class="off-day-time-to" type="text">
             </div>
           </div>
-          <div class="off-day" id="friday" value="4">
+          <div class="off-day" id="friday" value="5">
             <div class="off-day-checklabel" onclick="$RGZ.offDayClicked(this);">
               <i class="fa fa-square-o"></i>
               петак
@@ -1974,10 +2153,6 @@
   };
 
   adminDataFetchedAux = function() {
-    console.log(RGZ.adminRole);
-    console.log(RGZ.adminSluzbe);
-    console.log(RGZ.adminPraznici);
-    console.log(RGZ.adminDokumenti);
     var scheduleContentHtml = `
       <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
       <div id="logout" class="schedule-navi-button" onclick="$RGZ.logout();"><i class="fa fa-sign-out"></i></div>
@@ -1990,7 +2165,7 @@
     if (RGZ.loginInfo.rola == 1)
       scheduleContentHtml += `
             <option value="1">Нова служба</option>
-            <option value="2">Измени службу</option>
+            <option value="2">Измена службе</option>
       `;
     scheduleContentHtml += `
             <option value="3">Нови шалтер</option>
@@ -2224,33 +2399,34 @@
       $("#schedule-refresh i").removeClass("fa-spin");
     }, 3000);
     RGZ.zakazaniTermini = [];
-    var sync = 0;
-    $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "korisnici/zakazaniTermini",
-      function(responseArray, status) {
-        for (var m = 0; m < responseArray.length; m++) {
-          responseArray[m]["isOffice"] = false;
-          RGZ.zakazaniTermini.push(responseArray[m]);
-        }
-        sync = sync + 1;
-        if (sync == 2)
-          dataRefreshAux();
-      },
-      true, RGZ.bearer
-    );
     var date = new Date();
     var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
     var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
     var year = date.getFullYear();
+    var sync = (("" + year + "-" + month + "-" + day) == scheduleDateAux) ? 2 : 1;
+    if (("" + year + "-" + month + "-" + day) == scheduleDateAux)
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "korisnici/zakazaniTermini",
+        function(responseArray, status) {
+          for (var m = 0; m < responseArray.length; m++) {
+            responseArray[m]["isOffice"] = false;
+            RGZ.zakazaniTermini.push(responseArray[m]);
+          }
+          sync = sync - 1;
+          if (sync == 0)
+            dataRefreshAux();
+        },
+        true, RGZ.bearer
+      );
     $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(year + "-" + month + "-" + day),
+      RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(scheduleDateAux),
       function(responseArray, status) {
         for (var n = 0; n < responseArray.length; n++) {
           responseArray[n]["isOffice"] = true;
           RGZ.zakazaniTermini.push(responseArray[n]);
         }
-        sync = sync + 1;
-        if (sync == 2)
+        sync = sync - 1;
+        if (sync == 0)
           dataRefreshAux();
       },
       true, RGZ.bearer
@@ -2370,7 +2546,9 @@
     if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
       confirmArrivalClicked = false;
       return;
-    } else if (hours * 100 + minutes - 5 < Number($(e).parent().find(".item-time").html().replace(':', ''))) { //TODO or later date
+    }
+    /*
+    else if (hours * 100 + minutes - 5 < Number($(e).parent().find(".item-time").html().replace(':', ''))) { //TODO or later date
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Не можете потврдити долазак клијента у будућности.<br><br><span>Предвиђено је максимално кашњење од 5 минута.</span>',
@@ -2387,6 +2565,7 @@
       });
       return;
     }
+    */
     $.confirm({
       title: 'ПАЖЊА!',
       content: 'Да ли сте сигурни да желите да евидентирате да клијент (' + $(e).parent().find(".item-name").html() + (($(e).hasClass("item-y")) ? ') ЈЕСТЕ' : ') НИЈЕ') + ' ДОШАО у заказано време (' + $(e).parent().find(".item-time").html() + ')?',
@@ -2561,8 +2740,11 @@
   };
 
   RGZ.currentClientIndicator = function() {
-    //TODO: return if later date
     var date = new Date();
+    var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
+    var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
+    var year = date.getFullYear();
+    if (scheduleDateAux != ("" + year + "-" + month + "-" + day)) return;
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var seconds = date.getSeconds();

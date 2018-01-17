@@ -45,7 +45,7 @@ input {
 }
 
 #navi {
-  background-color: #F4F8E6;
+  background-color: #FFF;
   width: 100%;
   min-height: 7.2vh;
   font-size: 3.3vh;
@@ -109,7 +109,7 @@ input {
 #foot {
   background-color: #666;
   height: 7vh;
-  color: #F4F8E6;
+  color: #FFF;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -125,7 +125,7 @@ input {
   background-color: #666;
   height: 8vh;
   max-height: 8vh;
-  color: #F4F8E6;
+  color: #FFF;
   -webkit-transition: height 0.5s ease, max-height 0.5s ease;
   -moz-transition: height 0.5s ease, max-height 0.5s ease;
   transition: height 0.5s ease, max-height 0.5s ease;
@@ -288,7 +288,7 @@ input {
 }
 
 #foot-mobile a {
-  background-color: #F4F8E6;
+  background-color: #FFF;
   color: #666;
   padding: 2vh 0;
   margin-bottom: 3vh;
@@ -335,14 +335,14 @@ input {
 
 #book-content .form-button:hover, #book-content .form-search-button:hover, #schedule-content .form-button:hover, #schedule-content .form-search-button:hover {
   background-color: #1A3360;
-  color: #F4F8E6;
+  color: #FFF;
   cursor: pointer;
 }
 
 .content-box {
   width: 100%;
   height: 100%;
-  background-color: #E5EEC1;
+  background-color: #AAA;
   top: 0;
   left: 0;
   -webkit-transition: height 0.5s ease;
@@ -354,11 +354,11 @@ input {
   position: absolute;
   width: 100%;
   height: 100%;
-  opacity: 0.5;
+  opacity: 0.07;
 }
 
 #book-content>.content-box-img, #schedule-content>.content-box-img {
-  background: url('../img/clock.jpg') no-repeat;
+  background: url('../img/background.jpg') no-repeat;
   background-size: cover;
   background-position: center;
 }
@@ -393,7 +393,7 @@ input {
 .loader {
   width: 15vh;
   height: 15vh;
-  border: 1.5vh solid #F4F8E6;
+  border: 1.5vh solid #FFF;
   position: absolute;
   left: 0;
   right: 0;
@@ -554,7 +554,7 @@ input {
 }
 
 .btn-primary.active {
-  color: #F4F8E6;
+  color: #FFF;
 }
 
 #book-counters select, #book-offices select {
@@ -689,6 +689,42 @@ input {
 
 #schedule-content {
   height: 100% !important;
+}
+
+#schedule-cal {
+  position: relative;
+  width: 7vh !important;
+  height: 7vh !important;
+  line-height: 7vh !important;
+  text-align: center !important;
+  display: inline-block;
+  float: left;
+  margin-right: 1vh !important;
+  background-color: rgba(255, 255, 255, 0.5);
+  -webkit-transition: background-color 0.5s ease, color 0.5s ease;
+  -moz-transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+#schedule-cal:hover {
+  cursor: pointer;
+  color: #FFF;
+  background-color: #1A3360;
+}
+
+#schedule-cal-input {
+  height: 0 !important;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin: 0 !important;
+  border: none !important;
+  opacity: 0;
+}
+
+#schedule-co {
+  display: inline-block;
+  float: left;
 }
 
 #schedule-content .content-box-content {
@@ -1118,7 +1154,7 @@ input {
   }
   #book-content .form-button, #book-content .form-search-button, #schedule-content .form-button, #schedule-content .form-search-button {
     background-color: #1A3360;
-    color: #F4F8E6;
+    color: #FFF;
   }
 }
 
