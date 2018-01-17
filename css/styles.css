@@ -18,6 +18,9 @@ a, a:hover, a:focus, a:visited {
   display: inline-block;
   text-decoration: none;
   color: inherit;
+  -webkit-transition: color 0.4s ease;
+  -moz-transition: color 0.4s ease;
+  transition: color 0.4s ease;
 }
 
 button, button:hover, button:focus {
@@ -222,7 +225,7 @@ input {
 }
 
 #foot-copy {
-  color: #92948A;
+  color: #999;
   height: 3vh;
   line-height: 3vh;
   font-size: 1.2vh;
@@ -262,7 +265,7 @@ input {
 
 #foot-mobile-copy {
   position: absolute;
-  color: #92948A;
+  color: #999;
   height: 3vh;
   bottom: 0;
   line-height: 3vh;
