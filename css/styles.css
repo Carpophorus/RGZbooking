@@ -493,7 +493,7 @@ input {
   font-family: 'Russo One', sans-serif;
   font-size: 2.5vh;
   border-radius: 0;
-  border: 0.5vh solid white;
+  border: 0.5vh solid #FFF;
   padding: 0;
   margin: 0 0.5vh 1vh 0.5vh;
   height: 7vh;
@@ -510,7 +510,7 @@ input {
 }
 
 .jconfirm .jconfirm-box .jconfirm-buttons button.btn-white-rgz:hover {
-  background-color: white;
+  background-color: #FFF;
   color: #333
 }
 
@@ -778,7 +778,7 @@ input {
 
 .schedule-navi-button:hover {
   background-color: #1A3360;
-  color: white;
+  color: #FFF;
   cursor: pointer;
 }
 
@@ -944,7 +944,7 @@ input {
 #schedule-items .schedule-item>.item-y:hover, #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-y.arrival, #schedule-items .schedule-item>.item-n.arrival {
   cursor: pointer;
   background-color: green;
-  color: white;
+  color: #FFF;
   -webkit-transition: background-color 0.5s ease, color 0.5s ease;
   -moz-transition: background-color 0.5s ease, color 0.5s ease;
   transition: background-color 0.5s ease, color 0.5s ease;
@@ -1002,7 +1002,7 @@ input {
 }
 
 #schedule-items .expanded {
-  background-color: white;
+  background-color: #FFF;
   margin-top: 7vh;
 }
 
@@ -1043,7 +1043,7 @@ input {
   font-size: 1.7vh;
   line-height: 7vh;
   height: 7vh;
-  color: white;
+  color: #FFF;
   margin-top: 4vh;
   -webkit-transition: color 0.5s ease;
   -moz-transition: color 0.5s ease;
@@ -1138,7 +1138,7 @@ input {
     padding: 10vh 5vh;
   }
   .jconfirm .jconfirm-box .jconfirm-buttons button.btn-white-rgz {
-    background-color: white;
+    background-color: #FFF;
     color: #333
   }
   #book-counters, #book-offices {
