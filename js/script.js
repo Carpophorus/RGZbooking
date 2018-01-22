@@ -5,6 +5,7 @@
   RGZ.bearer = '';
   RGZ.loginInfo = '';
 
+  //RGZ.apiRoot = 'http://localhost:50399/api/';
   RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
   // RGZ.apiRoot = 'http://10.0.13.48:5053/api/';
   RGZ.salteriSluzbe = '';
@@ -111,12 +112,26 @@
 
   RGZ.loadBookContent = function() {
     var bookHtml = `
-      <div class="btn-group" data-toggle="buttons">
+      <div class="btn-group hidden-xs-down" data-toggle="buttons">
         <label class="btn btn-primary active" onclick="$RGZ.bookSwitch(0);">
           <input type="radio" name="options" id="option1" autocomplete="off" checked>ПРЕДАЈА&nbsp;ЗАХТЕВА
         </label>
         <label class="btn btn-primary" onclick="$RGZ.bookSwitch(1);">
           <input type="radio" name="options" id="option2" autocomplete="off">УВИД&nbsp;У&nbsp;ПРЕДМЕТ
+        </label>
+        <label class="btn btn-primary" onclick="$RGZ.bookSwitch(2);">
+          <input type="radio" name="options" id="option3" autocomplete="off">СТАТУС&nbsp;ПРЕДМЕТА
+        </label>
+      </div>
+      <div class="btn-group hidden-sm-up" data-toggle="buttons">
+        <label class="btn btn-primary active" onclick="$RGZ.bookSwitch(0);">
+          <input type="radio" name="options" id="option1" autocomplete="off" checked>ПРЕДАЈА
+        </label>
+        <label class="btn btn-primary" onclick="$RGZ.bookSwitch(1);">
+          <input type="radio" name="options" id="option2" autocomplete="off">УВИД
+        </label>
+        <label class="btn btn-primary" onclick="$RGZ.bookSwitch(2);">
+          <input type="radio" name="options" id="option3" autocomplete="off">СТАТУС
         </label>
       </div>
       <div id="book-counters">
@@ -411,20 +426,31 @@
   };
 
   RGZ.bookSwitch = function(n) {
-    if (n == 0 && nav == 1) {
+    if (n == 0 && nav != 0) {
       disappear($("#book-offices"), 500);
+      disappear($("#book-status"), 500);
       setTimeout(function() {
         appear($("#book-counters"), 500);
       }, 510);
       nav = 0;
     }
-    if (n == 1 && nav == 0) {
+    if (n == 1 && nav != 1) {
       disappear($("#book-counters"), 500);
+      disappear($("#book-status"), 500);
       setTimeout(function() {
         appear($("#book-offices"), 500);
         $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
       }, 510);
       nav = 1;
+    }
+    if (n == 2 && nav != 2) {
+      disappear($("#book-counters"), 500);
+      disappear($("#book-offices"), 500);
+      setTimeout(function() {
+        appear($("#book-status"), 500);
+        $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
+      }, 510);
+      nav = 2;
     }
   };
 
@@ -603,7 +629,7 @@
   RGZ.bookCounterTime = function() {
     $("#book-counter-aux").removeClass("gone");
     $(".content-box-content").animate({
-      scrollTop: $("#book-counter-aux").offset().top - $(".btn-group").offset().top
+      scrollTop: $("#book-counter-aux").offset().top - $(".btn-group").offset().top + 10 * window.innerHeight / 100
     }, 1500);
     setTimeout(function() {
       appear($("#book-counter-aux"), 1000);
@@ -623,7 +649,7 @@
   RGZ.bookOfficeTime = function() {
     $("#book-office-aux").removeClass("gone");
     $(".content-box-content").animate({
-      scrollTop: $("#book-office-aux").offset().top - $(".btn-group").offset().top
+      scrollTop: $("#book-office-aux").offset().top - $(".btn-group").offset().top + 10 * window.innerHeight / 100
     }, 1500);
     setTimeout(function() {
       appear($("#book-office-aux"), 1000);

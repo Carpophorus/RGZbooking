@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Owner" content="Republički geodetski zavod">
+  <meta http-equiv="Author" content="DBS Konsel Security Service d.o.o.">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>РГЗ Заказивање</title>
 
@@ -20,15 +22,15 @@
   <link rel="icon" type="image/png" sizes="192x192" href="img/favicons/android-chrome-192x192.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/favicon-16x16.png">
   <link rel="manifest" href="img/favicons/manifest.json">
-  <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#214291">
+  <link rel="mask-icon" href="img/favicons/safari-pinned-tab.svg" color="#1A3360">
   <meta name="apple-mobile-web-app-title" content="Заказивање">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="application-name" content="Заказивање">
   <meta name="msapplication-config" content="img/favicons/browserconfig.xml" />
-  <meta name="msapplication-TileColor" content="#214291">
+  <meta name="msapplication-TileColor" content="#1A3360">
   <meta name="msapplication-TileImage" content="img/favicons/mstile-144x144.png">
   <meta name="msapplication-TileImage" content="mstile-144x144.png" />
-  <meta name="theme-color" content="#F4F8E6">
+  <meta name="theme-color" content="#F2F2F2">
 
   <link rel="stylesheet" href="css/font-awesome.min.css">
   <link rel="stylesheet" href="css/tether.min.css">
@@ -36,7 +38,8 @@
   <link rel="stylesheet" href="css/jquery-confirm.min.css">
   <link rel="stylesheet" href="css/styles.css">
 
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Russo+One&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+  <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Russo+One&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet"> -->
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:400,700&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
 
   <script src="js/jquery-3.2.1.min.js"></script>
   <script src="js/tether.min.js"></script>
@@ -52,18 +55,18 @@
   </script>
 </head>
 
-<body>
+<body class="booking">
   <div id="navi" role="navigation" onclick="$RGZ.footerMobileOutsideClick(this);">
-    <img src="img/logo.svg" alt="logo">
+    <!-- <img src="img/logo.svg" alt="logo"> -->
     <div id="navi-landing">
-      <span>РГЗ ЗАКАЗИВАЊЕ</span>
+      <span>еЗАКАЗИВАЊЕ</span>
     </div>
   </div>
 
   <div id="tiles" class="row">
 
     <div id="book-content" class="content-box col-12" onclick="$RGZ.footerMobileOutsideClick(this);">
-      <div class="content-box-img"></div>
+      <!-- <div class="content-box-img"></div> -->
       <div class="content-box-loader gone">
         <div class="content-box-loader-inner-container">
           <div class="loader">
@@ -75,6 +78,7 @@
       <div id="recaptcha" class="g-recaptcha" data-sitekey="6LfwyjYUAAAAAFRNVQ7w4LQjP3wQp4PwUG0ef19r" data-callback="onSubmit" data-size="invisible" data-badge="bottomleft" data-theme="dark"></div>
     </div>
 
+    <!--
     <div id="foot-mobile" class="foot-mobile hidden-lg-up col-12" onclick="$RGZ.footerMobileClick(this);">
       <div id="foot-mobile-title">КОНТАКТ</div>
       <div id="foot-mobile-logo" class="hidden"></div>
@@ -101,9 +105,11 @@
       </div>
       <div id="foot-mobile-copy">Copyright&nbsp;&copy;&nbsp;RGZ&nbsp;2018.&nbsp;All&nbsp;Rights&nbsp;Reserved.</div>
     </div>
+    -->
 
   </div>
 
+  <!--
   <div id="foot" onmouseenter="$RGZ.footMouseOver();" onmouseleave="$RGZ.footMouseOut();" class="hidden-md-down">
     <div id="foot-contact">КОНТАКТ</div>
     <div id="foot-title" class="hidden">РЕПУБЛИЧКИ&nbsp;ГЕОДЕТСКИ&nbsp;ЗАВОД</div>
@@ -119,6 +125,7 @@
     </div>
     <div id="foot-copy">Copyright&nbsp;&copy;&nbsp;RGZ&nbsp;2018.&nbsp;All&nbsp;Rights&nbsp;Reserved.</div>
   </div>
+  -->
 </body>
 
 </html>

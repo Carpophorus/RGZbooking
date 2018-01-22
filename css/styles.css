@@ -9,8 +9,9 @@
 body {
   overflow-x: hidden;
   overflow-y: hidden;
-  font-family: 'Open Sans', sans-serif;
-  color: #333;
+  font-family: /*'Open Sans'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  color: #1A3360;
   font-size: 2.5vh;
 }
 
@@ -44,7 +45,8 @@ input {
 }
 
 .grecaptcha-badge {
-  bottom: 8vh !important;
+  /* bottom: 8vh !important; */
+  bottom: 1vh !important;
 }
 
 #navi {
@@ -54,14 +56,25 @@ input {
   font-size: 3.3vh;
   line-height: 7vh;
   text-align: center;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   color: #666;
   position: absolute;
   top: 0;
   z-index: 1000;
-  -webkit-box-shadow: 0 3px 1vh 0 #333;
-  -moz-box-shadow: 0 3px 1vh 0 #333;
-  box-shadow: 0 3px 1vh 0 #333;
+  -webkit-box-shadow: 0 0.5vh 1vh 0 #333;
+  -moz-box-shadow: 0 0.5vh 1vh 0 #333;
+  box-shadow: 0 0.5vh 1vh 0 #333;
+}
+
+.booking #navi {
+  background-color: #1A3360;
+  color: #FFF !important;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 
 #navi>img {
@@ -105,7 +118,7 @@ input {
   position: relative;
 }
 
-.schedule #tiles, .admin #tiles {
+.booking #tiles, .schedule #tiles, .admin #tiles {
   height: 93vh;
 }
 
@@ -137,7 +150,10 @@ input {
 #foot-contact, #foot-mobile-title {
   width: 100%;
   text-align: center;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   font-size: 3vh;
   line-height: 8vh;
 }
@@ -155,7 +171,10 @@ input {
 
 #foot-title {
   font-size: 2.5vh;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   line-height: 4.5vh;
   letter-spacing: 1px;
   position: absolute;
@@ -254,7 +273,10 @@ input {
   position: absolute;
   left: 45%;
   bottom: 44.5vh;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   font-size: 2.5vh;
   line-height: 3vh;
   opacity: 0;
@@ -314,12 +336,23 @@ input {
   height: 7vh;
   line-height: 6.2vh;
   font-size: 2.5vh;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   text-align: center;
   background-color: rgba(255, 255, 255, 0.15);
   -webkit-transition: background-color 0.5s ease, color 0.5s ease;
   -moz-transition: background-color 0.5s ease, color 0.5s ease;
   transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.booking .form-button, .booking .form-search-button {
+  background-color: #E1E1E1;
+}
+
+.booking input {
+  background-color: #E1E1E1 !important;
 }
 
 .form-search-button {
@@ -333,7 +366,7 @@ input {
 
 #book-content .form-button, #book-content .form-search-button, #schedule-content .form-button, #schedule-content .form-search-button {
   border: 0.5vh solid #1A3360;
-  color: #333;
+  color: #1A3360;
 }
 
 #book-content .form-button:hover, #book-content .form-search-button:hover, #schedule-content .form-button:hover, #schedule-content .form-search-button:hover {
@@ -345,12 +378,16 @@ input {
 .content-box {
   width: 100%;
   height: 100%;
-  background-color: #AAA;
+  background-color: #BBB;
   top: 0;
   left: 0;
   -webkit-transition: height 0.5s ease;
   -moz-transition: height 0.5s ease;
   transition: height 0.5s ease;
+}
+
+.booking .content-box {
+  background-color: #F2F2F2;
 }
 
 .content-box-img {
@@ -406,6 +443,10 @@ input {
   animation: loader 2s infinite ease;
 }
 
+.booking .loader {
+  border: 1.5vh solid #E1E1E1;
+}
+
 .loader-inner {
   vertical-align: top;
   display: inline-block;
@@ -454,8 +495,9 @@ input {
 }
 
 .btn-group {
-  width: 100%;
-  padding: 10vh 25%;
+  width: 50%;
+  margin: 10vh 25%;
+  border: 0.5vh solid;
 }
 
 .jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-title-c {
@@ -465,7 +507,10 @@ input {
 }
 
 .jconfirm.jconfirm-supervan .jconfirm-box div.jconfirm-title-c .jconfirm-title {
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   padding-bottom: 5vh;
 }
 
@@ -490,7 +535,10 @@ input {
 }
 
 .jconfirm.jconfirm-supervan .jconfirm-box .jconfirm-buttons button {
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   font-size: 2.5vh;
   border-radius: 0;
   border: 0.5vh solid #FFF;
@@ -505,25 +553,28 @@ input {
 }
 
 .jconfirm.jconfirm-supervan .jconfirm-bg {
-  background-color: #333;
+  background-color: #1A3360;
   opacity: 0.9;
 }
 
 .jconfirm .jconfirm-box .jconfirm-buttons button.btn-white-rgz:hover {
   background-color: #FFF;
-  color: #333
+  color: #1A3360
 }
 
 .btn-group>label {
   border-radius: 0;
-  width: 50%;
+  width: 33.333333%;
   font-size: 2.5vh;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   margin: 0;
-  border: 0.5vh solid;
-  height: 7vh;
+  height: 6vh;
   line-height: 6vh;
   overflow: hidden;
+  margin-left: 0 !important;
 }
 
 .btn-primary.focus, .btn-primary.active {
@@ -531,7 +582,7 @@ input {
   box-shadow: none;
 }
 
-#book-content .btn-group>label {
+#book-content .btn-group {
   border-color: #1A3360;
 }
 
@@ -540,11 +591,15 @@ input {
 }
 
 #book-content .btn-primary:not(.active):hover {
-  background-color: #1A3360;
+  /* background-color: #1A3360; */
+  /* background-color: rgba(26, 51, 96, 0.5); */
+  /* background-color: rgba(255, 255, 255, 0.15); */
+  background-color: #E1E1E1;
 }
 
 .btn {
   padding: 0;
+  border: 0;
 }
 
 .btn-group>label:hover {
@@ -552,8 +607,9 @@ input {
 }
 
 .btn-primary {
-  color: #333;
-  background-color: rgba(255, 255, 255, 0.15);
+  color: #1A3360;
+  /* background-color: rgba(255, 255, 255, 0.15); */
+  background-color: #E1E1E1;
 }
 
 .btn-primary.active {
@@ -561,16 +617,20 @@ input {
 }
 
 #book-counters select, #book-offices select {
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   font-size: 2.5vh;
-  color: #333;
+  color: #1A3360;
   width: 50%;
   margin: 0 25% 4vh 25%;
   height: 7vh;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: #E1E1E1;
+  /* background-color: rgba(255, 255, 255, 0.5); */
   border-bottom: 0.6vh solid #1A3360;
   text-align-last: center;
   -webkit-transition: opacity 0.5s ease;
@@ -578,10 +638,17 @@ input {
   transition: opacity 0.5s ease;
 }
 
+.booking #book-counter-reason {
+  font-weight: 400;
+}
+
 #subj-select {
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   font-size: 2.5vh;
-  color: #333;
+  color: #1A3360;
   height: 7vh;
   line-height: 7vh;
   margin: 0 25% 4vh 25%;
@@ -601,9 +668,12 @@ input {
 #subj-select input {
   width: 100%;
   height: 7vh;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   font-size: 2.5vh;
-  color: #333;
+  color: #1A3360;
   margin-bottom: 0;
   white-space: nowrap;
   overflow: hidden !important;
@@ -648,7 +718,8 @@ input {
 }
 
 #book-counter-aux select {
-  font-family: 'Open Sans', sans-serif;
+  font-family: /*'Open Sans'*/
+  'Fira Sans Extra Condensed', sans-serif;
   text-align: left;
   text-align-last: left;
   margin: 0;
@@ -661,7 +732,7 @@ input {
   display: block;
   width: 100%;
   font-size: 2.5vh;
-  color: #333;
+  color: #1A3360;
   height: 7vh;
   background-color: rgba(255, 255, 255, 0.5);
   border-bottom: 0.6vh solid #1A3360;
@@ -746,7 +817,8 @@ input {
   height: 7vh;
   line-height: 7vh;
   text-align: center;
-  font-family: 'Open Sans', sans-serif;
+  font-family: /*'Open Sans'*/
+  'Fira Sans Extra Condensed', sans-serif;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
@@ -791,7 +863,7 @@ input {
   width: 100%;
   line-height: 7vh;
   text-align: center;
-  color: #333;
+  color: #1A3360;
 }
 
 #schedule-refresh {
@@ -824,15 +896,19 @@ input {
   height: 7vh;
   text-align: center;
   text-align-last: center;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   line-height: 7vh;
   background-color: rgba(255, 255, 255, 0.5);
-  color: #333;
+  color: #1A3360;
 }
 
 #admin-action-form select {
   margin-bottom: 4vh !important;
-  font-family: 'Open Sans', sans-serif !important;
+  font-family: /*'Open Sans'*/
+  'Fira Sans Extra Condensed', sans-serif !important;
   border-bottom: 0.6vh solid #1A3360;
 }
 
@@ -851,7 +927,10 @@ input {
   width: 23vh;
   color: #1A3360;
   line-height: 6.2vh;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
   cursor: pointer;
   display: inline-block;
 }
@@ -881,7 +960,10 @@ input {
   line-height: 7vh;
   width: 3vh;
   text-align: center;
-  font-family: 'Russo One', sans-serif;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
 }
 
 .timepicker .title {
@@ -918,7 +1000,8 @@ input {
 }
 
 .item-indicator {
-  color: red;
+  color: #A12D2E;
+  /*red*/
 }
 
 #schedule-header {
@@ -951,7 +1034,8 @@ input {
 }
 
 #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-n.arrival {
-  background-color: red;
+  background-color: #A12D2E;
+  /*red*/
 }
 
 #schedule-items .schedule-item>.arrival {
@@ -1089,7 +1173,8 @@ input {
 
 @media (max-width: 991.5px) {
   .grecaptcha-badge {
-    bottom: 9vh !important;
+    /* bottom: 9vh !important; */
+    bottom: 1vh !important;
   }
   #navi {
     min-height: 8vh;
@@ -1135,11 +1220,12 @@ input {
     max-height: 75vh;
   }
   .btn-group {
-    padding: 10vh 5vh;
+    margin: 10vh 5vh;
+    width: calc(100% - 10vh);
   }
   .jconfirm .jconfirm-box .jconfirm-buttons button.btn-white-rgz {
     background-color: #FFF;
-    color: #333
+    color: #1A3360
   }
   #book-counters, #book-offices {
     padding: 0 5vh;
@@ -1176,7 +1262,7 @@ input {
 }
 
 #book-counter-reason>option {
-  color: #333 !important;
+  color: #1A3360 !important;
 }
 
 ::-webkit-input-placeholder {
@@ -1197,8 +1283,26 @@ input {
   opacity: 1;
 }
 
-@media (max-width: 767.5px) and (min-width: 766.5px) {
-  #schedule-header i, #schedule-header #slash {
+@media (min-width: 1198.5px) and (max-width: 1199.5px) {
+  .hidden-xl-up {
+    display: none;
+  }
+}
+
+@media (min-width: 990.5px) and (max-width: 991.5px) {
+  .hidden-lg-up {
+    display: none;
+  }
+}
+
+@media (min-width: 766.5px) and (max-width: 767.5px) {
+  .hidden-md-up {
+    display: none;
+  }
+}
+
+@media (min-width: 574.5px) and (max-width: 575.5px) {
+  .hidden-sm-up {
     display: none;
   }
 }
