@@ -713,8 +713,46 @@ input {
   margin-bottom: 4vh;
 }
 
-#book-counter-aux, #book-office-aux {
+#book-counter-aux, #book-office-aux, #book-status-aux {
   padding: 6vh 25% 0 25%;
+}
+
+#book-status-aux-desc {
+  padding: 3vh 0 6vh 0;
+}
+
+.message-overlay {
+  width: 100%;
+  text-align: center;
+}
+
+.message-container {
+  display: inline-block;
+  margin: 0 10% 0 10%;
+  text-align: left
+}
+
+.message-icon {
+  position: absolute;
+  width: 10vh;
+  height: 10vh;
+  font-size: 10vh
+}
+
+.message-ct-container {
+  padding-left: 13vh
+}
+
+.message-code {
+  line-height: 6vh;
+  font-size: 4vh;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+}
+
+.message-error .message-icon, .message-error .message-code {
+  color: #A12D2E;
 }
 
 #book-counter-aux select {
@@ -728,7 +766,7 @@ input {
   padding: 0 2vh;
 }
 
-.aux-container input {
+.aux-container input, #book-status>input {
   display: block;
   width: 100%;
   font-size: 2.5vh;
@@ -738,6 +776,19 @@ input {
   border-bottom: 0.6vh solid #1A3360;
   margin-bottom: 4vh;
   padding: 0 2vh;
+}
+
+#book-status>input {
+  margin: 0 25% 4vh 25%;
+  width: 50%;
+}
+
+#book-status-aux-title {
+  text-align: center;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 3vh;
 }
 
 #book-counter-check, #book-office-check {
@@ -759,6 +810,19 @@ input {
   text-align: justify;
   width: calc(100% - 8vh);
   padding-top: 1.5vh;
+}
+
+.checkbox-label span {
+  color: #69A2FF;
+}
+
+.checkbox-label span:hover {
+  color: #1A3360;
+  cursor: pointer;
+}
+
+#book-office-aux .checkbox-label {
+  margin-top: 1vh;
 }
 
 #schedule-content {
@@ -1227,10 +1291,10 @@ input {
     background-color: #FFF;
     color: #1A3360
   }
-  #book-counters, #book-offices {
+  #book-counters, #book-offices, #book-status {
     padding: 0 5vh;
   }
-  #book-counter-aux, #book-office-aux {
+  #book-counter-aux, #book-office-aux, #book-status-aux {
     padding: 6vh 0 0 0;
   }
   #book-counters select, #book-offices select, #subj-select, .form-search-button-container {

@@ -19,6 +19,7 @@
   RGZ.adminSluzbe = '';
   RGZ.adminPraznici = '';
   RGZ.adminDokumenti = '';
+  RGZ.checkboxLabelLinkClicked = false;
 
   var bookingForbidden = false;
   var nav = 0;
@@ -39,7 +40,7 @@
     targetElem.innerHTML = html;
   };
 
-  var appear = function(selector, interval) {
+  window.appear = function(selector, interval) {
     $(selector).removeClass("gone");
     setTimeout(function() {
       $(selector).css({
@@ -51,7 +52,7 @@
     }, 10);
   };
 
-  var disappear = function(selector, interval) {
+  window.disappear = function(selector, interval) {
     $(selector).css({
       "opacity": 0,
       "-webkit-transition": "opacity " + Number(interval) / 1000 + "s ease",
@@ -194,10 +195,41 @@
           <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
           <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-          <!-- <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да предајем потпуну документацију и доказ о уплаћеној такси за захтев и упис због којег заказујем термин за предају захтева. У случају кашњења, доношења непотпуне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничење да на шалтеру Службе нећу вршити измену или допуне поднете пријаве за заказивање и да у ћу у случају потребе да захтев буде измењен/проширен бити упућен/а на редован шалтер.</label> -->
+          <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да сам претходно проверио/ла статус свог предмета <span onclick="$RGZ.checkboxLabelLinkClicked = true; $('.btn-group .btn-primary:last-child').click();">ОВДЕ</span>.</label>
           <div class="form-button" onclick="$RGZ.bookOffice();">ЗАКАЖИ</div>
         </div>
+      </div>
+      <div id="book-status" class="gone">
+        <div class="message-overlay">
+          <div class="message-container message-error">
+            <i class="message-icon fa fa-wrench"></i>
+            <div class="message-ct-container">
+              <div class="message-code">У&nbsp;ИЗРАДИ</div>
+              <div class="message-text">Тражена функционалност није тренутно доступна.</div>
+            </div>
+          </div>
+        </div>
+        <!-- <div id="subj-select">
+          <div class="subj-1">
+            <span class="hidden-sm-down">БР.&nbsp;ПРЕДМЕТА:</span>
+            <span class="hidden-md-up">БР.&nbsp;ПР.:</span>
+            &nbsp;952&nbsp;-&nbsp;02&nbsp;-&nbsp;
+          </div>
+          <div class="subj-input-container">
+            <div class="subj-2"><input id="subj-type" type="text" maxlength="3" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
+            <div class="subj-3">-</div>
+            <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
+            <div class="subj-5">/</div>
+            <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
+          </div>
+        </div>
+        <!-- <input id="book-status-id" placeholder="идентификациони број" onfocus="this.placeholder=''" onblur="this.placeholder='идентификациони број'" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"> --
+        <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchStatus();">ПРЕТРАГА</div></div>
+        <div id="book-status-aux" class="aux-container gone">
+          <div id="book-status-aux-title"></div>
+          <div id="book-status-aux-desc"></div>
+        </div> -->
       </div>
     `;
     insertHtml("#book-content>.content-box-content", bookHtml);
@@ -211,15 +243,17 @@
     if (window.innerWidth > 991.5) {
       if ($("#foot-mobile").hasClass("clicked")) $("#foot-mobile").click();
       $(".content-box").css({
-        "height": "86vh"
+        "height": "100%" /* "86vh" when footer is active */
       });
     } else {
       $(".content-box").css({
-        "height": "84vh"
+        "height": "100%" /* "84vh" when footer is active */
       });
     }
     if (!$("#book-offices").hasClass("gone"))
-      $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
+      $("#book-offices .subj-input-container").width($("#book-offices #subj-select").innerWidth() - $("#book-offices .subj-1").innerWidth());
+    if (!$("#book-status").hasClass("gone"))
+      $("#book-status .subj-input-container").width($("#book-status #subj-select").innerWidth() - $("#book-status .subj-1").innerWidth());
   });
 
   RGZ.recaptchaCallback = function(token) {
@@ -415,10 +449,22 @@
         },
         true, data /*, RGZ.bearer*/
       );
+    } else if (nav == 2) {
+      //this on api response
+      console.log("952-02-" + $("#book-status #subj-type").val() + "-" + $("#book-status #subj-id").val() + "/" + $("#book-status #subj-year").val())
+      $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year").prop("disabled", false);
+      insertHtml("#book-status-aux-title", "ИМЕ СТАТУСА");
+      insertHtml("#book-status-aux-desc", "опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса");
+      disappear($(".content-box-loader"), 200);
+      appear($("#book-status-aux"), 500);
     }
   };
 
   RGZ.checkboxClicked = function(e) {
+    if (RGZ.checkboxLabelLinkClicked == true) {
+      RGZ.checkboxLabelLinkClicked = false;
+      return;
+    }
     if ($(e).find("i").hasClass("fa-square-o"))
       $(e).find("i").removeClass("fa-square-o").addClass("fa-check-square-o");
     else
@@ -439,7 +485,7 @@
       disappear($("#book-status"), 500);
       setTimeout(function() {
         appear($("#book-offices"), 500);
-        $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
+        $("#book-offices .subj-input-container").width($("#book-offices #subj-select").innerWidth() - $("#book-offices .subj-1").innerWidth());
       }, 510);
       nav = 1;
     }
@@ -448,7 +494,7 @@
       disappear($("#book-offices"), 500);
       setTimeout(function() {
         appear($("#book-status"), 500);
-        $(".subj-input-container").width($("#subj-select").innerWidth() - $(".subj-1").innerWidth());
+        $("#book-status .subj-input-container").width($("#book-status #subj-select").innerWidth() - $("#book-status .subj-1").innerWidth());
       }, 510);
       nav = 2;
     }
@@ -556,7 +602,7 @@
 
   RGZ.fetchOfficeTimes = function() {
     fetchOfficeTimesClicked = true;
-    if ($("#office-select option:selected").val() == 0 || $("#subj-type").val() == "" || $("#subj-id").val() == "" || $("#subj-year").val() == "") {
+    if ($("#office-select option:selected").val() == 0 || $("#book-offices #subj-type").val() == "" || $("#book-offices #subj-id").val() == "" || $("#book-offices #subj-year").val() == "") {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате прво изабрати службу у којој желите да закажете канцеларијски термин и уписати број свог предмета.',
@@ -573,7 +619,7 @@
       });
       return;
     }
-    $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", true);
+    $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", true);
     $(".content-box-loader").css({
       "padding-top": "56vh"
     });
@@ -585,7 +631,7 @@
     RGZ.officeDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&broj_dok=" + encodeURIComponent("952-02-" + $("#subj-type").val() + "-" + $("#subj-id").val() + "/" + $("#subj-year").val()),
+        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&broj_dok=" + encodeURIComponent("952-02-" + $("#book-offices #subj-type").val() + "-" + $("#book-offices #subj-id").val() + "/" + $("#book-offices #subj-year").val()),
         function(responseArray, status) {
           RGZ.kancelarijeTermini = responseArray;
           var datumi = [];
@@ -609,7 +655,7 @@
           insertHtml("#office-time-select", selectTimeHtml);
           appear($("#office-time-select, #office-day-select"), 500);
           disappear($(".content-box-loader"), 200);
-          $("#office-select, #subj-type, #subj-id, #subj-year").prop("disabled", false);
+          $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", false);
         },
         true /*, RGZ.bearer*/
       );
@@ -824,10 +870,10 @@
 
   RGZ.bookOffice = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-office-name").val() == "" /* || $("#book-office-check i").hasClass("fa-square-o")*/ ) {
+    if ($("#book-office-name").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
       $.confirm({
         title: 'ГРЕШКА!',
-        content: 'Морате исправно попунити барем обавезна поља (означена звездицом).' /* и прихватити услове коришћења заказивача.'*/ ,
+        content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и претходно проверити статус предмета.',
         theme: 'supervan',
         backgroundDismiss: 'true',
         buttons: {
@@ -899,6 +945,36 @@
         },
       }
     });
+  };
+
+  RGZ.fetchStatus = function() {
+    if ($("#book-status #subj-type").val() == "" || $("#book-status #subj-id").val() == "" || $("#book-status #subj-year").val() == "" /*|| $("#book-status #book-status-id").val() == ""*/ ) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате исправно попунити број предмета.' /*и идентификациони број, уколико је везан за Ваш предмет.'*/ ,
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year").prop("disabled", true);
+    $(".content-box-loader").css({
+      "padding-top": "45vh" /*"56vh" for ID active, "45vh" for ID inactive */
+    });
+    disappear($("#book-status-aux"), 500);
+    appear($(".content-box-loader"), 200);
+    setTimeout(function() {
+      grecaptcha.reset();
+      grecaptcha.execute();
+    }, 500);
   };
 
   RGZ.forgotPassword = function() {
