@@ -5,9 +5,9 @@
   RGZ.bearer = '';
   RGZ.loginInfo = '';
 
-  //RGZ.apiRoot = 'http://localhost:50399/api/';
-  RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
-  // RGZ.apiRoot = 'http://10.0.13.48:5053/api/';
+  RGZ.apiRoot = 'http://localhost:50399/api/';
+  //RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
+  //RGZ.apiRoot = 'http://10.0.13.48:5053/api/';
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
   RGZ.kancelarijeSluzbe = '';
@@ -195,8 +195,8 @@
           <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
           <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-          <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да сам претходно проверио/ла статус свог предмета <span onclick="$RGZ.checkboxLabelLinkClicked = true; $('.btn-group .btn-primary:last-child').click();">ОВДЕ</span>.</label>
+          <!-- <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да сам претходно проверио/ла статус свог предмета <span onclick="$RGZ.checkboxLabelLinkClicked = true; $('.btn-group .btn-primary:last-child').click();">ОВДЕ</span>.</label> -->
           <div class="form-button" onclick="$RGZ.bookOffice();">ЗАКАЖИ</div>
         </div>
       </div>
@@ -287,7 +287,7 @@
             buttons: {
               print: {
                 text: '<i class="fa fa-print"></i>',
-                btnClass: 'btn-white-prm hidden-md-down',
+                btnClass: 'btn-white-rgz hidden-md-down',
                 action: function() {
                   var date = new Date();
                   var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
@@ -384,7 +384,7 @@
             buttons: {
               print: {
                 text: '<i class="fa fa-print"></i>',
-                btnClass: 'btn-white-prm hidden-md-down',
+                btnClass: 'btn-white-rgz hidden-md-down',
                 action: function() {
                   var date = new Date();
                   var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
@@ -591,7 +591,23 @@
             <option disabled value="0">ПРВО ИЗАБЕРИТЕ ДАТУМ</option>
           `;
           insertHtml("#counter-time-select", selectTimeHtml);
-          appear($("#counter-time-select, #counter-day-select"), 500);
+          if (RGZ.salteriTermini.length > 0)
+            appear($("#counter-time-select, #counter-day-select"), 500);
+          else
+            $.confirm({
+              title: 'ОБАВЕШТЕЊЕ',
+              content: 'Сви термини у одабраној служби су заузети, молимо покушајте касније.',
+              theme: 'supervan',
+              backgroundDismiss: 'true',
+              buttons: {
+                ok: {
+                  text: 'ОК',
+                  btnClass: 'btn-white-rgz',
+                  keys: ['enter'],
+                  action: function() {}
+                }
+              }
+            });
           disappear($(".content-box-loader"), 200);
           $("#counter-select").prop("disabled", false);
         },
@@ -653,7 +669,23 @@
             <option disabled value="0">ПРВО ИЗАБЕРИТЕ ДАТУМ</option>
           `;
           insertHtml("#office-time-select", selectTimeHtml);
-          appear($("#office-time-select, #office-day-select"), 500);
+          if (RGZ.kancelarijeTermini.length > 0)
+            appear($("#office-time-select, #office-day-select"), 500);
+          else
+            $.confirm({
+              title: 'ОБАВЕШТЕЊЕ',
+              content: 'Сви термини у одабраној служби су заузети, молимо покушајте касније.',
+              theme: 'supervan',
+              backgroundDismiss: 'true',
+              buttons: {
+                ok: {
+                  text: 'ОК',
+                  btnClass: 'btn-white-rgz',
+                  keys: ['enter'],
+                  action: function() {}
+                }
+              }
+            });
           disappear($(".content-box-loader"), 200);
           $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", false);
         },
@@ -819,7 +851,7 @@
           buttons: {
             ok: {
               text: 'ОК',
-              btnClass: 'btn-white-prm',
+              btnClass: 'btn-white-rgz',
               keys: ['enter'],
               action: function() {}
             }
@@ -870,10 +902,10 @@
 
   RGZ.bookOffice = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-office-name").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
+    if ($("#book-office-name").val() == "" /* || $("#book-office-check i").hasClass("fa-square-o")*/ ) {
       $.confirm({
         title: 'ГРЕШКА!',
-        content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и претходно проверити статус предмета.',
+        content: 'Морате исправно попунити барем обавезна поља (означена звездицом).' /* и претходно проверити статус предмета.'*/ ,
         theme: 'supervan',
         backgroundDismiss: 'true',
         buttons: {
@@ -898,7 +930,7 @@
           buttons: {
             ok: {
               text: 'ОК',
-              btnClass: 'btn-white-prm',
+              btnClass: 'btn-white-rgz',
               keys: ['enter'],
               action: function() {}
             }
@@ -987,7 +1019,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -1037,7 +1069,7 @@
                   buttons: {
                     ok: {
                       text: 'ОК',
-                      btnClass: 'btn-white-prm',
+                      btnClass: 'btn-white-rgz',
                       keys: ['enter'],
                       action: function() {}
                     }
@@ -1178,7 +1210,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -1329,7 +1361,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -1403,7 +1435,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -1499,7 +1531,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -1592,7 +1624,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -1953,7 +1985,7 @@
       buttons: {
         ok: {
           text: 'ОК',
-          btnClass: 'btn-white-prm',
+          btnClass: 'btn-white-rgz',
           keys: ['enter'],
           action: function() {}
         }
@@ -2006,7 +2038,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -2395,7 +2427,7 @@
         buttons: {
           ok: {
             text: 'ОК',
-            btnClass: 'btn-white-prm',
+            btnClass: 'btn-white-rgz',
             keys: ['enter'],
             action: function() {}
           }
@@ -2569,7 +2601,7 @@
                   buttons: {
                     ok: {
                       text: 'ОК',
-                      btnClass: 'btn-white-prm',
+                      btnClass: 'btn-white-rgz',
                       keys: ['enter'],
                       action: function() {}
                     }
@@ -2728,13 +2760,13 @@
       buttons: {
         cancel: {
           text: '<i class="fa fa-times"></i>',
-          btnClass: 'btn-white-prm',
+          btnClass: 'btn-white-rgz',
           keys: ['esc'],
           action: function() {}
         },
         print: {
           text: '<i class="fa fa-print"></i>',
-          btnClass: 'btn-white-prm',
+          btnClass: 'btn-white-rgz',
           keys: ['enter'],
           action: function() {
             var date = new Date();

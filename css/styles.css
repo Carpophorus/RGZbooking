@@ -758,6 +758,7 @@ input {
 #book-counter-aux select {
   font-family: /*'Open Sans'*/
   'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 400 !important;
   text-align: left;
   text-align-last: left;
   margin: 0;
@@ -881,8 +882,10 @@ input {
   height: 7vh;
   line-height: 7vh;
   text-align: center;
+  color: #1A3360;
   font-family: /*'Open Sans'*/
   'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 400 !important;
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis;
@@ -973,6 +976,7 @@ input {
   margin-bottom: 4vh !important;
   font-family: /*'Open Sans'*/
   'Fira Sans Extra Condensed', sans-serif !important;
+  font-weight: 400 !important;
   border-bottom: 0.6vh solid #1A3360;
 }
 
