@@ -1229,7 +1229,7 @@
       });
       return;
     }
-    var data = JSON.parse('{"id": "' + $("#admin-dep option:selected").val() + '", "sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '", "pocetak_radnog_vremena": "' + $("#dep-start").val() + '", "kraj_radnog_vremena": "' + $("#dep-end").val() + '", "interval_za_saltere": "' + $("#dep-int").val() + '"}');
+    var data = JSON.parse('{"id": "' + $("#admin-dep option:selected").val() + '", "sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '", "pocetak_radnog_vremena": "' + $("#dep-start").val() + '", "kraj_radnog_vremena": "' + $("#dep-end").val() + '", "interval_za_saltere": "' + $("#dep-int").val() + '", "dms_sluzbaId": "' + $("#dep-dms").val() + '"}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPutRequestWithData(
@@ -2059,7 +2059,7 @@
       });
       return;
     }
-    var data = JSON.parse('{"sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '", "pocetak_radnog_vremena": "' + $("#dep-start").val() + '", "kraj_radnog_vremena": "' + $("#dep-end").val() + '", "interval_za_saltere": "' + $("#dep-int").val() + '"}');
+    var data = JSON.parse('{"sluzba": "' + $("#dep-name").val() + '", "adresa": "' + $("#dep-address").val() + '", "pocetak_radnog_vremena": "' + $("#dep-start").val() + '", "kraj_radnog_vremena": "' + $("#dep-end").val() + '", "interval_za_saltere": "' + $("#dep-int").val() + '", "dms_sluzbaId": "' + $("#dep-dms").val() + '"}');
     data = JSON.stringify(data);
     pleaseWait();
     $ajaxUtils.sendPostRequestWithData(
