@@ -616,7 +616,7 @@ input {
   color: #FFF;
 }
 
-#book-counters select, #book-offices select {
+#book-counters select, #book-offices select, #book-status select {
   font-family: /*'Russo One'*/
   'Fira Sans Extra Condensed', sans-serif;
   font-weight: 700;

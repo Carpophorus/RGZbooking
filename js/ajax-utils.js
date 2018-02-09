@@ -42,7 +42,7 @@
       handleResponse(request, responseHandler, isJsonResponse);
     };
     request.open("GET", requestUrl, true);
-    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    if (bearer != null) request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.send(null);
   };
 
@@ -52,7 +52,7 @@
       handleResponse(request, responseHandler, isJsonResponse);
     };
     request.open("POST", requestUrl, true);
-    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    if (bearer != null) request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.send(null);
   };
 
@@ -62,7 +62,7 @@
       handleResponse(request, responseHandler, isJsonResponse);
     };
     request.open("PUT", requestUrl, true);
-    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    if (bearer != null) request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.send(null);
   };
 
@@ -72,7 +72,7 @@
       handleResponse(request, responseHandler, isJsonResponse);
     };
     request.open("DELETE", requestUrl, true);
-    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    if (bearer != null) request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.send(null);
   };
 
@@ -82,7 +82,7 @@
       handleResponse(request, responseHandler, isJsonResponse);
     };
     request.open("POST", requestUrl, true);
-    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    if (bearer != null) request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     request.send(data);
   };
@@ -93,7 +93,7 @@
       handleResponse(request, responseHandler, isJsonResponse);
     };
     request.open("PUT", requestUrl, true);
-    request.setRequestHeader('Authorization', 'Bearer ' + bearer);
+    if (bearer != null) request.setRequestHeader('Authorization', 'Bearer ' + bearer);
     request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     request.send(data);
   };

@@ -201,7 +201,7 @@
         </div>
       </div>
       <div id="book-status" class="gone">
-        <div class="message-overlay">
+        <!-- <div class="message-overlay">
           <div class="message-container message-error">
             <i class="message-icon fa fa-wrench"></i>
             <div class="message-ct-container">
@@ -209,8 +209,15 @@
               <div class="message-text">Тражена функционалност није тренутно доступна.</div>
             </div>
           </div>
-        </div>
-        <!-- <div id="subj-select">
+        </div> -->
+        <select id="status-dep-select">
+          <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
+    `;
+    for (var i = 0; i < 10; i++)
+      bookHtml += `<option value="` + i + `">` + "тест" + `</option>`;
+    bookHtml += `
+        </select>
+        <div id="subj-select">
           <div class="subj-1">
             <span class="hidden-sm-down">БР.&nbsp;ПРЕДМЕТА:</span>
             <span class="hidden-md-up">БР.&nbsp;ПР.:</span>
@@ -224,12 +231,12 @@
             <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
           </div>
         </div>
-        <!-- <input id="book-status-id" placeholder="идентификациони број" onfocus="this.placeholder=''" onblur="this.placeholder='идентификациони број'" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"> --
+        <!-- <input id="book-status-id" placeholder="идентификациони број" onfocus="this.placeholder=''" onblur="this.placeholder='идентификациони број'" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"> -->
         <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchStatus();">ПРЕТРАГА</div></div>
         <div id="book-status-aux" class="aux-container gone">
           <div id="book-status-aux-title"></div>
           <div id="book-status-aux-desc"></div>
-        </div> -->
+        </div>
       </div>
     `;
     insertHtml("#book-content>.content-box-content", bookHtml);
@@ -352,7 +359,7 @@
             }
           });
         },
-        true, data /*, RGZ.bearer*/
+        true, data, ((RGZ.bearer != "") ? RGZ.bearer : undefined)
       );
     } else if (nav == 1) {
       var data = RGZ.kancelarijeTermini[$("#office-time-select option:selected").attr("value")];
@@ -447,16 +454,20 @@
             }
           });
         },
-        true, data /*, RGZ.bearer*/
+        true, data, ((RGZ.bearer != "") ? RGZ.bearer : undefined)
       );
     } else if (nav == 2) {
-      //this on api response
-      console.log("952-02-" + $("#book-status #subj-type").val() + "-" + $("#book-status #subj-id").val() + "/" + $("#book-status #subj-year").val())
-      $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year").prop("disabled", false);
-      insertHtml("#book-status-aux-title", "ИМЕ СТАТУСА");
-      insertHtml("#book-status-aux-desc", "опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса опис статуса");
-      disappear($(".content-box-loader"), 200);
-      appear($("#book-status-aux"), 500);
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "status/predmet" + "?brojPredmeta=" + encodeURIComponent("952-02-" + $("#book-status #subj-type").val() + "-" + $("#book-status #subj-id").val() + "/" + $("#book-status #subj-year").val()) + "&sluzbaId=" + $("#book-status #status-dep-select option:selected").attr("value"),
+        function(responseArray, status) {
+          $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year, #book-status #status-dep-select").prop("disabled", false);
+          insertHtml("#book-status-aux-title", responseArray.status);
+          insertHtml("#book-status-aux-desc", responseArray.opis);
+          disappear($(".content-box-loader"), 200);
+          appear($("#book-status-aux"), 500);
+        },
+        true /*, RGZ.bearer */
+      );
     }
   };
 
@@ -980,10 +991,10 @@
   };
 
   RGZ.fetchStatus = function() {
-    if ($("#book-status #subj-type").val() == "" || $("#book-status #subj-id").val() == "" || $("#book-status #subj-year").val() == "" /*|| $("#book-status #book-status-id").val() == ""*/ ) {
+    if ($("#book-status #subj-type").val() == "" || $("#book-status #subj-id").val() == "" || $("#book-status #subj-year").val() == "" || $("#book-status #status-dep-select option:selected").attr("value") == 0 /*|| $("#book-status #book-status-id").val() == ""*/ ) {
       $.confirm({
         title: 'ГРЕШКА!',
-        content: 'Морате исправно попунити број предмета.' /*и идентификациони број, уколико је везан за Ваш предмет.'*/ ,
+        content: 'Морате одабрати службу у којој је предмет заведен и исправно попунити број предмета.' /*и идентификациони број, уколико је везан за Ваш предмет.'*/ ,
         theme: 'supervan',
         backgroundDismiss: 'true',
         buttons: {
@@ -997,9 +1008,9 @@
       });
       return;
     }
-    $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year").prop("disabled", true);
+    $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year, #book-status #status-dep-select").prop("disabled", true);
     $(".content-box-loader").css({
-      "padding-top": "45vh" /*"56vh" for ID active, "45vh" for ID inactive */
+      "padding-top": "56vh" /*"67" for DEP+NUM+ID, "56vh" for NUM+ID, "45vh" for NUM */
     });
     disappear($("#book-status-aux"), 500);
     appear($(".content-box-loader"), 200);
@@ -1197,7 +1208,7 @@
   };
 
   RGZ.editDep = function() {
-    if ($("#dep-name").val() == "" || $("#dep-address").val() == "") {
+    if ($("#dep-name").val() == "" || $("#dep-address").val() == "" || $("#dep-dms").val() == "" || $("#dep-start").val() == "" || $("#dep-end").val() == "" || $("#dep-int").val() == "") {
       inputMissing();
       return;
     }
@@ -1711,9 +1722,11 @@
         <input id="dep-name" type="text">
         <div class="form-label">Адреса службе:</div>
         <input id="dep-address" type="text">
-        <div class="form-label">Почетак радног времена:</div>
+        <div class="form-label">DMS идентификатор службе:</div>
+        <input id="dep-dms" type="text" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
+        <div class="form-label">Почетак радног времена шалтера:</div>
         <input id="dep-start" type="text">
-        <div class="form-label">Крај радног времена:</div>
+        <div class="form-label">Крај радног времена шалтера:</div>
         <input id="dep-end" type="text">
         <div class="form-label">Интервал за шалтере [min]:</div>
         <input id="dep-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
@@ -2025,7 +2038,7 @@
   };
 
   RGZ.newDep = function() {
-    if ($("#dep-name").val() == "" || $("#dep-address").val() == "" || $("#dep-start").val() == "" || $("#dep-end").val() == "" || $("#dep-int").val() == "") {
+    if ($("#dep-name").val() == "" || $("#dep-address").val() == "" || $("#dep-dms").val() == "" || $("#dep-start").val() == "" || $("#dep-end").val() == "" || $("#dep-int").val() == "") {
       inputMissing();
       return;
     }
@@ -2208,9 +2221,11 @@
             <input id="dep-name" type="text">
             <div class="form-label">Адреса службе:</div>
             <input id="dep-address" type="text">
-            <div class="form-label">Почетак радног времена:</div>
+            <div class="form-label">DMS идентификатор службе:</div>
+            <input id="dep-dms" type="text" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
+            <div class="form-label">Почетак радног времена шалтера:</div>
             <input id="dep-start" type="text">
-            <div class="form-label">Крај радног времена:</div>
+            <div class="form-label">Крај радног времена шалтера:</div>
             <input id="dep-end" type="text">
             <div class="form-label">Интервал за шалтере [min]:</div>
             <input id="dep-int" type="text" maxlength="2" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
