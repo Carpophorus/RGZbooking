@@ -14,6 +14,7 @@
   RGZ.salteriTermini = '';
   RGZ.kancelarijeTermini = '';
   RGZ.zakazaniTermini = [];
+  RGZ.statusSluzbe = '';
 
   RGZ.adminRole = '';
   RGZ.adminSluzbe = '';
@@ -73,7 +74,7 @@
         function(responseArray, status) {
           RGZ.salteriSluzbe = responseArray;
           sync = sync + 1;
-          if (sync == 3) RGZ.loadBookContent();
+          if (sync == 4) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -82,7 +83,7 @@
         function(responseArray, status) {
           RGZ.zahtevi = responseArray;
           sync = sync + 1;
-          if (sync == 3) RGZ.loadBookContent();
+          if (sync == 4) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -91,7 +92,16 @@
         function(responseArray, status) {
           RGZ.kancelarijeSluzbe = responseArray;
           sync = sync + 1;
-          if (sync == 3) RGZ.loadBookContent();
+          if (sync == 4) RGZ.loadBookContent();
+        },
+        true /*, RGZ.bearer*/
+      );
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "status/sluzbe",
+        function(responseArray, status) {
+          RGZ.statusSluzbe = responseArray;
+          sync = sync + 1;
+          if (sync == 4) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -213,8 +223,8 @@
         <select id="status-dep-select">
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
-    for (var i = 0; i < 10; i++)
-      bookHtml += `<option value="` + i + `">` + "тест" + `</option>`;
+    for (var i = 0; i < RGZ.statusSluzbe.length; i++)
+      bookHtml += `<option value="` + RGZ.statusSluzbe[i].dms_sluzbaId + `">` + RGZ.statusSluzbe[i].sluzba + `</option>`;
     bookHtml += `
         </select>
         <div id="subj-select">
