@@ -458,7 +458,7 @@
       );
     } else if (nav == 2) {
       $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "status/predmet" + "?brojPredmeta=" + encodeURIComponent("952-02-" + $("#book-status #subj-type").val() + "-" + $("#book-status #subj-id").val() + "/" + $("#book-status #subj-year").val()) + "&sluzbaId=" + $("#book-status #status-dep-select option:selected").attr("value"),
+        RGZ.apiRoot + "status/predmet" + "?brojPredmeta=" + encodeURIComponent("952-02-" + $("#book-status #subj-type").val() + "-" + $("#book-status #subj-id").val() + "/" + $("#book-status #subj-year").val()) + "&sluzbaId=" + $("#book-status #status-dep-select option:selected").attr("value") + "&captchaToken=" + encodeURIComponent(token),
         function(responseArray, status) {
           $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year, #book-status #status-dep-select").prop("disabled", false);
           insertHtml("#book-status-aux-title", responseArray.status);
@@ -1771,7 +1771,7 @@
         <select id="usr-role">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 1 : RGZ.adminRole.length); i++)
+      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 1 : RGZ.adminRole.length); i++)
         formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
       formHtml += `
         </select>
@@ -1802,7 +1802,7 @@
         <select id="usr-role">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 11) ? 1 : RGZ.adminRole.length); i++)
+      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 1 : RGZ.adminRole.length); i++)
         formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
       formHtml += `
         </select>
@@ -2207,7 +2207,7 @@
       if ($("#admin-action").val() == 2 || $("#admin-action").val() == 3 || $("#admin-action").val() == 4 || $("#admin-action").val() == 5 || $("#admin-action").val() == 6 || $("#admin-action").val() == 11 || $("#admin-action").val() == 12) {
         var adminDepHtml = '<option disabled selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>';
         for (var i = 0; i < RGZ.adminSluzbe.length; i++) {
-          if (RGZ.loginInfo.rola != 1 && RGZ.adminSluzbe[i].id == 11) continue;
+          if (RGZ.adminSluzbe[i].id == 1 && (RGZ.loginInfo.rola != 1 || $("#admin-action").val() == 2 || $("#admin-action").val() == 3 || $("#admin-action").val() == 4 || $("#admin-action").val() == 11 || $("#admin-action").val() == 12)) continue;
           adminDepHtml += `<option value="` + RGZ.adminSluzbe[i].id + `">` + RGZ.adminSluzbe[i].sluzba + `</option>`;
         }
         insertHtml("#admin-dep", adminDepHtml);
