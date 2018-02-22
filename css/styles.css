@@ -1255,9 +1255,9 @@ input {
     margin-top: 8vh;
     height: 92vh;
   }
-  .content-box {
+  /* .content-box {
     height: 84vh;
-  }
+  } */
   .schedule #tiles, .admin #tiles {
     height: 92vh;
   }

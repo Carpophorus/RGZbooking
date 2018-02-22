@@ -5,9 +5,8 @@
   RGZ.bearer = '';
   RGZ.loginInfo = '';
 
-  RGZ.apiRoot = 'http://localhost:50399/api/';
-  //RGZ.apiRoot = 'https://rgzapi.azurewebsites.net/api/';
-  //RGZ.apiRoot = 'http://10.0.13.48:5053/api/';
+  RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
+
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
   RGZ.kancelarijeSluzbe = '';
