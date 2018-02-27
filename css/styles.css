@@ -1302,7 +1302,7 @@ input {
   #book-counter-aux, #book-office-aux, #book-status-aux {
     padding: 6vh 0 0 0;
   }
-  #book-counters select, #book-offices select, #subj-select, .form-search-button-container {
+  #book-counters select, #book-offices select, #book-status select, #subj-select, .form-search-button-container {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
