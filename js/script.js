@@ -124,24 +124,24 @@
     var bookHtml = `
       <div class="btn-group hidden-xs-down" data-toggle="buttons">
         <label class="btn btn-primary active" onclick="$RGZ.bookSwitch(0);">
-          <input type="radio" name="options" id="option1" autocomplete="off" checked>ПРЕДАЈА&nbsp;ЗАХТЕВА
+          <input type="radio" name="options" id="option1" autocomplete="off" checked>ЗА&nbsp;ПРЕДАЈУ&nbsp;ЗАХТЕВА<br>НА&nbsp;ШАЛТЕРУ
         </label>
         <label class="btn btn-primary" onclick="$RGZ.bookSwitch(1);">
-          <input type="radio" name="options" id="option2" autocomplete="off">УВИД&nbsp;У&nbsp;ПРЕДМЕТ
+          <input type="radio" name="options" id="option2" autocomplete="off">ЗА&nbsp;САСТАНАК&nbsp;СА<br>СЛУЖБЕНИКОМ&nbsp;КАТАСТРА
         </label>
         <label class="btn btn-primary" onclick="$RGZ.bookSwitch(2);">
-          <input type="radio" name="options" id="option3" autocomplete="off">СТАТУС&nbsp;ПРЕДМЕТА
+          <input type="radio" name="options" id="option3" autocomplete="off">ПРОВЕРА&nbsp;СТАТУСА<br>ВАШЕГ&nbsp;ПРЕДМЕТА
         </label>
       </div>
       <div class="btn-group hidden-sm-up" data-toggle="buttons">
         <label class="btn btn-primary active" onclick="$RGZ.bookSwitch(0);">
-          <input type="radio" name="options" id="option1" autocomplete="off" checked>ПРЕДАЈА
+          <input type="radio" name="options" id="option1" autocomplete="off" checked>ЗА&nbsp;ПРЕДАЈУ&nbsp;ЗАХТЕВА<br>НА&nbsp;ШАЛТЕРУ
         </label>
         <label class="btn btn-primary" onclick="$RGZ.bookSwitch(1);">
-          <input type="radio" name="options" id="option2" autocomplete="off">УВИД
+          <input type="radio" name="options" id="option2" autocomplete="off">ЗА&nbsp;САСТАНАК&nbsp;СА<br>СЛУЖБЕНИКОМ
         </label>
         <label class="btn btn-primary" onclick="$RGZ.bookSwitch(2);">
-          <input type="radio" name="options" id="option3" autocomplete="off">СТАТУС
+          <input type="radio" name="options" id="option3" autocomplete="off">ПРОВЕРА&nbsp;СТАТУСА<br>ВАШЕГ&nbsp;ПРЕДМЕТА
         </label>
       </div>
       <div id="book-counters">

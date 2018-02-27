@@ -564,15 +564,16 @@ input {
 
 .btn-group>label {
   border-radius: 0;
+  padding: 0.6vh 0;
   width: 33.333333%;
-  font-size: 2.5vh;
+  font-size: 2vh;
   font-family: /*'Russo One'*/
   'Fira Sans Extra Condensed', sans-serif;
   font-weight: 700;
   /*comment out font-weight if Russo is applied*/
   margin: 0;
   height: 6vh;
-  line-height: 6vh;
+  line-height: 2.7vh;
   overflow: hidden;
   margin-left: 0 !important;
 }
