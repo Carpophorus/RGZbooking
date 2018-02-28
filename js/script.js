@@ -169,7 +169,7 @@
           <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
           <div id="book-counter-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да предајем потпуну документацију и доказ о уплаћеној такси за захтев и упис због којег заказујем термин за предају захтева. У случају кашњења, доношења непотпуне документације или неуплаћене таксе, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничење да на шалтеру Службе нећу вршити измену или допуне поднете пријаве за заказивање и да у ћу у случају потребе да захтев буде измењен/проширен бити упућен/а на редован шалтер.</label>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да предајем потпуну документацију за захтев и упис због којег заказујем термин за предају захтева. У случају кашњења или доношења непотпуне документације, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничење да на шалтеру Службе нећу вршити измену или допуне поднете пријаве за заказивање и да у ћу у случају потребе да захтев буде измењен/проширен бити упућен/а на редован шалтер.</label>
           <div class="form-button" onclick="$RGZ.bookCounter();">ЗАКАЖИ</div>
         </div>
       </div>
