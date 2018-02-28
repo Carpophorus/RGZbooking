@@ -1988,6 +1988,7 @@
       $("#dep-end").timepicker();
       $("#dep-name").val(dep.sluzba);
       $("#dep-address").val(dep.adresa);
+      $("#dep-dms").val(dep.dms_sluzbaId);
       $("#dep-start").val(dep.pocetak_radnog_vremena);
       $("#dep-end").val(dep.kraj_radnog_vremena);
       $("#dep-int").val(dep.interval_za_saltere);
