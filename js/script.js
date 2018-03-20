@@ -2543,7 +2543,7 @@
     `;
     var found = false;
     for (var i = 0; i < qualified.length; i++) {
-      if (qualified[i] == $("#schedule-co option:selected").val()) found = true;
+      if (qualified[i].trim() == $("#schedule-co option:selected").val()) found = true;
       scheduleCoHtml += `<option ` + ((qualified[i] == $("#schedule-co option:selected").val()) ? `selected` : ``) + `>` + qualified[i] + `</option>`;
     }
     insertHtml("#schedule-co", scheduleCoHtml);
@@ -2656,7 +2656,9 @@
       <div id="schedule-items">
     `;
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
-      if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val() || RGZ.zakazaniTermini[i].kancelarija == $("#schedule-co").val())
+      var salterTrim = (RGZ.zakazaniTermini[i].salter != undefined) ? RGZ.zakazaniTermini[i].salter.trim() : '';
+      var kancelarijaTrim = (RGZ.zakazaniTermini[i].kancelarija != undefined) ? RGZ.zakazaniTermini[i].kancelarija.trim() : '';
+      if (salterTrim == $("#schedule-co").val() || kancelarijaTrim == $("#schedule-co").val())
         ttHtml += `
           <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
             <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
