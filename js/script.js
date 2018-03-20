@@ -1122,6 +1122,8 @@
     `;
     for (var i = 0; i < qualified.length; i++)
       scheduleContentHtml += `<option>` + qualified[i] + `</option>`;
+    if (qualified.length == 0)
+      scheduleContentHtml += `<option disabled>НЕМА ЗАКАЗАНИХ ТЕРМИНА</option>`;
     insertHtml("#schedule-co", scheduleContentHtml);
   };
 
@@ -2531,11 +2533,11 @@
     var qualified = [];
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
       if (RGZ.zakazaniTermini[i].salter != undefined) {
-        if (!qualified.includes(RGZ.zakazaniTermini[i].salter))
-          qualified.push(RGZ.zakazaniTermini[i].salter);
+        if (!qualified.includes(RGZ.zakazaniTermini[i].salter.trim()))
+          qualified.push(RGZ.zakazaniTermini[i].salter.trim());
       } else {
-        if (!qualified.includes(RGZ.zakazaniTermini[i].kancelarija))
-          qualified.push(RGZ.zakazaniTermini[i].kancelarija);
+        if (!qualified.includes(RGZ.zakazaniTermini[i].kancelarija.trim()))
+          qualified.push(RGZ.zakazaniTermini[i].kancelarija.trim());
       }
     }
     var scheduleCoHtml = `
@@ -2543,9 +2545,11 @@
     `;
     var found = false;
     for (var i = 0; i < qualified.length; i++) {
-      if (qualified[i].trim() == $("#schedule-co option:selected").val()) found = true;
+      if (qualified[i] == $("#schedule-co option:selected").val()) found = true;
       scheduleCoHtml += `<option ` + ((qualified[i] == $("#schedule-co option:selected").val()) ? `selected` : ``) + `>` + qualified[i] + `</option>`;
     }
+    if (qualified.length == 0)
+      scheduleCoHtml += `<option disabled>НЕМА ЗАКАЗАНИХ ТЕРМИНА</option>`;
     insertHtml("#schedule-co", scheduleCoHtml);
     if (found == false) {
       $("#schedule-co option:first-child").prop("selected", true);
