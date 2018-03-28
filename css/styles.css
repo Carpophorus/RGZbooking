@@ -323,11 +323,11 @@ input {
 }
 
 .foot-mobile-button-left {
-  padding-right: 1.5vh!important;
+  padding-right: 1.5vh !important;
 }
 
 .foot-mobile-button-right {
-  padding-left: 1.5vh!important;
+  padding-left: 1.5vh !important;
 }
 
 .form-button, .form-search-button {
@@ -720,6 +720,7 @@ input {
 
 #book-status-aux-desc {
   padding: 3vh 0 6vh 0;
+  text-align: center;
 }
 
 .message-overlay {
@@ -812,6 +813,14 @@ input {
   text-align: justify;
   width: calc(100% - 8vh);
   padding-top: 1.5vh;
+}
+
+.form-notice {
+  font-size: 1.7vh;
+  margin-bottom: 4vh;
+  color: #A12D2E;
+  /* red */
+  text-align: center;
 }
 
 .checkbox-label span {

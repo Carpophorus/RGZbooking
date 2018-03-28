@@ -197,7 +197,7 @@
             <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
           </div>
         </div>
-        <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchOfficeTimes();">ПРЕТРАГА</div></div>
+        <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchOfficeTimes();">ПРЕТРАГА</div><div class="form-notice">НАПОМЕНА: Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</div></div>
         <select id="office-day-select" class="gone" onchange="$RGZ.bookOfficeDay();">
         </select>
         <select id="office-time-select" class="gone" onchange="$RGZ.bookOfficeTime();">
@@ -243,7 +243,7 @@
           </div>
         </div>
         <!-- <input id="book-status-id" placeholder="идентификациони број" onfocus="this.placeholder=''" onblur="this.placeholder='идентификациони број'" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"> -->
-        <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchStatus();">ПРЕТРАГА</div></div>
+        <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchStatus();">ПРЕТРАГА</div><div class="form-notice">НАПОМЕНА: Увид је омогућен за предмете формиране 2017. године и касније.</div></div>
         <div id="book-status-aux" class="aux-container gone">
           <div id="book-status-aux-title"></div>
           <div id="book-status-aux-desc"></div>
