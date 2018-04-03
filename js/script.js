@@ -1186,7 +1186,7 @@
       todayBtn: true,
       todayHighlight: true,
       language: "sr",
-      startDate: "-7d",
+      startDate: "12.03.2018.",
       daysOfWeekDisabled: [0, 6]
     }).on("show", function() {
       scheduleDate = $("#schedule-cal-input").val();
