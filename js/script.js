@@ -20,6 +20,7 @@
   RGZ.adminPraznici = '';
   RGZ.adminDokumenti = '';
   RGZ.checkboxLabelLinkClicked = false;
+  RGZ.fellowCraft = 1700;
 
   var bookingForbidden = false;
   var nav = 0;
@@ -222,7 +223,7 @@
           </div>
         </div> -->
         <select id="status-dep-select">
-          <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
+          <option disabled value="-1" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
     for (var i = 0; i < RGZ.statusSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.statusSluzbe[i].dms_sluzbaId + `">` + RGZ.statusSluzbe[i].sluzba + `</option>`;
@@ -674,6 +675,93 @@
       });
       return;
     }
+    if (RGZ.bearer == "" || RGZ.bearer == undefined) {
+      if (($("#book-offices #subj-type").val() < 1 || $("#book-offices #subj-type").val() > 21) && $("#office-select option:selected").val() != RGZ.fellowCraft) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-offices #subj-type").val() != 22 && $("#office-select option:selected").val() == RGZ.fellowCraft) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) за другостепени поступак је 22.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-offices #subj-year").val() < 2014) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Можете заказати термин само за предмете који су формирани 2014. године и касније.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-offices #subj-year").val() > (new Date()).getFullYear()) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Не можете заказати термин за предмет из будућности.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-offices #subj-id").val() <= 0) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Број предмета не може бити 0 или мањи.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+    }
     $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", true);
     $(".content-box-loader").css({
       "padding-top": "56vh"
@@ -1019,7 +1107,7 @@
   };
 
   RGZ.fetchStatus = function() {
-    if ($("#book-status #subj-type").val() == "" || $("#book-status #subj-id").val() == "" || $("#book-status #subj-year").val() == "" || $("#book-status #status-dep-select option:selected").attr("value") == 0 /*|| $("#book-status #book-status-id").val() == ""*/ ) {
+    if ($("#book-status #subj-type").val() == "" || $("#book-status #subj-id").val() == "" || $("#book-status #subj-year").val() == "" || $("#book-status #status-dep-select option:selected").attr("value") == -1 /*|| $("#book-status #book-status-id").val() == ""*/ ) {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате одабрати службу у којој је предмет заведен и исправно попунити број предмета.' /*и идентификациони број, уколико је везан за Ваш предмет.'*/ ,
@@ -1035,6 +1123,110 @@
         }
       });
       return;
+    }
+    if ($("#book-status #subj-year").val().length < 4) {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате уписати четвороцифрену годину у последњем пољу броја предмета.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
+    if (RGZ.bearer == "" || RGZ.bearer == undefined) {
+      if (($("#book-status #subj-type").val() < 1 || $("#book-status #subj-type").val() > 21) && $("#book-status #status-dep-select option:selected").attr("value") != 0) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-status #subj-type").val() != 22 && $("#book-status #status-dep-select option:selected").attr("value") == 0) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) за другостепени поступак је 22.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-status #subj-year").val() < 2017) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Можете видети статус само за предмете који су формирани 2017. године и касније.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-status #subj-year").val() > (new Date()).getFullYear()) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Не можете видети статус за предмет из будућности.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if ($("#book-status #subj-id").val() <= 0) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Број предмета не може бити 0 или мањи.',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
     }
     $("#book-status #subj-type, #book-status #subj-id, #book-status #subj-year, #book-status #status-dep-select").prop("disabled", true);
     $(".content-box-loader").css({
