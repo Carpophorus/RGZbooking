@@ -121,6 +121,25 @@
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
     }
+
+    var today = new Date();
+    var limit = new Date(2018, 9, 1);
+    if (today < limit) {
+      $.confirm({
+        title: 'ОБАВЕШТЕЊЕ',
+        content: 'Приликом заказивања састанка са службеником Катастра или вршења упита за статус предмета, у поље подвучено црвеном линијом могуће је уписати само БРОЈ (по старој класификацији) или БРОЈ-БРОЈ (по класификацији од јула 2018. године).<br><br><span>Ово обавештење ће се приказивати до 1. октобра 2018. године.</span>',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+    }
   });
 
   RGZ.loadBookContent = function() {
@@ -193,7 +212,7 @@
           <div class="subj-input-container">
             <div class="subj-2"><input id="subj-type" type="text" maxlength="3" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
             <div class="subj-3">-</div>
-            <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
+            <div class="subj-4"><input id="subj-id" type="text" maxlength="17"></div>
             <div class="subj-5">/</div>
             <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
           </div>
@@ -238,7 +257,7 @@
           <div class="subj-input-container">
             <div class="subj-2"><input id="subj-type" type="text" maxlength="3" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
             <div class="subj-3">-</div>
-            <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
+            <div class="subj-4"><input id="subj-id" type="text" maxlength="17" onkeyup="disappear($('#book-status-aux'), 500);" onkeydown="disappear($('#book-status-aux'), 500);"></div>
             <div class="subj-5">/</div>
             <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);" onkeydown="disappear($('#book-status-aux'), 500); $RGZ.numbersOnly(this);"></div>
           </div>
@@ -676,10 +695,11 @@
       return;
     }
     if (RGZ.bearer == "" || RGZ.bearer == undefined) {
-      if (($("#book-offices #subj-type").val() < 1 || $("#book-offices #subj-type").val() > 21) && $("#office-select option:selected").val() != RGZ.fellowCraft) {
+      var regex = RegExp(/^\d+\-?(?:\d+)?$/g);
+      if (!regex.test($("#book-offices #subj-id").val())) {
         $.confirm({
           title: 'ГРЕШКА!',
-          content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          content: 'Поље подвучено црвеном бојом прихвата формат БРОЈ или БРОЈ-БРОЈ.<br><br><span>Молимо уклоните сва слова, специјалне карактере и размаке.</span>',
           theme: 'supervan',
           backgroundDismiss: 'true',
           buttons: {
@@ -693,10 +713,27 @@
         });
         return;
       }
-      if ($("#book-offices #subj-type").val() != 22 && $("#office-select option:selected").val() == RGZ.fellowCraft) {
+      if (($("#book-offices #subj-type").val() < 1 || $("#book-offices #subj-type").val() > 21) && $("#office-select option:selected").val() != RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
-          content: 'Класификациони број предмета (број који уписујете у прво поље слева) за другостепени поступак је 22.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.<br><br><span>Уколико желите да закажете састанак у вези другостепеног предмета или предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if (!($("#book-offices #subj-type").val() == 22 || $("#book-offices #subj-type").val() == 23) && $("#office-select option:selected").val() == RGZ.fellowCraft) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) за другостепени поступак је 22 или 23.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
           theme: 'supervan',
           backgroundDismiss: 'true',
           buttons: {
@@ -1142,7 +1179,25 @@
       return;
     }
     if (RGZ.bearer == "" || RGZ.bearer == undefined) {
-      if (($("#book-status #subj-type").val() < 1 || $("#book-status #subj-type").val() > 21) && $("#book-status #status-dep-select option:selected").attr("value") != 0) {
+      var regex = RegExp(/^\d+\-?(?:\d+)?$/g);
+      if (!regex.test($("#book-status #subj-id").val())) {
+        $.confirm({
+          title: 'ГРЕШКА!',
+          content: 'Поље подвучено црвеном бојом прихвата формат БРОЈ или БРОЈ-БРОЈ.<br><br><span>Молимо уклоните сва слова, специјалне карактере и размаке.</span>',
+          theme: 'supervan',
+          backgroundDismiss: 'true',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {}
+            }
+          }
+        });
+        return;
+      }
+      if (($("#book-status #subj-type").val() < 1 || $("#book-status #subj-type").val() > 21) && $("#book-status #status-dep-select option:selected").attr("value") != RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
           content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.',
@@ -1159,10 +1214,10 @@
         });
         return;
       }
-      if ($("#book-status #subj-type").val() != 22 && $("#book-status #status-dep-select option:selected").attr("value") == 0) {
+      if (!($("#book-status #subj-type").val() == 22 || $("#book-status #subj-type").val() == 23) && $("#book-status #status-dep-select option:selected").attr("value") == RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
-          content: 'Класификациони број предмета (број који уписујете у прво поље слева) за другостепени поступак је 22.',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) за другостепени поступак је 22 или 23.<br><br><span>Уколико имате проблема са увидом у статус другостепеног предмета, позовите Инфо Центар.</span>',
           theme: 'supervan',
           backgroundDismiss: 'true',
           buttons: {

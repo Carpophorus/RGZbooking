@@ -688,6 +688,10 @@ input {
   transition: opacity 0.5s ease;
 }
 
+#subj-select #subj-id {
+  border-bottom: 0.6vh solid #A12D2E;
+}
+
 .subj-1 {
   white-space: nowrap;
   overflow: hidden !important;
