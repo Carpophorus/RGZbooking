@@ -695,8 +695,8 @@
       return;
     }
     if (RGZ.bearer == "" || RGZ.bearer == undefined) {
-      var regex = RegExp(/^\d+\-?(?:\d+)?$/g);
-      if (!regex.test($("#book-offices #subj-id").val())) {
+      var regex1 = RegExp(/^\d+\-?(?:\d+)?$/g);
+      if (!regex1.test($("#book-offices #subj-id").val())) {
         $.confirm({
           title: 'ГРЕШКА!',
           content: 'Поље подвучено црвеном бојом прихвата формат БРОЈ или БРОЈ-БРОЈ.<br><br><span>Молимо уклоните сва слова, специјалне карактере и размаке.</span>',
@@ -713,6 +713,26 @@
         });
         return;
       }
+      /*var regex2 = RegExp(/^\d+\-\d+$/g);
+      if (regex2.test($("#book-offices #subj-id").val())) {
+        if (Number($("#book-offices #subj-id").val().substring(0, $("#book-offices #subj-id").val().indexOf('-'))) != Number($("#office-select option:selected").val())) {
+          $.confirm({
+            title: 'ГРЕШКА!',
+            content: 'Не можете заказати састанак у вези предмета који није заведен у одабраној служби.</span>',
+            theme: 'supervan',
+            backgroundDismiss: 'true',
+            buttons: {
+              ok: {
+                text: 'ОК',
+                btnClass: 'btn-white-rgz',
+                keys: ['enter'],
+                action: function() {}
+              }
+            }
+          });
+          return;
+        }
+      }*/
       if (($("#book-offices #subj-type").val() < 1 || $("#book-offices #subj-type").val() > 21) && $("#office-select option:selected").val() != RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
@@ -1179,8 +1199,8 @@
       return;
     }
     if (RGZ.bearer == "" || RGZ.bearer == undefined) {
-      var regex = RegExp(/^\d+\-?(?:\d+)?$/g);
-      if (!regex.test($("#book-status #subj-id").val())) {
+      var regex1 = RegExp(/^\d+\-?(?:\d+)?$/g);
+      if (!regex1.test($("#book-status #subj-id").val())) {
         $.confirm({
           title: 'ГРЕШКА!',
           content: 'Поље подвучено црвеном бојом прихвата формат БРОЈ или БРОЈ-БРОЈ.<br><br><span>Молимо уклоните сва слова, специјалне карактере и размаке.</span>',
@@ -1197,6 +1217,26 @@
         });
         return;
       }
+      /*var regex2 = RegExp(/^\d+\-\d+$/g);
+      if (regex2.test($("#book-status #subj-id").val())) {
+        if (Number($("#book-status #subj-id").val().substring(0, $("#book-status #subj-id").val().indexOf('-'))) != Number($("#book-status #status-dep-select option:selected").attr("value"))) {
+          $.confirm({
+            title: 'ГРЕШКА!',
+            content: 'Не можете видети статус предмета који није заведен у одабраној служби.</span>',
+            theme: 'supervan',
+            backgroundDismiss: 'true',
+            buttons: {
+              ok: {
+                text: 'ОК',
+                btnClass: 'btn-white-rgz',
+                keys: ['enter'],
+                action: function() {}
+              }
+            }
+          });
+          return;
+        }
+      }*/
       if (($("#book-status #subj-type").val() < 1 || $("#book-status #subj-type").val() > 21) && $("#book-status #status-dep-select option:selected").attr("value") != RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
