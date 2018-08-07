@@ -920,7 +920,7 @@
 
   RGZ.numbersOnly = function(e) {
     $(e).val($(e).val().replace(/\D/g, ''));
-    //if ($(e).attr("id") == "subj-type" || $(e).attr("id") == "subj-year")
+    if ($(e).attr("id") == "subj-type" || $(e).attr("id") == "subj-year")
       RGZ.officeDepartmentChanged();
   };
 
