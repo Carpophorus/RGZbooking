@@ -107,7 +107,7 @@
           responseHandler(JSON.parse((request.status == 204) ? null : request.responseText), request.status);
         else
           responseHandler((request.status == 204) ? null : request.responseText, request.status);
-      } else if (request.status == 400) {
+      } else if (request.status == 400 || request.status >= 500) {
         var errorText = JSON.parse(request.responseText).Message;
         setTimeout(function() {
           disappear($(".content-box-loader"), 200);
