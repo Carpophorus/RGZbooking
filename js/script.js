@@ -184,7 +184,7 @@
           <select id="book-counter-reason" class="book-counter-reason-lighter" onchange="$RGZ.counterReasonChanged();">
             <option disabled value="0" selected hidden>врста захтева ✱</option>
     `;
-    for (var i = 0; i < RGZ.zahtevi.length; i++)
+    for (i = 0; i < RGZ.zahtevi.length; i++)
       bookHtml += `<option value="` + RGZ.zahtevi[i].id + `">` + RGZ.zahtevi[i].opis + `</option>`;
     bookHtml += `
           </select>
@@ -199,7 +199,7 @@
         <select id="office-select" onchange="$RGZ.officeDepartmentChanged();">
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
-    for (var i = 0; i < RGZ.kancelarijeSluzbe.length; i++)
+    for (i = 0; i < RGZ.kancelarijeSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.kancelarijeSluzbe[i].id + `">` + RGZ.kancelarijeSluzbe[i].sluzba + `</option>`;
     bookHtml += `
         </select>
@@ -244,7 +244,7 @@
         <select id="status-dep-select">
           <option disabled value="-1" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
-    for (var i = 0; i < RGZ.statusSluzbe.length; i++)
+    for (i = 0; i < RGZ.statusSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.statusSluzbe[i].dms_sluzbaId + `">` + RGZ.statusSluzbe[i].sluzba + `</option>`;
     bookHtml += `
         </select>
@@ -295,8 +295,9 @@
   });
 
   RGZ.recaptchaCallback = function(token) {
+    var data;
     if (nav == 0) {
-      var data = RGZ.salteriTermini[$("#counter-time-select option:selected").attr("value")];
+      data = RGZ.salteriTermini[$("#counter-time-select option:selected").attr("value")];
       data.ime = $("#book-counter-name").val();
       data.dokumentId = $("#book-counter-reason option:selected").attr("value");
       data.tel = $("#book-counter-phone").val();
@@ -393,7 +394,7 @@
         true, data, ((RGZ.bearer != "") ? RGZ.bearer : undefined)
       );
     } else if (nav == 1) {
-      var data = RGZ.kancelarijeTermini[$("#office-time-select option:selected").attr("value")];
+      data = RGZ.kancelarijeTermini[$("#office-time-select option:selected").attr("value")];
       data.ime = $("#book-office-name").val();
       data.tel = $("#book-office-phone").val();
       data.email = $("#book-office-mail").val();
@@ -557,7 +558,7 @@
     $(".content-box-content").animate({
       scrollTop: 0
     }, 500);
-  }
+  };
 
   RGZ.officeDepartmentChanged = function() {
     if (fetchOfficeTimesClicked == true) {
@@ -574,7 +575,7 @@
     $(".content-box-content").animate({
       scrollTop: 0
     }, 500);
-  }
+  };
 
   RGZ.counterReasonChanged = function() {
     $("#book-counter-reason").removeClass("book-counter-reason-lighter");
@@ -623,7 +624,7 @@
           var selectDayHtml = `
             <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ДАТУМ...</option>
           `;
-          for (var i = 0; i < datumi.length; i++) {
+          for (i = 0; i < datumi.length; i++) {
             var localizedDate = datumi[i].substring(8, 10) + '.' + datumi[i].substring(5, 7) + '.' + datumi[i].substring(0, 4) + '.';
             selectDayHtml += `<option value="` + datumi[i] + `">` + localizedDate + `</option>`;
           }
@@ -843,7 +844,7 @@
           var selectDayHtml = `
             <option disabled value="0" selected hidden>ИЗАБЕРИТЕ ДАТУМ...</option>
           `;
-          for (var i = 0; i < datumi.length; i++) {
+          for (i = 0; i < datumi.length; i++) {
             var localizedDate = datumi[i].substring(8, 10) + '.' + datumi[i].substring(5, 7) + '.' + datumi[i].substring(0, 4) + '.';
             selectDayHtml += `<option value="` + datumi[i] + `">` + localizedDate + `</option>`;
           }
@@ -1079,7 +1080,7 @@
               grecaptcha.execute();
             }, 10);
           }
-        },
+        }
       }
     });
   };
@@ -1158,7 +1159,7 @@
               grecaptcha.execute();
             }, 10);
           }
-        },
+        }
       }
     });
   };
@@ -1424,7 +1425,7 @@
     var scheduleContentHtml = `
       <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
     `;
-    for (var i = 0; i < qualified.length; i++)
+    for (i = 0; i < qualified.length; i++)
       scheduleContentHtml += `<option>` + qualified[i] + `</option>`;
     if (qualified.length == 0)
       scheduleContentHtml += `<option disabled>НЕМА ЗАКАЗАНИХ ТЕРМИНА</option>`;
@@ -1457,7 +1458,7 @@
           <select id="schedule-co" onchange="$RGZ.scheduleSearch();" style="` + ((RGZ.loginInfo.rola > 3) ? "width: calc(100% - 8vh)" : "") + `">
             <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
     `;
-    for (var i = 0; i < qualified.length; i++)
+    for (i = 0; i < qualified.length; i++)
       scheduleContentHtml += `<option>` + qualified[i] + `</option>`;
     scheduleContentHtml += `
           </select>
@@ -1621,7 +1622,7 @@
     $("#off-status option:nth-child(" + ((off.aktivan == true) ? "2" : "3") + ")").prop("selected", true);
     $(".off-day-group input").val("");
     $(".off-day-group i").removeClass("fa-check-square-o").addClass("fa-square-o");
-    for (var i = 0; i < off.rgz_kancelarije_termini.length; i++) {
+    for (i = 0; i < off.rgz_kancelarije_termini.length; i++) {
       var dayId = '';
       switch (off.rgz_kancelarije_termini[i].dan) {
         case 1:
@@ -1727,7 +1728,7 @@
       },
       true, data, RGZ.bearer
     );
-  }
+  };
 
   RGZ.adminUsrChanged = function() {
     var usr = '';
@@ -2063,7 +2064,7 @@
         <select id="admin-cnt" onchange="$RGZ.adminCntChanged();">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = 0; i < dep.rgz_salteri.length; i++)
+      for (i = 0; i < dep.rgz_salteri.length; i++)
         formHtml += `<option value="` + dep.rgz_salteri[i].id + `">` + dep.rgz_salteri[i].opis + `</option>`;
       formHtml += `
         </select>
@@ -2088,7 +2089,7 @@
         <select id="usr-role">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 1 : RGZ.adminRole.length); i++)
+      for (i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 1 : RGZ.adminRole.length); i++)
         formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
       formHtml += `
         </select>
@@ -2101,7 +2102,7 @@
         <select id="admin-usr" onchange="$RGZ.adminUsrChanged();">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = 0; i < dep.rgz_Korisnici.length; i++)
+      for (i = 0; i < dep.rgz_Korisnici.length; i++)
         formHtml += `<option value="` + dep.rgz_Korisnici[i].id + `">` + dep.rgz_Korisnici[i].korisnicko_ime + `</option>`;
       formHtml += `
         </select>
@@ -2119,7 +2120,7 @@
         <select id="usr-role">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 1 : RGZ.adminRole.length); i++)
+      for (i = ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 0 : 1); i < ((RGZ.loginInfo.rola == 1 && $("#admin-dep option:selected").val() == 1) ? 1 : RGZ.adminRole.length); i++)
         formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
       formHtml += `
         </select>
@@ -2134,7 +2135,7 @@
         <select id="off-role">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = 3; i < RGZ.adminRole.length; i++)
+      for (i = 3; i < RGZ.adminRole.length; i++)
         formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
       formHtml += `
         </select>
@@ -2207,7 +2208,7 @@
         <select id="admin-off" onchange="$RGZ.adminOffChanged();">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = 0; i < dep.rgz_sluzbe_kancelarije.length; i++)
+      for (i = 0; i < dep.rgz_sluzbe_kancelarije.length; i++)
         formHtml += `<option value="` + dep.rgz_sluzbe_kancelarije[i].id + `">` + dep.rgz_sluzbe_kancelarije[i].kancelarija + `</option>`;
       formHtml += `
         </select>
@@ -2217,7 +2218,7 @@
         <select id="off-role">
           <option value="0" disabled selected hidden> </option>
       `;
-      for (var i = 3; i < RGZ.adminRole.length; i++)
+      for (i = 3; i < RGZ.adminRole.length; i++)
         formHtml += `<option value="` + RGZ.adminRole[i].id + `">` + RGZ.adminRole[i].rola + `</option>`;
       formHtml += `
         </select>
@@ -2522,9 +2523,10 @@
       scrollTop: 0
     }, 500);
     setTimeout(function() {
+      var i;
       if ($("#admin-action").val() == 2 || $("#admin-action").val() == 3 || $("#admin-action").val() == 4 || $("#admin-action").val() == 5 || $("#admin-action").val() == 6 || $("#admin-action").val() == 11 || $("#admin-action").val() == 12) {
         var adminDepHtml = '<option disabled selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>';
-        for (var i = 0; i < RGZ.adminSluzbe.length; i++) {
+        for (i = 0; i < RGZ.adminSluzbe.length; i++) {
           if (RGZ.adminSluzbe[i].id == 1 && (RGZ.loginInfo.rola != 1 || $("#admin-action").val() == 2 || $("#admin-action").val() == 3 || $("#admin-action").val() == 4 || $("#admin-action").val() == 11 || $("#admin-action").val() == 12)) continue;
           adminDepHtml += `<option value="` + RGZ.adminSluzbe[i].id + `">` + RGZ.adminSluzbe[i].sluzba + `</option>`;
         }
@@ -2563,7 +2565,7 @@
             <select id="admin-hol">
               <option value="0" disabled selected hidden> </option>
           `;
-          for (var i = 0; i < RGZ.adminPraznici.length; i++)
+          for (i = 0; i < RGZ.adminPraznici.length; i++)
             formHtml += `<option value="` + RGZ.adminPraznici[i].id + `">` + RGZ.adminPraznici[i].datum.substring(8, 10) + `.` + RGZ.adminPraznici[i].datum.substring(5, 7) + `.` + RGZ.adminPraznici[i].datum.substring(0, 4) + `.</option>`;
           formHtml += `
             </select>
@@ -2583,7 +2585,7 @@
             <select id="admin-doc" onchange="$RGZ.adminDocChanged();">
               <option value="0" disabled selected hidden> </option>
           `;
-          for (var i = 0; i < RGZ.adminDokumenti.length; i++)
+          for (i = 0; i < RGZ.adminDokumenti.length; i++)
             formHtml += `<option value="` + RGZ.adminDokumenti[i].id + `">` + RGZ.adminDokumenti[i].opis + `</option>`;
           formHtml += `
             </select>
@@ -2848,7 +2850,7 @@
       <option disabled hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
     `;
     var found = false;
-    for (var i = 0; i < qualified.length; i++) {
+    for (i = 0; i < qualified.length; i++) {
       if (qualified[i] == $("#schedule-co option:selected").val()) found = true;
       scheduleCoHtml += `<option ` + ((qualified[i] == $("#schedule-co option:selected").val()) ? `selected` : ``) + `>` + qualified[i] + `</option>`;
     }
