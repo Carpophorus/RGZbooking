@@ -36,6 +36,10 @@
   var year = date.getFullYear();
   var scheduleDateAux = ("" + year + "-" + month + "-" + day);
 
+  var counterDescViewed = false;
+  var officeDescViewed = false;
+  var statusDescViewed = false;
+
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
     targetElem.innerHTML = html;
@@ -191,7 +195,7 @@
           <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
           <div id="book-counter-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да предајем потпуну документацију за захтев и упис због којег заказујем термин за предају захтева. У случају кашњења или доношења непотпуне документације, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничење да на шалтеру Службе нећу вршити измену или допуне поднете пријаве за заказивање и да ћу у случају потребе да захтев буде измењен/проширен бити упућен/а на редован шалтер.</label>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да предајем потпуну документацију за захтев и упис због којег заказујем термин за предају захтева. У случају кашњења или доношења непотпуне документације, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничење да на шалтеру Службе нећу вршити измену или допуне поднете пријаве за заказивање и да ћу у случају потребе да захтев буде измењен/проширен бити упућен/а на редован шалтер. Слажем се да захтев буде одбијен на лицу места уколико немам правни основ за подношење истог.</label>
           <div class="form-button" onclick="$RGZ.bookCounter();">ЗАКАЖИ</div>
         </div>
       </div>
@@ -227,7 +231,7 @@
           <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
           <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
           <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
-          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да предмет због којег заказујем састанак са службеником није архивиран (одн. завршен), нити да постоји претходни захтев. Такође потврђујем да сам претходно проверио/ла статус свог предмета <span onclick="$RGZ.checkboxLabelLinkClicked = true; $('.btn-group .btn-primary:last-child').click();">ОВДЕ</span>.</label>
+          <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да предмет због којег заказујем састанак са службеником није архивиран (одн. завршен), нити да постоји претходни захтев. Такође потврђујем да сам претходно проверио/ла статус свог предмета <span onclick="$RGZ.checkboxLabelLinkClicked = true; $('.btn-group .btn-primary:last-child').click();">ОВДЕ</span>. Слажем се да мој захтев за информацијама о предмету буде одбијен уколико немам правни основ да исте затражим.</label>
           <div class="form-button" onclick="$RGZ.bookOffice();">ЗАКАЖИ</div>
         </div>
       </div>
@@ -522,6 +526,22 @@
         appear($("#book-counters"), 500);
       }, 510);
       nav = 0;
+      if (!counterDescViewed)
+        $.confirm({
+          title: 'ЗАКАЗИВАЊЕ ШАЛТЕРСКОГ ТЕРМИНА',
+          content: 'Опис.<br>Opis.\nOpis.\n&bull;Opis.\u2022Opis.',
+          theme: 'supervan',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {
+                counterDescViewed = true;
+              }
+            }
+          }
+        });
     }
     if (n == 1 && nav != 1) {
       disappear($("#book-counters"), 500);
@@ -531,6 +551,22 @@
         $("#book-offices .subj-input-container").width($("#book-offices #subj-select").innerWidth() - $("#book-offices .subj-1").innerWidth());
       }, 510);
       nav = 1;
+      if (!officeDescViewed)
+        $.confirm({
+          title: 'ЗАКАЗИВАЊЕ КАНЦЕЛАРИЈСКОГ ТЕРМИНА',
+          content: 'Опис.<br>Opis.\nOpis.\n&bull;Opis.\u2022Opis.',
+          theme: 'supervan',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {
+                officeDescViewed = true;
+              }
+            }
+          }
+        });
     }
     if (n == 2 && nav != 2) {
       disappear($("#book-counters"), 500);
@@ -540,6 +576,22 @@
         $("#book-status .subj-input-container").width($("#book-status #subj-select").innerWidth() - $("#book-status .subj-1").innerWidth());
       }, 510);
       nav = 2;
+      if (!statusDescViewed)
+        $.confirm({
+          title: 'УВИД У СТАТУС ПРЕДМЕТА',
+          content: 'Опис.<br>Opis.\nOpis.\n&bull;Opis.\u2022Opis.',
+          theme: 'supervan',
+          buttons: {
+            ok: {
+              text: 'ОК',
+              btnClass: 'btn-white-rgz',
+              keys: ['enter'],
+              action: function() {
+                statusDescViewed = true;
+              }
+            }
+          }
+        });
     }
   };
 
@@ -734,10 +786,10 @@
           return;
         }
       }*/
-      if (($("#book-offices #subj-type").val() < 1 || $("#book-offices #subj-type").val() > 21) && $("#office-select option:selected").val() != RGZ.fellowCraft) {
+      if (($("#book-offices #subj-type").val() < 1 || $("#book-offices #subj-type").val() > 21) /*&& $("#office-select option:selected").val() != RGZ.fellowCraft*/) {
         $.confirm({
           title: 'ГРЕШКА!',
-          content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.<br><br><span>Уколико желите да закажете састанак у вези другостепеног предмета или предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
+          content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21. Не можете заказати увид за другостепене предмете.<br><br><span>Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</span>',
           theme: 'supervan',
           backgroundDismiss: 'true',
           buttons: {
@@ -751,6 +803,7 @@
         });
         return;
       }
+      /*
       if (!($("#book-offices #subj-type").val() == 22 || $("#book-offices #subj-type").val() == 23) && $("#office-select option:selected").val() == RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
@@ -768,6 +821,7 @@
         });
         return;
       }
+      */
       if ($("#book-offices #subj-year").val() < 2014) {
         $.confirm({
           title: 'ГРЕШКА!',
@@ -1238,7 +1292,7 @@
           return;
         }
       }*/
-      if (($("#book-status #subj-type").val() < 1 || $("#book-status #subj-type").val() > 21) && $("#book-status #status-dep-select option:selected").attr("value") != RGZ.fellowCraft) {
+      if (($("#book-status #subj-type").val() < 1 || $("#book-status #subj-type").val() > 21) /*&& $("#book-status #status-dep-select option:selected").attr("value") != RGZ.fellowCraft*/) {
         $.confirm({
           title: 'ГРЕШКА!',
           content: 'Класификациони број предмета (број који уписујете у прво поље слева) мора бити у опсегу од 1 до 21.',
@@ -1255,6 +1309,7 @@
         });
         return;
       }
+      /*
       if (!($("#book-status #subj-type").val() == 22 || $("#book-status #subj-type").val() == 23) && $("#book-status #status-dep-select option:selected").attr("value") == RGZ.fellowCraft) {
         $.confirm({
           title: 'ГРЕШКА!',
@@ -1272,6 +1327,7 @@
         });
         return;
       }
+      */
       if ($("#book-status #subj-year").val() < 2017) {
         $.confirm({
           title: 'ГРЕШКА!',
