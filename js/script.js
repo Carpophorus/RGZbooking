@@ -192,8 +192,8 @@
       bookHtml += `<option value="` + RGZ.zahtevi[i].id + `">` + RGZ.zahtevi[i].opis + `</option>`;
     bookHtml += `
           </select>
+          <input type="email" id="book-counter-mail" placeholder="e-mail ✱" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail ✱'">
           <input id="book-counter-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
-          <input id="book-counter-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
           <div id="book-counter-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
           <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-counter-check'));">Потврђујем да предајем потпуну документацију за захтев и упис због којег заказујем термин за предају захтева. У случају кашњења или доношења непотпуне документације, пристајем да наредна странка буде услужена и/или да будем упућен/а на редован шалтер. Прихватам и ограничење да на шалтеру Службе нећу вршити измену или допуне поднете пријаве за заказивање и да ћу у случају потребе да захтев буде измењен/проширен бити упућен/а на редован шалтер. Слажем се да захтев буде одбијен на лицу места уколико немам правни основ за подношење истог.</label>
           <div class="form-button" onclick="$RGZ.bookCounter();">ЗАКАЖИ</div>
@@ -228,8 +228,8 @@
         </select>
         <div id="book-office-aux" class="aux-container gone">
           <input id="book-office-name" placeholder="име и презиме ✱" onfocus="this.placeholder=''" onblur="this.placeholder='име и презиме ✱'">
+          <input type="email" id="book-office-mail" placeholder="e-mail ✱" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail ✱'">
           <input id="book-office-phone" placeholder="телефон" onfocus="this.placeholder=''" onblur="this.placeholder='телефон'" maxlength="11" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);">
-          <input id="book-office-mail" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
           <div id="book-office-check" onclick="$RGZ.checkboxClicked(this);"><i class="fa fa-square-o"></i></div>
           <label class="checkbox-label" onclick="$RGZ.checkboxClicked($('#book-office-check'));">Потврђујем да предмет због којег заказујем састанак са службеником није архивиран (одн. завршен), нити да постоји претходни захтев. Такође потврђујем да сам претходно проверио/ла статус свог предмета <span onclick="$RGZ.checkboxLabelLinkClicked = true; $('.btn-group .btn-primary:last-child').click();">ОВДЕ</span>. Слажем се да мој захтев за информацијама о предмету буде одбијен уколико немам правни основ да исте затражим.</label>
           <div class="form-button" onclick="$RGZ.bookOffice();">ЗАКАЖИ</div>
@@ -1078,7 +1078,7 @@
 
   RGZ.bookCounter = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-counter-name").val() == "" || $("#book-counter-reason option:selected").attr("value") == 0 || $("#book-counter-check i").hasClass("fa-square-o")) {
+    if ($("#book-counter-name").val() == "" || $("#book-counter-reason option:selected").attr("value") == 0 || $("#book-counter-mail").val() == "" || $("#book-counter-check i").hasClass("fa-square-o")) {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
@@ -1095,7 +1095,7 @@
       });
       return;
     }
-    if ($("#book-counter-mail").val() != "") {
+    /*if ($("#book-counter-mail").val() != "") {
       var mail = $("#book-counter-mail").val();
       if (!(~mail.lastIndexOf("@") && ~mail.lastIndexOf(".") && mail.lastIndexOf("@") < mail.lastIndexOf("."))) {
         $.confirm({
@@ -1114,7 +1114,7 @@
         });
         return;
       }
-    }
+    }*/
     $.confirm({
       title: 'ПОТВРДА',
       content: 'Да ли желите да закажете термин на шалтеру са унетим параметрима?<br><br><span>Молимо Вас да проверите све податке унете у претходном кораку пре заказивања. Када почне процес заказивања, молимо Вас да останете на страници до приказивања повратних информација.</span>',
@@ -1157,7 +1157,7 @@
 
   RGZ.bookOffice = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-office-name").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
+    if ($("#book-office-name").val() == "" || $("#book-office-mail").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
@@ -1174,7 +1174,7 @@
       });
       return;
     }
-    if ($("#book-office-mail").val() != "") {
+    /*if ($("#book-office-mail").val() != "") {
       var mail = $("#book-office-mail").val();
       if (!(~mail.lastIndexOf("@") && ~mail.lastIndexOf(".") && mail.lastIndexOf("@") < mail.lastIndexOf("."))) {
         $.confirm({
@@ -1193,7 +1193,7 @@
         });
         return;
       }
-    }
+    }*/
     $.confirm({
       title: 'ПОТВРДА',
       content: 'Да ли желите да закажете канцеларијски термин са унетим параметрима?<br><br><span>Молимо Вас да проверите све податке унете у претходном кораку пре заказивања. Када почне процес заказивања, молимо Вас да останете на страници до приказивања повратних информација.</span>',
