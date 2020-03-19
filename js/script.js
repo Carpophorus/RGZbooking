@@ -3021,7 +3021,7 @@
                   }
                 });
               },
-              true /*, RGZ.bearer*/
+              true, RGZ.bearer
             );
           }
         }
