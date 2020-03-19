@@ -1083,7 +1083,7 @@
 
   RGZ.bookCounter = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-counter-name").val() == "" || $("#book-counter-reason option:selected").attr("value") == 0 || $("#book-counter-mail").val() == "" || $("#book-counter-check i").hasClass("fa-square-o")) {
+    if ($("#book-counter-name").val() == "" || $("#book-counter-reason option:selected").attr("value") == 0 || $("#book-counter-mail").val() == "" || document.getElementById('book-counter-mail').checkValidity() == false || $("#book-counter-check i").hasClass("fa-square-o")) {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
@@ -1162,7 +1162,7 @@
 
   RGZ.bookOffice = function() {
     if (bookingForbidden == true) return;
-    if ($("#book-office-name").val() == "" || $("#book-office-mail").val() == "" || $("#book-office-check i").hasClass("fa-square-o")) {
+    if ($("#book-office-name").val() == "" || $("#book-office-mail").val() == "" || document.getElementById('book-office-mail').checkValidity() == false || $("#book-office-check i").hasClass("fa-square-o")) {
       $.confirm({
         title: 'ГРЕШКА!',
         content: 'Морате исправно попунити барем обавезна поља (означена звездицом) и прихватити услове коришћења заказивача.',
