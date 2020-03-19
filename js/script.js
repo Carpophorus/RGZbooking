@@ -5,7 +5,11 @@
   RGZ.bearer = '';
   RGZ.loginInfo = '';
 
-  RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
+  //DBS TEST
+  RGZ.apiRoot = 'http://10.0.1.251:8083/api/';
+
+  //RGZ LIVE
+  //RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
 
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
