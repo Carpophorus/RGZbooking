@@ -1563,15 +1563,15 @@
                 }
               });
             else {
-              //vvvvvvvvv
               pleaseWait();
               $ajaxUtils.sendPutRequest(
                 RGZ.apiRoot + "korisnici/izmeniSKN" + "?idSKN=" + novaSKN,
                 function(responseArray, status) {
                   $(".jconfirm").remove();
+                  sessionStorage.removeItem(RGZ.ssTokenLabel);
                   $.confirm({
                     title: 'СКН ПРОМЕЊЕНА',
-                    content: 'Успешно сте променили СКН за претрагу.<br><br>Бићете излоговани када кликнете ОК. Пријавите се поново са истим креденцијалима како би Вам измене биле видљиве.',
+                    content: 'Успешно сте променили СКН за претрагу.<br><br>Управо сте излоговани. Пријавите се поново са истим креденцијалима како би Вам измене биле видљиве.',
                     theme: 'supervan',
                     buttons: {
                       ok: {
@@ -1579,7 +1579,7 @@
                         btnClass: 'btn-white-rgz',
                         keys: ['enter'],
                         action: function() {
-                          RGZ.logout();
+                          location.reload();
                         }
                       }
                     }

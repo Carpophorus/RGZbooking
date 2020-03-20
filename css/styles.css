@@ -1003,6 +1003,21 @@ input {
   color: #1A3360;
 }
 
+#skn-switch-select {
+  height: 7vh;
+  text-align: center;
+  text-align-last: center;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  /*comment out font-weight if Russo is applied*/
+  line-height: 7vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  color: #1A3360;
+  width: 100%;
+  margin: 0;
+}
+
 #admin-action-form select {
   margin-bottom: 4vh !important;
   font-family: /*'Open Sans'*/
