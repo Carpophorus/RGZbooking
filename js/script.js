@@ -1563,20 +1563,21 @@
         var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
         var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
         var year = date.getFullYear();
-        var sync = (("" + year + "-" + month + "-" + day) == scheduleDateAux) ? 2 : 1;
-        if (("" + year + "-" + month + "-" + day) == scheduleDateAux) $ajaxUtils.sendGetRequest(
-          RGZ.apiRoot + "korisnici/zakazaniTermini",
-          function(responseArray, status) {
-            for (var m = 0; m < responseArray.length; m++) {
-              responseArray[m]["isOffice"] = false;
-              RGZ.zakazaniTermini.push(responseArray[m]);
-            }
-            sync = sync - 1;
-            if (sync == 0)
-              calDataFetchedAux();
-          },
-          true, RGZ.bearer
-        );
+        var sync = 2; //(("" + year + "-" + month + "-" + day) == scheduleDateAux) ? 2 : 1;
+        //if (("" + year + "-" + month + "-" + day) == scheduleDateAux)
+          $ajaxUtils.sendGetRequest(
+            RGZ.apiRoot + "korisnici/zakazaniTermini" + "?datum=" + encodeURIComponent(scheduleDateAux),
+            function(responseArray, status) {
+              for (var m = 0; m < responseArray.length; m++) {
+                responseArray[m]["isOffice"] = false;
+                RGZ.zakazaniTermini.push(responseArray[m]);
+              }
+              sync = sync - 1;
+              if (sync == 0)
+                calDataFetchedAux();
+            },
+            true, RGZ.bearer
+          );
         $ajaxUtils.sendGetRequest(
           RGZ.apiRoot + "korisnici/zakazaniTerminiKancelarije" + "?datum=" + encodeURIComponent(scheduleDateAux),
           function(responseArray, status) {
@@ -2951,10 +2952,10 @@
     var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
     var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
     var year = date.getFullYear();
-    var sync = (("" + year + "-" + month + "-" + day) == scheduleDateAux) ? 2 : 1;
-    if (("" + year + "-" + month + "-" + day) == scheduleDateAux)
+    var sync = 2; /*(("" + year + "-" + month + "-" + day) == scheduleDateAux) ? 2 : 1;*/
+    //if (("" + year + "-" + month + "-" + day) == scheduleDateAux)
       $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "korisnici/zakazaniTermini",
+        RGZ.apiRoot + "korisnici/zakazaniTermini" + "?datum=" + encodeURIComponent(scheduleDateAux),
         function(responseArray, status) {
           for (var m = 0; m < responseArray.length; m++) {
             responseArray[m]["isOffice"] = false;
