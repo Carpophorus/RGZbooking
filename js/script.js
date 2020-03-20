@@ -1521,7 +1521,7 @@
       }
     }
     var scheduleContentHtml = `
-      <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>`
+      <div id="schedule-print` + ((RGZ.loginInfo.rola == 7) ? `2` : ((RGZ.loginInfo.rola == 6) ? `1` : ``)) + `" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>`
       + ((RGZ.loginInfo.rola == 7) ? `<div id="schedule-switch-skn" class="schedule-navi-button" onclick="$RGZ.switchSKN();"><strong>СКН</strong></div>` : ``)
       + ((RGZ.loginInfo.rola == 6 || RGZ.loginInfo.rola == 7) ? `<div id="schedule-search" class="schedule-navi-button" onclick="$RGZ.scheduleSearchPopup();"><i class="fa fa-search"></i></div>` : ``)
       + `<div id="schedule-refresh" class="schedule-navi-button" onclick="$RGZ.scheduleRefresh(false);"><i class="fa fa-refresh"></i></div>

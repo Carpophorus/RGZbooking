@@ -960,8 +960,16 @@ input {
   right: 14.4vh;
 }
 
-#schedule-print {
+#schedule-print, #schedule-search {
   right: 21.6vh;
+}
+
+#schedule-print-1, #schedule-switch-skn {
+  right: 28.8vh;
+}
+
+#schedule-print-2 {
+  right: 36vh;
 }
 
 #timetable {
