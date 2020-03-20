@@ -1512,10 +1512,14 @@
     insertHtml("#schedule-co", scheduleContentHtml);
   };
 
+  RGZ.sknSwitchSwitched = function() {
+    novaSKN = $('#skn-switch-select option:selected').val();
+  };
+
   var switchSKNAux = function() {
     novaSKN = 0;
     var switchHtml = `
-      <select id="skn-switch-select" onchange="novaSKN = $('#skn-switch-select option:selected').val();">
+      <select id="skn-switch-select" onchange="$RGZ.sknSwitchSwitched();">
         <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
     for (var i = 0; i < svSluzbe.length; i++)
@@ -1596,6 +1600,7 @@
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "admin/sluzbe",
         function(responseArray, status) {
+          $(".jconfirm").remove();
           svSluzbe = responseArray;
           switchSKNAux();
         },
