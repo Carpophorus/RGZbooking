@@ -46,6 +46,7 @@
   var statusDescViewed = false;
 
   var svSluzbe = null;
+  var novaSKN = 0;
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -1511,32 +1512,97 @@
     insertHtml("#schedule-co", scheduleContentHtml);
   };
 
+  var switchSKNAux = function() {
+    novaSKN = 0;
+    var switchHtml = `
+      <select id="skn-switch-select" onchange="novaSKN = $('#skn-switch-select option:selected').val();">
+        <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
+    `;
+    for (var i = 0; i < svSluzbe.length; i++)
+      if (svSluzbe[i].id != 1 && svSluzbe[i].id != RGZ.loginInfo.sluzbaId)
+        switchHtml += `<option value="` + svSluzbe[i].id + `">` + svSluzbe[i].sluzba + `</option>`;
+    switchHtml += `
+      </select>
+    `;
+    $.confirm({
+      title: 'ПРОМЕНА СКН',
+      content: 'Овим вршите промену СКН која се користи за претрагу термина.<br><br>Тренутна СКН:<br><strong>' + RGZ.loginInfo.sluzba + '</strong><br><br>Нова СКН:<br>' + switchHtml,
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      buttons: {
+        cancel: {
+          text: 'ОДУСТАНИ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        ok: {
+          text: 'ПРОМЕНИ',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            if (novaSKN == 0)
+              $.confirm({
+                title: 'ГРЕШКА!',
+                content: 'Морате да одаберете нову СКН.',
+                theme: 'supervan',
+                backgroundDismiss: 'true',
+                buttons: {
+                  ok: {
+                    text: 'ОК',
+                    btnClass: 'btn-white-rgz',
+                    keys: ['enter'],
+                    action: function() {
+                      RGZ.switchSKN();
+                    }
+                  }
+                }
+              });
+            else {
+              //vvvvvvvvv
+              pleaseWait();
+              $ajaxUtils.sendPutRequest(
+                RGZ.apiRoot + "korisnici/izmeniSKN" + "?idSKN=" + novaSKN,
+                function(responseArray, status) {
+                  $(".jconfirm").remove();
+                  $.confirm({
+                    title: 'СКН ПРОМЕЊЕНА',
+                    content: 'Успешно сте променили СКН за претрагу.<br><br>Бићете излоговани када кликнете ОК. Пријавите се поново са истим креденцијалима како би Вам измене биле видљиве.',
+                    theme: 'supervan',
+                    buttons: {
+                      ok: {
+                        text: 'ОК',
+                        btnClass: 'btn-white-rgz',
+                        keys: ['enter'],
+                        action: function() {
+                          RGZ.logout();
+                        }
+                      }
+                    }
+                  });
+                },
+                true, RGZ.bearer
+              );
+            }
+          }
+        }
+      }
+    });
+  };
+
   RGZ.switchSKN = function() {
     if (svSluzbe == null) {
+      pleaseWait();
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "admin/sluzbe",
         function(responseArray, status) {
           svSluzbe = responseArray;
-          console.log(svSluzbe);
-          //confirm
+          switchSKNAux();
         },
         true, RGZ.bearer
       );
     } else {
-      $.confirm({
-        title: 'ПРОМЕНА СКН', //vvvvvvvvvvvv
-        content: 'Лозинка за налог са корисничким именом "' + $("#username").val() + '" успешно је промењена.<br><br><span>Користите нову лозинку приликом наредне пријаве на систем путем овог налога.</span>',
-        theme: 'supervan',
-        backgroundDismiss: 'true',
-        buttons: {
-          ok: {
-            text: 'ОК',
-            btnClass: 'btn-white-rgz',
-            keys: ['enter'],
-            action: function() {}
-          }
-        }
-      });
+      switchSKNAux();
     }
   };
 
