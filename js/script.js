@@ -45,6 +45,8 @@
   var officeDescViewed = false;
   var statusDescViewed = false;
 
+  var svSluzbe = null;
+
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
     targetElem.innerHTML = html;
@@ -1507,6 +1509,39 @@
     if (qualified.length == 0)
       scheduleContentHtml += `<option disabled>НЕМА ЗАКАЗАНИХ ТЕРМИНА</option>`;
     insertHtml("#schedule-co", scheduleContentHtml);
+  };
+
+  RGZ.switchSKN = function() {
+    if (svSluzbe == null) {
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "admin/sluzbe",
+        function(responseArray, status) {
+          svSluzbe = responseArray;
+          console.log(svSluzbe);
+          //confirm
+        },
+        true, RGZ.bearer
+      );
+    } else {
+      $.confirm({
+        title: 'ПРОМЕНА СКН', //vvvvvvvvvvvv
+        content: 'Лозинка за налог са корисничким именом "' + $("#username").val() + '" успешно је промењена.<br><br><span>Користите нову лозинку приликом наредне пријаве на систем путем овог налога.</span>',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+    }
+  };
+
+  RGZ.scheduleSearchPopup = function() {
+    //TODO + new api calls?
   };
 
   dataFetchedAux = function() {
