@@ -666,7 +666,7 @@ input {
 
 #subj-select>div, #subj-select>div>div {
   position: relative;
-  display: inline-block;
+  /*display: inline-block;*/
   height: 7vh;
   float: left;
 }
@@ -859,7 +859,7 @@ input {
   height: 7vh !important;
   line-height: 7vh !important;
   text-align: center !important;
-  display: inline-block;
+  /*display: inline-block;*/
   float: left;
   margin-right: 1vh !important;
   background-color: rgba(255, 255, 255, 0.5);
@@ -885,7 +885,7 @@ input {
 }
 
 #schedule-co {
-  display: inline-block;
+  /*display: inline-block;*/
   float: left;
 }
 
@@ -1306,7 +1306,7 @@ input {
   #navi>img {
     height: 6vh;
   }
-  .booking #tiles {
+  #tiles {
     margin-top: 8vh;
     height: 92vh;
   }
