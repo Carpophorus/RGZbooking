@@ -2900,7 +2900,7 @@
       true, RGZ.bearer
     );
     $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "korisnici/razloziOtkazivaja",
+      RGZ.apiRoot + "korisnici/razloziOtkazivanja",
       function(responseArray, status) {
         RGZ.razloziOtkaziavnja = responseArray;
         sync = sync - 1;
