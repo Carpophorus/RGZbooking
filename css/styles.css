@@ -967,6 +967,7 @@ input {
 
 #schedule-filter.active {
   color: #EB4511 !important;
+  /*orange*/
 }
 
 #schedule-print, #schedule-search {
@@ -1161,6 +1162,11 @@ input {
   /*red*/
 }
 
+#schedule-items .schedule-item>.item-c:hover, #schedule-items .schedule-item>.item-c.arrival {
+  background-color: #EB4511;
+  /*orange*/
+}
+
 #schedule-items .schedule-item>.arrival {
   cursor: default !important;
 }
@@ -1195,9 +1201,14 @@ input {
   height: 7vh;
   line-height: 7vh;
   font-weight: 700;
-  -webkit-transition: margin 0.5s ease, background-color 0.5s ease;
-  -moz-transition: margin 0.5s ease, background-color 0.5s ease;
-  transition: margin 0.5s ease, background-color 0.5s ease;
+  overflow: hidden;
+  -webkit-transition: margin 0.5s ease, background-color 0.5s ease, height 0.5s ease;
+  -moz-transition: margin 0.5s ease, background-color 0.5s ease, height 0.5s ease;
+  transition: margin 0.5s ease, background-color 0.5s ease, height 0.5s ease;
+}
+
+.zero-height {
+  height: 0 !important;
 }
 
 .schedule-item:nth-child(4n+1), .expansion>div {

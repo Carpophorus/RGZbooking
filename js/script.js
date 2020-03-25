@@ -27,6 +27,8 @@
   RGZ.checkboxLabelLinkClicked = false;
   RGZ.fellowCraft = 1700;
 
+  RGZ.razloziOtkaziavnja = [];
+
   var bookingForbidden = false;
   var nav = 0;
   var confirmArrivalClicked = false;
@@ -1612,11 +1614,15 @@
   };
 
   RGZ.scheduleSearchPopup = function() {
-    //TODO + new api calls?
+    //TODO + new api call vvvvvvvv
   };
 
   RGZ.scheduleFilter = function(e) {
     $(e).toggleClass("active");
+    if ($(e).hasClass("active"))
+      $(".item-c.arrival").parent().toggleClass("zero-height", false);
+    else
+      $(".item-c.arrival").parent().toggleClass("zero-height", true);
   }
 
   dataFetchedAux = function() {
@@ -2862,7 +2868,7 @@
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
     RGZ.zakazaniTermini = [];
-    var sync = 0;
+    var sync = 3;
     $ajaxUtils.sendGetRequest(
       RGZ.apiRoot + "korisnici/zakazaniTermini",
       function(responseArray, status) {
@@ -2870,8 +2876,8 @@
           responseArray[m]["isOffice"] = false;
           RGZ.zakazaniTermini.push(responseArray[m]);
         }
-        sync = sync + 1;
-        if (sync == 2)
+        sync = sync - 1;
+        if (sync == 0)
           dataFetchedAux();
       },
       true, RGZ.bearer
@@ -2887,8 +2893,18 @@
           responseArray[n]["isOffice"] = true;
           RGZ.zakazaniTermini.push(responseArray[n]);
         }
-        sync = sync + 1;
-        if (sync == 2)
+        sync = sync - 1;
+        if (sync == 0)
+          dataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "korisnici/razloziOtkazivaja",
+      function(responseArray, status) {
+        RGZ.razloziOtkaziavnja = responseArray;
+        sync = sync - 1;
+        if (sync == 0)
           dataFetchedAux();
       },
       true, RGZ.bearer
@@ -3150,9 +3166,9 @@
     var ttHtml = `
       <div id="schedule-header" class="row">
         <div class="col-1"></div>
-        <div class="col-3 col-lg-2"><span class="hidden-sm-down">време</span><i class="hidden-md-up fa fa-clock-o"></i></div>
-        <div class="col-4 col-lg-7"><span class="hidden-sm-down">име и презиме</span><i class="hidden-md-up fa fa-user"></i></div>
-        <div class="col-4 col-lg-2"><span class="hidden-sm-down">потврда доласка</span><i class="hidden-md-up fa fa-check"></i><span class="hidden-md-up" id="slash">&nbsp;/&nbsp;</span><i class="hidden-md-up fa fa-times"></i></div>
+        <div class="col-2"><span class="hidden-sm-down">време</span><i class="hidden-md-up fa fa-clock-o"></i></div>
+        <div class="col-6"><span class="hidden-sm-down">име и презиме</span><i class="hidden-md-up fa fa-user"></i></div>
+        <div class="col-3"><span class="hidden-sm-down">потврда доласка</span><i class="hidden-md-up fa fa-minus-circle"></i><span class="hidden-md-up" id="slash">&nbsp;/&nbsp;</span><i class="hidden-md-up fa fa-check"></i><span class="hidden-md-up" id="slash">&nbsp;/&nbsp;</span><i class="hidden-md-up fa fa-times"></i></div>
       </div>
       <div id="schedule-items">
     `;
@@ -3161,12 +3177,13 @@
       var kancelarijaTrim = (RGZ.zakazaniTermini[i].kancelarija != undefined) ? RGZ.zakazaniTermini[i].kancelarija.replace(/\s\s+/g, ' ').trim() : '';
       if (salterTrim == $("#schedule-co").val() || kancelarijaTrim == $("#schedule-co").val())
         ttHtml += `
-          <div class="schedule-item row" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
+          <div class="schedule-item row` + ((RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active") == false) ? ` zero-height` : ``) + `" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
             <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
-            <div class="col-3 col-lg-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
-            <div class="col-4 col-lg-7 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
-            <div class="col-2 col-lg-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-check"></i></div>
-            <div class="col-2 col-lg-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-times"></i></div>
+            <div class="col-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
+            <div class="col-6 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
+            <div class="col-1 item-c ` + ((RGZ.zakazaniTermini[i].otkazan == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda != null) ? `arrival-counter` : ``)) + `" onclick="$RGZ.cancelArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-minus-circle"></i></div>
+            <div class="col-1 item-y ` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == false || RGZ.zakazaniTermini[i].otkazan == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-check"></i></div>
+            <div class="col-1 item-n ` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `arrival` : ((RGZ.zakazaniTermini[i].potvrda == true || RGZ.zakazaniTermini[i].otkazan == true) ? `arrival-counter` : ``)) + `" onclick="$RGZ.confirmArrival(this, ` + RGZ.zakazaniTermini[i].id + `, ` + i + `, ` + RGZ.zakazaniTermini[i].isOffice + `);"><i class="fa fa-times"></i></div>
           </div>
           <div id="expansion-` + i + `" class="expansion collapse">
             <div class="row">
@@ -3182,7 +3199,10 @@
                 <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].tel + `</div>
                 ` : ``) + `
                 <div class="expansion-label">документ:</div>
-                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].dokument + `</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].dokument + `</div>` + ((RGZ.zakazaniTermini[i].otkazan == true) ? `
+                <div class="expansion-label">разлог отказивања:</div>
+                <div class="expansion-info-data">` + RGZ.zakazaniTermini[i].razlog_otkazivanja + `</div>
+                ` : ``) + `
               </div>
             </div>
           </div>
@@ -3201,11 +3221,21 @@
     }, 600);
   };
 
+  RGZ.cancelArrival = function(e, dbID, localID, isOffice) {
+    //vvvvvvv
+    confirmArrivalClicked = true;
+    if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
+      confirmArrivalClicked = false;
+      return;
+    }
+    console.log("cancelled");
+  };
+
   RGZ.confirmArrival = function(e, dbID, localID, isOffice) {
-    var date = new Date();
+    /*var date = new Date();
     var hours = date.getHours();
     var minutes = date.getMinutes();
-    var seconds = date.getSeconds();
+    var seconds = date.getSeconds();*/
     confirmArrivalClicked = true;
     if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
       confirmArrivalClicked = false;
