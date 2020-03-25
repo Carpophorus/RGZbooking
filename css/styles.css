@@ -966,7 +966,7 @@ input {
 }
 
 #schedule-filter.active {
-  color: #EB4511 !important;
+  color: #FFA000 !important;
   /*orange*/
 }
 
@@ -1144,11 +1144,11 @@ input {
   max-height: 76vh;
 }
 
-#schedule-header>div:last-child, #schedule-header>div:first-child, #schedule-items .schedule-item>div:first-child, #schedule-items .schedule-item>.item-y, #schedule-items .schedule-item>.item-n {
+#schedule-header>div:last-child, #schedule-header>div:first-child, #schedule-items .schedule-item>div:first-child, #schedule-items .schedule-item>.item-y, #schedule-items .schedule-item>.item-n, #schedule-items .schedule-item>.item-c {
   text-align: center;
 }
 
-#schedule-items .schedule-item>.item-y:hover, #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-y.arrival, #schedule-items .schedule-item>.item-n.arrival {
+#schedule-items .schedule-item>.item-y:hover, #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-c:hover, #schedule-items .schedule-item>.item-y.arrival, #schedule-items .schedule-item>.item-n.arrival {
   cursor: pointer;
   background-color: green;
   color: #FFF;
@@ -1163,7 +1163,7 @@ input {
 }
 
 #schedule-items .schedule-item>.item-c:hover, #schedule-items .schedule-item>.item-c.arrival {
-  background-color: #EB4511;
+  background-color: #FFA000;
   /*orange*/
 }
 
