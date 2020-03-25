@@ -6,8 +6,8 @@
   RGZ.loginInfo = '';
 
   //DBS TEST
-  //RGZ.apiRoot = 'http://10.0.1.251:8083/api/';
-  RGZ.apiRoot = 'http://localhost:50398/api/';
+  RGZ.apiRoot = 'http://10.0.1.251:8083/api/';
+  //RGZ.apiRoot = 'http://localhost:50398/api/';
 
   //RGZ LIVE
   //RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
