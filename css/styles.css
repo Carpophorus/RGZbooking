@@ -960,16 +960,25 @@ input {
   right: 14.4vh;
 }
 
-#schedule-print, #schedule-search {
+#schedule-filter {
   right: 21.6vh;
+  transition: color 0.5s ease;
 }
 
-#schedule-print-1, #schedule-switch-skn {
+#schedule-filter.active {
+  color: #EB4511 !important;
+}
+
+#schedule-print, #schedule-search {
   right: 28.8vh;
 }
 
-#schedule-print-2 {
+#schedule-print-1, #schedule-switch-skn {
   right: 36vh;
+}
+
+#schedule-print-2 {
+  right: 43.2vh;
 }
 
 #timetable {
@@ -1324,8 +1333,17 @@ input {
   #schedule-refresh {
     right: 16.4vh;
   }
-  #schedule-print {
+  #schedule-filter {
     right: 24.6vh;
+  }
+  #schedule-search, #schedule-print {
+    right: 32.8vh;
+  }
+  #schedule-switch-skn, #schedule-print-1 {
+    right: 32.8vh;
+  }
+  #schedule-print-2 {
+    right: 41vh;
   }
   #schedule-searchbar>div {
     padding-bottom: 3vh;
