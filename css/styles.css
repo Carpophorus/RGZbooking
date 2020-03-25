@@ -1148,7 +1148,7 @@ input {
   text-align: center;
 }
 
-#schedule-items .schedule-item>.item-y:hover, #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-c:hover, #schedule-items .schedule-item>.item-y.arrival, #schedule-items .schedule-item>.item-n.arrival {
+#schedule-items .schedule-item>.item-y:hover, #schedule-items .schedule-item>.item-n:hover, #schedule-items .schedule-item>.item-c:hover, #schedule-items .schedule-item>.item-y.arrival, #schedule-items .schedule-item>.item-n.arrival, #schedule-items .schedule-item>.item-c.arrival {
   cursor: pointer;
   background-color: green;
   color: #FFF;
@@ -1174,7 +1174,7 @@ input {
 #schedule-items .schedule-item>.arrival-counter:hover {
   cursor: default;
   background-color: transparent;
-  color: #333;
+  color: #1A3360;
 }
 
 .item-name {
