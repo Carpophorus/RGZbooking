@@ -1601,7 +1601,7 @@
     if (svSluzbe == null) {
       pleaseWait();
       $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "admin/sluzbe",
+        RGZ.apiRoot + "admin/sluzbeIC",
         function(responseArray, status) {
           $(".jconfirm").remove();
           svSluzbe = responseArray;
