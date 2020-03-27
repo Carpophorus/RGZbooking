@@ -1519,14 +1519,14 @@
     novaSKN = $('#skn-switch-select option:selected').val();
   };
 
-  var switchSKNAux = function() {
+  var switchSKN = function() {
     novaSKN = 0;
     var switchHtml = `
       <select id="skn-switch-select" onchange="$RGZ.sknSwitchSwitched();">
         <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
     for (var i = 0; i < svSluzbe.length; i++)
-      if (svSluzbe[i].id != 1 && svSluzbe[i].id != RGZ.loginInfo.sluzbaId)
+      if (svSluzbe[i].id != 1  && svSluzbe[i].id != 172 && svSluzbe[i].id != RGZ.loginInfo.sluzbaId)
         switchHtml += `<option value="` + svSluzbe[i].id + `">` + svSluzbe[i].sluzba + `</option>`;
     switchHtml += `
       </select>
@@ -1595,23 +1595,6 @@
         }
       }
     });
-  };
-
-  RGZ.switchSKN = function() {
-    if (svSluzbe == null) {
-      pleaseWait();
-      $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "admin/sluzbeIC",
-        function(responseArray, status) {
-          $(".jconfirm").remove();
-          svSluzbe = responseArray;
-          switchSKNAux();
-        },
-        true, RGZ.bearer
-      );
-    } else {
-      switchSKNAux();
-    }
   };
 
   RGZ.scheduleSearchPopup = function() {
@@ -2869,7 +2852,17 @@
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
     RGZ.zakazaniTermini = [];
-    var sync = 3;
+    var sync = 4;
+    $ajaxUtils.sendGetRequest(
+      RGZ.apiRoot + "admin/sluzbeIC",
+      function(responseArray, status) {
+        svSluzbe = responseArray;
+        sync = sync - 1;
+        if (sync == 0)
+          dataFetchedAux();
+      },
+      true, RGZ.bearer
+    );
     $ajaxUtils.sendGetRequest(
       RGZ.apiRoot + "korisnici/zakazaniTermini",
       function(responseArray, status) {
