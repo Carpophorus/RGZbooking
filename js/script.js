@@ -85,13 +85,13 @@
       var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
       RGZ.bearer = (tokens != null) ? tokens.access_token : "";
       appear($("#book-content>.content-box-loader"), 200);
-      var sync = 0;
+      var sync = 4;
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "salteri/sluzbe",
         function(responseArray, status) {
           RGZ.salteriSluzbe = responseArray;
-          sync = sync + 1;
-          if (sync == 4) RGZ.loadBookContent();
+          sync = sync - 1;
+          if (sync == 0) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -99,8 +99,8 @@
         RGZ.apiRoot + "salteri/zahtevi",
         function(responseArray, status) {
           RGZ.zahtevi = responseArray;
-          sync = sync + 1;
-          if (sync == 4) RGZ.loadBookContent();
+          sync = sync - 1;
+          if (sync == 0) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -108,8 +108,8 @@
         RGZ.apiRoot + "kancelarije/sluzbe",
         function(responseArray, status) {
           RGZ.kancelarijeSluzbe = responseArray;
-          sync = sync + 1;
-          if (sync == 4) RGZ.loadBookContent();
+          sync = sync - 1;
+          if (sync == 0) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -117,8 +117,8 @@
         RGZ.apiRoot + "status/sluzbe",
         function(responseArray, status) {
           RGZ.statusSluzbe = responseArray;
-          sync = sync + 1;
-          if (sync == 4) RGZ.loadBookContent();
+          sync = sync - 1;
+          if (sync == 0) RGZ.loadBookContent();
         },
         true /*, RGZ.bearer*/
       );
@@ -1519,7 +1519,7 @@
     novaSKN = $('#skn-switch-select option:selected').val();
   };
 
-  var switchSKN = function() {
+  RGZ.switchSKN = function() {
     novaSKN = 0;
     var switchHtml = `
       <select id="skn-switch-select" onchange="$RGZ.sknSwitchSwitched();">
@@ -2852,17 +2852,19 @@
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
     RGZ.zakazaniTermini = [];
-    var sync = 4;
-    $ajaxUtils.sendGetRequest(
-      RGZ.apiRoot + "admin/sluzbeIC",
-      function(responseArray, status) {
-        svSluzbe = responseArray;
-        sync = sync - 1;
-        if (sync == 0)
-          dataFetchedAux();
-      },
-      true, RGZ.bearer
-    );
+    var sync = ((RGZ.loginInfo.rola == 7) ? 4 : 3);
+    if (RGZ.loginInfo.rola == 7) {
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "admin/sluzbeIC",
+        function(responseArray, status) {
+          svSluzbe = responseArray;
+          sync = sync - 1;
+          if (sync == 0)
+            dataFetchedAux();
+        },
+        true, RGZ.bearer
+      );
+    }
     $ajaxUtils.sendGetRequest(
       RGZ.apiRoot + "korisnici/zakazaniTermini",
       function(responseArray, status) {
@@ -2910,13 +2912,13 @@
     if (tokens == null) return;
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
-    var sync = 0;
+    var sync = 4;
     $ajaxUtils.sendGetRequest(
       RGZ.apiRoot + "admin/role",
       function(responseArray, status) {
         RGZ.adminRole = responseArray;
-        sync = sync + 1;
-        if (sync == 4)
+        sync = sync - 1;
+        if (sync == 0)
           adminDataFetchedAux();
       },
       true, RGZ.bearer
@@ -2925,8 +2927,8 @@
       RGZ.apiRoot + "admin/sluzbe",
       function(responseArray, status) {
         RGZ.adminSluzbe = responseArray;
-        sync = sync + 1;
-        if (sync == 4)
+        sync = sync - 1;
+        if (sync == 0)
           adminDataFetchedAux();
       },
       true, RGZ.bearer
@@ -2935,8 +2937,8 @@
       RGZ.apiRoot + "admin/praznici",
       function(responseArray, status) {
         RGZ.adminPraznici = responseArray;
-        sync = sync + 1;
-        if (sync == 4)
+        sync = sync - 1;
+        if (sync == 0)
           adminDataFetchedAux();
       },
       true, RGZ.bearer
@@ -2945,8 +2947,8 @@
       RGZ.apiRoot + "admin/dokumenti",
       function(responseArray, status) {
         RGZ.adminDokumenti = responseArray;
-        sync = sync + 1;
-        if (sync == 4)
+        sync = sync - 1;
+        if (sync == 0)
           adminDataFetchedAux();
       },
       true, RGZ.bearer
