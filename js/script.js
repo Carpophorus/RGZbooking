@@ -1604,10 +1604,11 @@
 
   var updateTableOddity = function() {
     //vvvvvvvvv
-    $(".schedule-item").removeClass('odd').removeClass('even');
-    var items = $(".schedule-item:not(.zero-height)");
+    $('.schedule-item').removeClass('odd').removeClass('even');
+    var items = $('.schedule-item').not('.zero-height');
+    console.log(items);
     for (var iii = 0; iii < items.length; iii++)
-      $(items)[iii].addClass((iii % 2 == 0) ? 'odd' : 'even');
+      $(items[iii]).addClass((iii % 2 == 0) ? 'odd' : 'even');
   }
 
   RGZ.scheduleFilter = function(e) {
