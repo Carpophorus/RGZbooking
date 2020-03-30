@@ -28,7 +28,7 @@
   RGZ.checkboxLabelLinkClicked = false;
   RGZ.fellowCraft = 1700;
 
-  RGZ.razloziOtkaziavnja = [];
+  RGZ.razloziOtkazivanja = [];
 
   var bookingForbidden = false;
   var nav = 0;
@@ -50,6 +50,7 @@
 
   var svSluzbe = null;
   var novaSKN = 0;
+  var otkazRazlog = 0;
 
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
@@ -2898,7 +2899,7 @@
     $ajaxUtils.sendGetRequest(
       RGZ.apiRoot + "korisnici/razloziOtkazivanja",
       function(responseArray, status) {
-        RGZ.razloziOtkaziavnja = responseArray;
+        RGZ.razloziOtkazivanja = responseArray;
         sync = sync - 1;
         if (sync == 0)
           dataFetchedAux();
@@ -3217,6 +3218,10 @@
     }, 600);
   };
 
+  RGZ.sknCancelSwitchSwitched = function() {
+    otkazRazlog = $('#skn-cancel-select option:selected').val();
+  };
+
   RGZ.cancelArrival = function(e, dbID, localID, isOffice) {
     //vvvvvvv
     confirmArrivalClicked = true;
@@ -3224,7 +3229,88 @@
       confirmArrivalClicked = false;
       return;
     }
-    console.log("cancelled");
+    $.confirm({
+      title: 'ПАЖЊА!',
+      content: 'Да ли сте сигурни да желите да откажете овај термин?',
+      theme: 'supervan',
+      backgroundDismiss: 'true',
+      autoClose: 'no|10000',
+      buttons: {
+        no: {
+          text: 'НЕ',
+          btnClass: 'btn-white-rgz',
+          keys: ['esc'],
+          action: function() {}
+        },
+        yes: {
+          text: 'ДА',
+          btnClass: 'btn-white-rgz',
+          keys: ['enter'],
+          action: function() {
+            otkazRazlog = 0;
+            var switchHtml = `
+              <select id="skn-cancel-select" onchange="$RGZ.sknCancelSwitchSwitched();">
+                <option disabled value="0" selected hidden>ИЗАБЕРИТЕ РАЗЛОГ ОТКАЗИВАЊА...</option>
+            `;
+            for (var i = 0; i < RGZ.razloziOtkazivanja.length; i++)
+              switchHtml += `<option value="` + RGZ.razloziOtkazivanja[i].id + `">` + RGZ.razloziOtkazivanja[i].razlog + `</option>`;
+            switchHtml += `
+              </select>
+            `;
+            $.confirm({
+              title: 'РАЗЛОГ ОТКАЗИВАЊА',
+              content: 'Овим вршите евидентирање разлога отказивања заказаног термина. Након потврде, одговарајући термин ће бити ослобођен за евентуално поновно заказивање.<br><br>Разлог:<br>' + switchHtml,
+              theme: 'supervan',
+              backgroundDismiss: 'true',
+              buttons: {
+                cancel: {
+                  text: 'ОДУСТАНИ',
+                  btnClass: 'btn-white-rgz',
+                  keys: ['esc'],
+                  action: function() {}
+                },
+                ok: {
+                  text: 'ПОТВРДИ',
+                  btnClass: 'btn-white-rgz',
+                  keys: ['enter'],
+                  action: function() {
+                    if (otkazRazlog == 0)
+                      $.confirm({
+                        title: 'ГРЕШКА!',
+                        content: 'Морате да одаберете разлог отказивања.',
+                        theme: 'supervan',
+                        backgroundDismiss: 'true',
+                        buttons: {
+                          ok: {
+                            text: 'ОК',
+                            btnClass: 'btn-white-rgz',
+                            keys: ['enter'],
+                            action: function() {
+                              RGZ.cancelArrival();
+                            }
+                          }
+                        }
+                      });
+                    else {
+                      RGZ.zakazaniTermini[localID].otkazan = true;
+                      RGZ.zakazaniTermini[localID].razlog_otkazivanja = RGZ.razloziOtkazivanja.filter(function(data) { return data.id == otkazRazlog; }).razlog;
+                      $ajaxUtils.sendPutRequest(
+                        RGZ.apiRoot + "korisnici/otkaziTermin" + ((isOffice == true) ? "Kancelarije" : "") + "/" + dbID + "/" + otkazRazlog,
+                        function(responseArray, status) {},
+                        true, RGZ.bearer
+                      );
+                      $(e).addClass("arrival");
+                      $(e).parent().find(".item-y").addClass("arrival-counter");
+                      $(e).parent().find(".item-n").addClass("arrival-counter");
+                    }
+                  }
+                }
+              }
+            });
+          }
+        }
+      }
+    });
   };
 
   RGZ.confirmArrival = function(e, dbID, localID, isOffice) {
@@ -3284,6 +3370,7 @@
             );
             $(e).addClass("arrival");
             $(e).parent().find((($(e).hasClass("item-y")) ? ".item-n" : ".item-y")).addClass("arrival-counter");
+            $(e).parent().find(".item-c").addClass("arrival-counter");
           }
         }
       }
