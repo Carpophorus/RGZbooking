@@ -1602,12 +1602,23 @@
     //TODO + new api call vvvvvvvv
   };
 
+  var updateTableOddity = function() {
+    //vvvvvvvvv
+    $(".schedule-item").removeClass('odd').removeClass('even');
+    var items = $(".schedule-item:not(.zero-height)");
+    for (var iii = 0; iii < items.length; iii++)
+      $(items)[iii].addClass((iii % 2 == 0) ? 'odd' : 'even');
+  }
+
   RGZ.scheduleFilter = function(e) {
     $(e).toggleClass("active");
     if ($(e).hasClass("active"))
       $(".item-c.arrival").parent().toggleClass("zero-height", false);
     else
       $(".item-c.arrival").parent().toggleClass("zero-height", true);
+    setTimeout(function() {
+      updateTableOddity();
+    }, 10);
   }
 
   dataFetchedAux = function() {
@@ -3169,12 +3180,13 @@
       </div>
       <div id="schedule-items">
     `;
+    //var itemCounter = 0;
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
       var salterTrim = (RGZ.zakazaniTermini[i].salter != undefined) ? RGZ.zakazaniTermini[i].salter.replace(/\s\s+/g, ' ').trim() : '';
       var kancelarijaTrim = (RGZ.zakazaniTermini[i].kancelarija != undefined) ? RGZ.zakazaniTermini[i].kancelarija.replace(/\s\s+/g, ' ').trim() : '';
       if (salterTrim == $("#schedule-co").val() || kancelarijaTrim == $("#schedule-co").val())
         ttHtml += `
-          <div class="schedule-item row` + ((RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active") == false) ? ` zero-height` : ``) + `" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
+          <div class="schedule-item row` + ((RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active") == false) ? ` zero-height` : ``) + /*((itemCounter % 2 == 0) ? ` odd` : `even`) +*/ `" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
             <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
             <div class="col-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
             <div class="col-6 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
@@ -3204,12 +3216,15 @@
             </div>
           </div>
         `;
+        /*if (RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active"))
+          itemCounter = itemCounter + 1;*/
     }
     ttHtml += `
       </div>
     `;
     setTimeout(function() {
       insertHtml("#timetable", ttHtml);
+      updateTableOddity();
     }, 500);
     setTimeout(function() {
       appear($("#timetable"), 500);

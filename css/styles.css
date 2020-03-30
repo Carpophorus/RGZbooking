@@ -1211,11 +1211,11 @@ input {
   height: 0 !important;
 }
 
-.schedule-item:nth-child(4n+1), .expansion>div {
+/*.schedule-item:nth-child(4n+1)*/ .schedule-item.odd, .expansion>div {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.schedule-item:nth-child(4n+3) {
+/*.schedule-item:nth-child(4n+3)*/ .schedule-item.even {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -1361,6 +1361,9 @@ input {
   }
   #schedule-items {
     max-height: 75vh;
+  }
+  #timetable .row>div {
+    padding: 0;
   }
   .btn-group {
     margin: 10vh 5vh;
