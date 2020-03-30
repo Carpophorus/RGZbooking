@@ -1013,7 +1013,7 @@ input {
   color: #1A3360;
 }
 
-#skn-switch-select {
+#skn-switch-select, #skn-cancel-select {
   height: 7vh;
   text-align: center;
   text-align-last: center;
