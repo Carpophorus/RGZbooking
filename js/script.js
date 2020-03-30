@@ -3223,7 +3223,6 @@
   };
 
   RGZ.cancelArrival = function(e, dbID, localID, isOffice) {
-    //vvvvvvv
     confirmArrivalClicked = true;
     if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
       confirmArrivalClicked = false;
@@ -3253,7 +3252,8 @@
                 <option disabled value="0" selected hidden>ИЗАБЕРИТЕ РАЗЛОГ ОТКАЗИВАЊА...</option>
             `;
             for (var i = 0; i < RGZ.razloziOtkazivanja.length; i++)
-              switchHtml += `<option value="` + RGZ.razloziOtkazivanja[i].id + `">` + RGZ.razloziOtkazivanja[i].razlog + `</option>`;
+              if (!(isOffice == false && RGZ.razloziOtkazivanja[i].id == 4))
+                switchHtml += `<option value="` + RGZ.razloziOtkazivanja[i].id + `">` + RGZ.razloziOtkazivanja[i].razlog + `</option>`;
             switchHtml += `
               </select>
             `;
