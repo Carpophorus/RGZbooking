@@ -3323,16 +3323,43 @@
                         }
                       });
                     else {
-                      RGZ.zakazaniTermini[localID].otkazan = true;
-                      RGZ.zakazaniTermini[localID].razlog_otkazivanja = RGZ.razloziOtkazivanja.filter(function(data) { return data.id == otkazRazlog; }).razlog;
+                      pleaseWait();
                       $ajaxUtils.sendPutRequest(
                         RGZ.apiRoot + "korisnici/otkaziTermin" + ((isOffice == true) ? "Kancelarije" : "") + "/" + dbID + "/" + otkazRazlog,
-                        function(responseArray, status) {},
+                        function(responseArray, status) {
+                          if ($("#schedule-filter").hasClass("active") == false) {
+                            if ($(e).parent().hasClass("expanded")) {
+                              $(".schedule-item").removeClass("expanded");
+                              $(".expansion").collapse('hide');
+                            }
+                            $(e).parent().addClass("zero-height");
+                            setTimeout(function() {
+                              updateTableOddity();
+                            }, 10);
+                          }
+                          $(e).addClass("arrival");
+                          $(e).parent().find(".item-y").addClass("arrival-counter");
+                          $(e).parent().find(".item-n").addClass("arrival-counter");
+                          RGZ.zakazaniTermini[localID].otkazan = true;
+                          RGZ.zakazaniTermini[localID].razlog_otkazivanja = RGZ.razloziOtkazivanja.filter(function(data) { return data.id == otkazRazlog; }).razlog;
+                          $(".jconfirm").remove();
+                          $.confirm({
+                            title: 'ТЕРМИН ОТКАЗАН',
+                            content: 'Успешно сте отказали термин.',
+                            theme: 'supervan',
+                            backgroundDismiss: 'true',
+                            buttons: {
+                              ok: {
+                                text: 'ОК',
+                                btnClass: 'btn-white-rgz',
+                                keys: ['enter'],
+                                action: function() {}
+                              }
+                            }
+                          });
+                        },
                         true, RGZ.bearer
                       );
-                      $(e).addClass("arrival");
-                      $(e).parent().find(".item-y").addClass("arrival-counter");
-                      $(e).parent().find(".item-n").addClass("arrival-counter");
                     }
                   }
                 }
@@ -3393,15 +3420,32 @@
           action: function() {
             var data = JSON.parse(`{"id": ` + dbID + `, "potvrda": ` + (($(e).hasClass("item-y")) ? `true` : `false`) + `}`);
             data = JSON.stringify(data);
-            RGZ.zakazaniTermini[localID].potvrda = (($(e).hasClass("item-y")) ? true : false);
+            pleaseWait();
             $ajaxUtils.sendPutRequestWithData(
               RGZ.apiRoot + "korisnici/potvrdaTermina" + ((isOffice == true) ? "Kancelarije" : "") + "/" + dbID,
-              function(responseArray, status) {},
+              function(responseArray, status) {
+                $(e).addClass("arrival");
+                $(e).parent().find((($(e).hasClass("item-y")) ? ".item-n" : ".item-y")).addClass("arrival-counter");
+                $(e).parent().find(".item-c").addClass("arrival-counter");
+                RGZ.zakazaniTermini[localID].potvrda = (($(e).hasClass("item-y")) ? true : false);
+                $(".jconfirm").remove();
+                $.confirm({
+                  title: 'ПОТВРЂЕН ' + (($(e).hasClass("item-y")) ? '' : 'НЕ') + 'ДОЛАЗАК',
+                  content: 'Успешно сте забележили ' + (($(e).hasClass("item-y")) ? '' : 'не') + 'долазак клијента у заказаном термину.',
+                  theme: 'supervan',
+                  backgroundDismiss: 'true',
+                  buttons: {
+                    ok: {
+                      text: 'ОК',
+                      btnClass: 'btn-white-rgz',
+                      keys: ['enter'],
+                      action: function() {}
+                    }
+                  }
+                });
+              },
               true, data, RGZ.bearer
             );
-            $(e).addClass("arrival");
-            $(e).parent().find((($(e).hasClass("item-y")) ? ".item-n" : ".item-y")).addClass("arrival-counter");
-            $(e).parent().find(".item-c").addClass("arrival-counter");
           }
         }
       }
