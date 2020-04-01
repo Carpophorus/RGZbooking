@@ -1603,10 +1603,8 @@
   };
 
   var updateTableOddity = function() {
-    //vvvvvvvvv
     $('.schedule-item').removeClass('odd').removeClass('even');
     var items = $('.schedule-item').not('.zero-height');
-    console.log(items);
     for (var iii = 0; iii < items.length; iii++)
       $(items[iii]).addClass((iii % 2 == 0) ? 'odd' : 'even');
   }
@@ -3242,6 +3240,23 @@
     confirmArrivalClicked = true;
     if ($(e).hasClass("arrival") || $(e).hasClass("arrival-counter")) {
       confirmArrivalClicked = false;
+      return;
+    }
+    if (RGZ.loginInfo.rola == 3) {
+      /*$.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Немате привилегију за ову активност.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-rgz',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });*/
       return;
     }
     $.confirm({
