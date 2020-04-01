@@ -1617,7 +1617,7 @@
         </div>
       </div>
     `;
-    insertHtml(".schedule", html);
+    $(".schedule").append(html);
     //init datepickers
     appear($("#schedule-search-popup"), 500);
   };
