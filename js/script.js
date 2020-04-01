@@ -1604,7 +1604,9 @@
     var html = `
       <div id="schedule-search-popup" class="gone">
         <div id="schedule-search-popup-inner">
-          <div id="schedule-search-popup-close" onclick="$RGZ.closeScheduleSearchPopup();"><i class="fa fa-times"></i></div>
+          <div id="schedule-search-popup-close" onclick="$RGZ.closeScheduleSearchPopup();">
+            <div id="schedule-search-popup-close-inner"><i class="fa fa-times"></i></div>
+          </div>
           <div id="schedule-search-searchbar">
             <div id="schedule-search-searchbar-inner" class="row">
               <div class="col-3"><input id="schedule-search-searchbar-datefrom"></div>
