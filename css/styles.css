@@ -1211,11 +1211,11 @@ input {
   height: 0 !important;
 }
 
-/*.schedule-item:nth-child(4n+1)*/ .schedule-item.odd, .expansion>div {
+.schedule-item.odd, .expansion>div {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-/*.schedule-item:nth-child(4n+3)*/ .schedule-item.even {
+.schedule-item.even {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -1292,6 +1292,107 @@ input {
 #admin-action-form .form-search-button {
   margin-top: 6vh !important;
 }
+
+#schedule-search-popup {
+  opacity: 0;
+  position: absolute;
+  z-index: 1002;
+  width: 100vw;
+  height: 100vh;
+  padding: 7vh;
+  background-color: rgba(255, 255, 255, 0.33);
+}
+
+#schedule-search-popup-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border: 0.5vh solid #1A3360;
+  box-sizing: border-box;
+}
+
+#schedule-search-popup-close {
+  position: absolute;
+  top: -3.5vh;
+  right: -3.5vh;
+  width: 7vh;
+  height: 7vh;
+  font-size: 3.3vh;
+  line-height: 7vh;
+  text-align: center;
+  background-color: #A12D2E;
+  color: #1A3360 !important;
+  -webkit-transition: color 0.5s ease;
+  -moz-transition: color 0.5s ease;
+  transition: color 0.5s ease;
+}
+
+#schedule-search-popup-close:hover {
+  color: #FFF !important;
+  cursor: pointer;
+}
+
+#schedule-search-searchbar {
+  position: relative;
+  width: 100%;
+  padding: 5vh 33%;
+}
+
+#schedule-search-searchbar-inner {
+  position: relative;
+  display: inline-block;
+  width: calc(100% - 7vh);
+  height: 7vh;
+}
+
+#schedule-search-searchbar-inner>div {
+  height: 7vh;
+  padding-right: 1vh;
+}
+
+#schedule-search-searchbar-inner>div>input {
+  display: block;
+  width: 100%;
+  font-size: 2.5vh;
+  color: #1A3360;
+  height: 7vh;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-bottom: 0.6vh solid #1A3360;
+  padding: 0 2vh;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+#schedule-search-searchbar-searchbutton {
+  display: inline-block;
+  width: 7vh;
+  height: 7vh;
+  line-height: 7vh;
+  text-align: center;
+  border: 0.5vh solid #1A3360;
+  box-sizing: border-box;
+  color: #1A3360;
+  background-color: #E1E1E1;
+  -webkit-transition: background-color 0.5s ease, color 0.5s ease;
+  -moz-transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+#schedule-search-searchbar-searchbutton:hover {
+  color: #FFF;
+  background-color: #1A3360;
+  cursor: pointer;
+}
+
+#searchtable {
+  position: relative;
+  width: 100%;
+  height: 76vh;
+  overflow-y: auto;
+}
+
+/*vvvvvv*/
 
 @media (min-width: 991.5px) {
   #schedule-searchbar {
@@ -1390,6 +1491,13 @@ input {
   #book-content .form-button, #book-content .form-search-button, #schedule-content .form-button, #schedule-content .form-search-button {
     background-color: #1A3360;
     color: #FFF;
+  }
+  #schedule-search-searchbar {
+    padding: 5vh;
+  }
+  #schedule-search-searchbar-searchbutton {
+    color: #FFF;
+    background-color: #1A3360;
   }
 }
 

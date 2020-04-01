@@ -1599,8 +1599,52 @@
   };
 
   RGZ.scheduleSearchPopup = function() {
-    //TODO + new api call vvvvvvvv
+    //funkcija u ravoju
+    //return
+    var html = `
+      <div id="schedule-search-popup" class="gone">
+        <div id="schedule-search-popup-inner">
+          <div id="schedule-search-popup-close" onclick="$RGZ.closeScheduleSearchPopup();"><i class="fa fa-times"></i></div>
+          <div id="schedule-search-searchbar">
+            <div id="schedule-search-searchbar-inner" class="row">
+              <div class="col-3"><input id="schedule-search-searchbar-datefrom"></div>
+              <div class="col-3"><input id="schedule-search-searchbar-dateto"></div>
+              <div class="col-6"><input id="schedule-search-searchbar-searchterm"></div>
+            </div>
+            <div id="schedule-search-searchbar-searchbutton" onclick="$RGZ.scheduleSearchPopupSearch();"><i class="fa fa-search"></i></div>
+          </div>
+          <div id="searchtable" class="gone"></div>
+        </div>
+      </div>
+    `;
+    insertHtml(".schedule", html);
+    //init datepickers
+    appear($("#schedule-search-popup"), 500);
   };
+
+  RGZ.closeScheduleSearchPopup = function() {
+    disappear($("#schedule-search-popup"), 500);
+    setTimeout(function() {
+      $("#schedule-search-popup").remove();
+    }, 510);
+  }
+
+  RGZ.scheduleSearchPopupSearch = function() {
+    //vvvvvv
+    //pleaseWait();
+    //api call
+    //on success until }:
+      //$(".jconfirm").remove();
+      //jconfirm number of results?
+    var html = `.`; //table header?
+    html += `.`;
+    html += `.`;
+    html += `.`;
+    html += `.`;
+    //red horizontal rows for future/today/past?
+    insertHtml("#searchtable", html);
+    appear($("#searchtable"), 500);
+  }
 
   var updateTableOddity = function() {
     $('.schedule-item').removeClass('odd').removeClass('even');
