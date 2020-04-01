@@ -1613,8 +1613,13 @@
     $(e).toggleClass("active");
     if ($(e).hasClass("active"))
       $(".item-c.arrival").parent().toggleClass("zero-height", false);
-    else
+    else {
       $(".item-c.arrival").parent().toggleClass("zero-height", true);
+      if ($(".item-c.arrival").parent().hasClass("expanded")) {
+        $(".schedule-item").removeClass("expanded");
+        $(".expansion").collapse('hide');
+      }
+    }
     setTimeout(function() {
       updateTableOddity();
     }, 10);
