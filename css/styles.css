@@ -1457,7 +1457,7 @@ input {
 }
 
 .searchtable-contents-item.odd>.searchtable-contents-item-first.today-reddish {
-  background-color: rgba(161, 45, 46, 0.5)
+  background-color: rgba(161, 45, 46, 0.3)
 }
 
 .searchtable-contents-item.even>.searchtable-contents-item-first.today-reddish {
