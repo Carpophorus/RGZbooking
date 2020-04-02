@@ -1454,6 +1454,7 @@ input {
 }
 
 .searchtable-contents-item-first>div, .searchtable-contents-item-second>div {
+  height: 7vh;
   padding-left: 1vh;
   overflow: hidden;
   text-overflow: ellipsis;

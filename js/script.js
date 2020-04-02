@@ -1670,8 +1670,8 @@
               <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
               <div class="col-2">20.03.2020.</div>
               <div class="col-2">11:15</div>
-              <div class="col-3">Име Презиме</div>
-              <div class="col-3">Канцеларија 782аa</div>
+              <div class="col-3">Име&nbsp;Презиме</div>
+              <div class="col-3">Канцеларија&nbsp;782аa</div>
             </div>
             <div class="searchtable-contents-item-second row">
               <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
@@ -1685,8 +1685,8 @@
               <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
               <div class="col-2">20.03.2020.</div>
               <div class="col-2">11:15</div>
-              <div class="col-3">Име Презиме</div>
-              <div class="col-3">Канцеларија 782аa</div>
+              <div class="col-3">Име&nbsp;Презиме</div>
+              <div class="col-3">Канцеларија&nbsp;782аa</div>
             </div>
             <div class="searchtable-contents-item-second row">
               <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
