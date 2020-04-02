@@ -1434,7 +1434,7 @@ input {
 }
 
 .searchtable-contents-item.searchtable-contents-item-expanded>.searchtable-contents-item-first {
-  background-color: #FFF;
+  background-color: #FFF !important;
 }
 
 .searchtable-contents-item-first, .searchtable-contents-item-second {
@@ -1445,9 +1445,10 @@ input {
   transition: color 0.5s ease;
 }
 
-.searchtable-contents-item.odd>.searchtable-contents-item-first {
+.searchtable-contents-item.odd>.searchtable-contents-item-first, .searchtable-contents-item-second {
   background-color: rgba(255, 255, 255, 0.5);
 }
+
 .searchtable-contents-item.even>.searchtable-contents-item-first {
   background-color: rgba(255, 255, 255, 0.15);
 }

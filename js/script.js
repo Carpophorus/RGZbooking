@@ -1732,8 +1732,10 @@
   }
 
   RGZ.expandScheduleSearchPopupItem = function(e) {
+    var hadClass = $(e).hasClass('searchtable-contents-item-expanded');
     $('.searchtable-contents-item').removeClass('searchtable-contents-item-expanded');
-    $(e).toggleClass('searchtable-contents-item-expanded');
+    if (!hadClass)
+      $(e).toggleClass('searchtable-contents-item-expanded');
   };
 
   var updateTableOddity = function() {
