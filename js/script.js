@@ -1712,6 +1712,8 @@
               html += `<hr>`
               hrChanged = false;
             }
+            if (hrChanged == true && x == 0)
+              hrChanged = 0;
             var dateShown = "" + ((responseDay.getDate() < 10) ? "0" : "") + responseDay.getDate() + "." + ((responseDay.getMonth() + 1 < 10) ? "0" : "") + (responseDay.getMonth() + 1) + "." + responseDay.getFullYear() + ".";
             html += `
                 <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
