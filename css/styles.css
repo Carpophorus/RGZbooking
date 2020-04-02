@@ -1465,6 +1465,7 @@ input {
   padding-left: 1vh;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #searchtable-contents {

@@ -1692,10 +1692,10 @@
           var future = true;
           var past = false;
           var hrChanged = false;
+          var todayAux = new Date();
+          var today = new Date(todayAux.getFullYear(), todayAux.getMonth(), todayAux.getDate());
           for (var x = 0; x < responseArray.length; x++) {
             var responseDay = new Date(responseArray[x].datum);
-            var todayAux = new Date();
-            var today = new Date(todayAux.getFullYear(), todayAux.getMonth(), todayAux.getDate());
             var todayCheck = false;
             if (responseDay.getTime() == today.getTime())
               todayCheck = true;
@@ -1703,11 +1703,11 @@
               future = false;
               hrChanged = true;
             }
-            if (today.getTime() > responseDay.getTime() && future == true) {
+            if (today.getTime() > responseDay.getTime() && past == false) {
               past = true;
               hrChanged = true;
             }
-            if (hrChanged == true) {
+            if (hrChanged == true && x != 0) {
               html += `<hr>`
               hrChanged = false;
             }
@@ -1718,12 +1718,12 @@
                     <div class="col-2" style="` + ((responseArray[x].potvrda == true) ? `color: green` : ((responseArray[x].potvrda == false) ? `color: #A12D2E` : ((responseArray[x].otkazan == true) ? `color: #FFA000` : ``))) + `"><i class="fa fa-` + ((responseArray[x].salterskiTermin == true) ? `file` : `archive`) + `"></i></div>
                     <div class="col-2">` + dateShown + `</div>
                     <div class="col-2">` + responseArray[x].termin + `</div>
-                    <div class="col-3">` + responseArray[x].ime.replace(/\s\s+/g, '&nbsp;') + `</div>
-                    <div class="col-3">` + responseArray[x].nazivKancelarijeIliSaltera.replace(/\s\s+/g, '&nbsp;') + `</div>
+                    <div class="col-3">` + responseArray[x].ime + `</div>
+                    <div class="col-3">` + responseArray[x].nazivKancelarijeIliSaltera + `</div>
                   </div>
                   <div class="searchtable-contents-item-second row">
-                    <div class="col-2" ` + ((responseArray.otkazan == true) ? `style="color: #FFA000"><i class="fa fa-` + cancellationReasonSwitcher(responseArray[x].razlogOtkazivanjaID) + `"></i>` : `>`) + `</div>
-                    <div class="col-10">` + responseArray[x].vrstaDokumentaIliBrojPredmeta.replace(/\s\s+/g, '&nbsp;') + `</div>
+                    <div class="col-2" ` + ((responseArray[x].otkazan == true) ? `style="color: #FFA000"><i class="fa fa-` + cancellationReasonSwitcher(responseArray[x].razlogOtkazivanjaID) + `"></i>` : `>`) + `</div>
+                    <div class="col-10">` + responseArray[x].vrstaDokumentaIliBrojPredmeta + `</div>
                   </div>
                 </div>
             `;
@@ -1752,39 +1752,6 @@
         true, RGZ.bearer
       );
     }, 200);
-    /////////////vvvvv
-    /*for (var i = 0; i < 10; i++) {
-      html += `
-          <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
-            <div class="searchtable-contents-item-first row">
-              <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
-              <div class="col-2">20.03.2020.</div>
-              <div class="col-2">11:15</div>
-              <div class="col-3">Име&nbsp;Презиме</div>
-              <div class="col-3">Канцеларија&nbsp;782аa</div>
-            </div>
-            <div class="searchtable-contents-item-second row">
-              <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
-              <div class="col-10">Упис прибележбе предмета поретка хипотеке за закуп</div>
-            </div>
-          </div>
-      `;
-      html += `
-          <div class="searchtable-contents-item even" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
-            <div class="searchtable-contents-item-first row">
-              <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
-              <div class="col-2">20.03.2020.</div>
-              <div class="col-2">11:15</div>
-              <div class="col-3">Име&nbsp;Презиме</div>
-              <div class="col-3">Канцеларија&nbsp;782аa</div>
-            </div>
-            <div class="searchtable-contents-item-second row">
-              <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
-              <div class="col-10">Упис прибележбе предмета поретка хипотеке за закуп</div>
-            </div>
-          </div>
-      `;
-    }*/
   };
 
   var cancellationReasonSwitcher = function(n) {
