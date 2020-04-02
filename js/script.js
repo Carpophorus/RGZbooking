@@ -1636,15 +1636,15 @@
     setTimeout(function() {
       $("#schedule-search-popup").remove();
     }, 510);
-  }
+  };
 
   RGZ.searchPopupDateFromChanged = function(e) {
     ///
-  }
+  };
 
   RGZ.searchPopupDateToChanged = function(e) {
     ///
-  }
+  };
 
   RGZ.scheduleSearchPopupSearch = function() {
     //vvvvvv
@@ -1664,7 +1664,7 @@
       <div id="searchtable-contents">
     `;
     html += `
-        <div class="searchtable-contents-item odd">
+        <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
           <div class="searchtable-contents-item-first row">
             <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
             <div class="col-2">20.03.2020.</div>
@@ -1679,7 +1679,7 @@
         </div>
     `;
     html += `
-        <div class="searchtable-contents-item even">
+        <div class="searchtable-contents-item even" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
           <div class="searchtable-contents-item-first row">
             <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
             <div class="col-2">20.03.2020.</div>
@@ -1694,7 +1694,7 @@
         </div>
     `;
     html += `
-        <div class="searchtable-contents-item odd">
+        <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
           <div class="searchtable-contents-item-first row">
             <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
             <div class="col-2">20.03.2020.</div>
@@ -1709,7 +1709,7 @@
         </div>
     `;
     html += `
-        <div class="searchtable-contents-item even">
+        <div class="searchtable-contents-item even" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
           <div class="searchtable-contents-item-first row">
             <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
             <div class="col-2">20.03.2020.</div>
@@ -1731,12 +1731,17 @@
     appear($("#searchtable"), 500);
   }
 
+  RGZ.expandScheduleSearchPopupItem = function(e) {
+    $('.searchtable-contents-item').removeClass('searchtable-contents-item-expanded');
+    $(e).toggleClass('searchtable-contents-item-expanded');
+  };
+
   var updateTableOddity = function() {
     $('.schedule-item').removeClass('odd').removeClass('even');
     var items = $('.schedule-item').not('.zero-height');
     for (var iii = 0; iii < items.length; iii++)
       $(items[iii]).addClass((iii % 2 == 0) ? 'odd' : 'even');
-  }
+  };
 
   RGZ.scheduleFilter = function(e) {
     $(e).toggleClass("active");
@@ -1752,7 +1757,7 @@
     setTimeout(function() {
       updateTableOddity();
     }, 10);
-  }
+  };
 
   dataFetchedAux = function() {
     var qualified = [];

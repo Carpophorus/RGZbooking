@@ -1419,6 +1419,45 @@ input {
   padding-left: 1vh;
 }
 
+.searchtable-contents-item {
+  height: 7vh;
+  -webkit-transition: height 0.5s ease, margin 0.5s ease;
+  -moz-transition: height 0.5s ease, margin 0.5s ease;
+  transition: height 0.5s ease, margin 0.5s ease;
+  overflow: hidden;
+}
+
+.searchtable-contents-item.searchtable-contents-item-expanded {
+  height: 14vh;
+  margin-top: 3.5vh;
+  margin-bottom: 3.5vh;
+}
+
+.searchtable-contents-item.searchtable-contents-item-expanded>.searchtable-contents-item-first {
+  background-color: #FFF;
+}
+
+.searchtable-contents-item-first, .searchtable-contents-item-second {
+  height: 7vh;
+  line-height: 7vh;
+  -webkit-transition: color 0.5s ease;
+  -moz-transition: color 0.5s ease;
+  transition: color 0.5s ease;
+}
+
+.searchtable-contents-item.odd>.searchtable-contents-item-first {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.searchtable-contents-item.even>.searchtable-contents-item-first {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.searchtable-contents-item-first>div, .searchtable-contents-item-second>div {
+  padding-left: 1vh;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 #searchtable-contents {
   height: 64vh;
   width: 100%;
