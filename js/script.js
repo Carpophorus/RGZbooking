@@ -1626,7 +1626,6 @@
       autoclose: true,
       todayBtn: true,
       language: "sr",
-      endDate: "0d",
       startDate: "12.03.2018.",
     });
     appear($("#schedule-search-popup"), 500);
@@ -1637,6 +1636,14 @@
     setTimeout(function() {
       $("#schedule-search-popup").remove();
     }, 510);
+  }
+
+  RGZ.searchPopupDateFromChanged = function(e) {
+    ///
+  }
+
+  RGZ.searchPopupDateToChanged = function(e) {
+    ///
   }
 
   RGZ.scheduleSearchPopupSearch = function() {
@@ -1656,10 +1663,66 @@
       </div>
       <div id="searchtable-contents">
     `;
-    html += `.`;
-    html += `.`;
-    html += `.`;
-    html += `.`;
+    html += `
+        <div class="searchtable-contents-item odd">
+          <div class="searchtable-contents-item-first row">
+            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
+            <div class="col-2">20.03.2020.</div>
+            <div class="col-2">11:15</div>
+            <div class="col-3">Име Презиме</div>
+            <div class="col-3">Канцеларија 782а</div>
+          </div>
+          <div class="searchtable-contents-item-second row">
+            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
+            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
+          </div>
+        </div>
+    `;
+    html += `
+        <div class="searchtable-contents-item even">
+          <div class="searchtable-contents-item-first row">
+            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
+            <div class="col-2">20.03.2020.</div>
+            <div class="col-2">11:15</div>
+            <div class="col-3">Име Презиме</div>
+            <div class="col-3">Канцеларија 782а</div>
+          </div>
+          <div class="searchtable-contents-item-second row">
+            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
+            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
+          </div>
+        </div>
+    `;
+    html += `
+        <div class="searchtable-contents-item odd">
+          <div class="searchtable-contents-item-first row">
+            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
+            <div class="col-2">20.03.2020.</div>
+            <div class="col-2">11:15</div>
+            <div class="col-3">Име Презиме</div>
+            <div class="col-3">Канцеларија 782а</div>
+          </div>
+          <div class="searchtable-contents-item-second row">
+            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
+            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
+          </div>
+        </div>
+    `;
+    html += `
+        <div class="searchtable-contents-item even">
+          <div class="searchtable-contents-item-first row">
+            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
+            <div class="col-2">20.03.2020.</div>
+            <div class="col-2">11:15</div>
+            <div class="col-3">Име Презиме</div>
+            <div class="col-3">Канцеларија 782а</div>
+          </div>
+          <div class="searchtable-contents-item-second row">
+            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
+            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
+          </div>
+        </div>
+    `;
     html += `
       </div>
     `;

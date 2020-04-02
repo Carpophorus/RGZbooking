@@ -1403,7 +1403,6 @@ input {
   position: relative;
   width: 100%;
   height: 68vh;
-  overflow-y: auto;
   opacity: 0;
 }
 
@@ -1421,8 +1420,9 @@ input {
 }
 
 #searchtable-contents {
-  height: 55vh;
+  height: 64vh;
   width: 100%;
+  overflow-y: auto;
 }
 
 .schedule-search-searchbar-inner-label {
