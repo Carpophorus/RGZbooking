@@ -1663,66 +1663,38 @@
       </div>
       <div id="searchtable-contents">
     `;
-    html += `
-        <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
-          <div class="searchtable-contents-item-first row">
-            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
-            <div class="col-2">20.03.2020.</div>
-            <div class="col-2">11:15</div>
-            <div class="col-3">Име Презиме</div>
-            <div class="col-3">Канцеларија 782а</div>
+    for (var i = 0; i < 10; i++) {
+      html += `
+          <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
+            <div class="searchtable-contents-item-first row">
+              <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
+              <div class="col-2">20.03.2020.</div>
+              <div class="col-2">11:15</div>
+              <div class="col-3">Име Презиме</div>
+              <div class="col-3">Канцеларија 782аa</div>
+            </div>
+            <div class="searchtable-contents-item-second row">
+              <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
+              <div class="col-10">Упис прибележбе предмета поретка хипотеке за закуп</div>
+            </div>
           </div>
-          <div class="searchtable-contents-item-second row">
-            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
-            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
+      `;
+      html += `
+          <div class="searchtable-contents-item even" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
+            <div class="searchtable-contents-item-first row">
+              <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
+              <div class="col-2">20.03.2020.</div>
+              <div class="col-2">11:15</div>
+              <div class="col-3">Име Презиме</div>
+              <div class="col-3">Канцеларија 782аa</div>
+            </div>
+            <div class="searchtable-contents-item-second row">
+              <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
+              <div class="col-10">Упис прибележбе предмета поретка хипотеке за закуп</div>
+            </div>
           </div>
-        </div>
-    `;
-    html += `
-        <div class="searchtable-contents-item even" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
-          <div class="searchtable-contents-item-first row">
-            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
-            <div class="col-2">20.03.2020.</div>
-            <div class="col-2">11:15</div>
-            <div class="col-3">Име Презиме</div>
-            <div class="col-3">Канцеларија 782а</div>
-          </div>
-          <div class="searchtable-contents-item-second row">
-            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
-            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
-          </div>
-        </div>
-    `;
-    html += `
-        <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
-          <div class="searchtable-contents-item-first row">
-            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
-            <div class="col-2">20.03.2020.</div>
-            <div class="col-2">11:15</div>
-            <div class="col-3">Име Презиме</div>
-            <div class="col-3">Канцеларија 782а</div>
-          </div>
-          <div class="searchtable-contents-item-second row">
-            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
-            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
-          </div>
-        </div>
-    `;
-    html += `
-        <div class="searchtable-contents-item even" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
-          <div class="searchtable-contents-item-first row">
-            <div class="col-2" style="color: green"><i class="fa fa-file"></i></div>
-            <div class="col-2">20.03.2020.</div>
-            <div class="col-2">11:15</div>
-            <div class="col-3">Име Презиме</div>
-            <div class="col-3">Канцеларија 782а</div>
-          </div>
-          <div class="searchtable-contents-item-second row">
-            <div class="col-1" style="color: orange"><i class="fa fa-gavel"></i></div>
-            <div class="col-11">Упис прибележбе предмета поретка хипотеке за закуп</div>
-          </div>
-        </div>
-    `;
+      `;
+    }
     html += `
       </div>
     `;
