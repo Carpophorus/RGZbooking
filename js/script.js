@@ -1697,11 +1697,17 @@
             //if raDatum >= today and beforeToday == true then beforeToday = false hrChanged = true
             //if raDatum > today and afterToday == false then afterToday = true hrChanged = true
             //if hrChanged == true and x != 0 then html += hr hrChanged = false //add hr css
+            var responseDay = new Date(responseArray[x].datum);
+            var today = new Date();
+            var todayCheck = false;
+            if (responseDay.getDate() == today.getDate() && responseDay.getMonth() == today.getMonth() && responseDay.getFullYear() == today.getFullYear())
+              todayCheck = true;
+            var dateShown = "" + responseDay.getDate() + "." + (responseDay.getMonth() + 1) + "." + responseDay.getFullYear() + ".";
             html += `
-                <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
+                <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);" ` + ((todayCheck == true) ? `style="background-color: rgba(161, 45, 46, 0.4)"` : ``) + `>
                   <div class="searchtable-contents-item-first row">
                     <div class="col-2" style="color: green"><i class="fa fa-` + ((responseArray[x].salterskiTermin == true) ? `file` : `archive`) + `"></i></div>
-                    <div class="col-2">` + responseArray[x].datum + `</div>
+                    <div class="col-2">` + dateShown + `</div>
                     <div class="col-2">` + responseArray[x].termin + `</div>
                     <div class="col-3">` + responseArray[x].ime.replace(/\s\s+/g, '&nbsp;') + `</div>
                     <div class="col-3">` + responseArray[x].nazivKancelarijeIliSaltera.replace(/\s\s+/g, '&nbsp;') + `</div>
