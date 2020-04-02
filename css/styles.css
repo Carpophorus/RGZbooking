@@ -1316,6 +1316,7 @@ input {
 
 #schedule-search-popup-close {
   position: absolute;
+  z-index: 1003;
   top: -3.5vh;
   right: -3.5vh;
   width: 7vh;

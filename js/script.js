@@ -1639,15 +1639,34 @@
   };
 
   RGZ.searchPopupDateFromChanged = function(e) {
-    ///
+    if ($(e).val() != "")
+      $("#schedule-search-searchbar-dateto").datepicker('setStartDate', $(e).val());
   };
 
   RGZ.searchPopupDateToChanged = function(e) {
-    ///
+    if ($(e).val() != "")
+      $("#schedule-search-searchbar-datefrom").datepicker('setEndDate', $(e).val());
   };
 
   RGZ.scheduleSearchPopupSearch = function() {
     //vvvvvv
+    if ($("#schedule-search-searchbar-datefrom").val() == "" || $("#schedule-search-searchbar-dateto").val() == "" || $("#schedule-search-searchbar-searchterm").val() == "") {
+      $.confirm({
+        title: 'ГРЕШКА!',
+        content: 'Морате унети све параметре за претрагу.',
+        theme: 'supervan',
+        backgroundDismiss: 'true',
+        buttons: {
+          ok: {
+            text: 'ОК',
+            btnClass: 'btn-white-prm',
+            keys: ['enter'],
+            action: function() {}
+          }
+        }
+      });
+      return;
+    }
     //pleaseWait();
     //api call
     //on success until }:
