@@ -1689,31 +1689,40 @@
             </div>
             <div id="searchtable-contents">
           `;
-          //vvvvvv
-          var beforeToday = true;
-          var afterToday = false;
+          var future = true;
+          var past = false;
           var hrChanged = false;
           for (var x = 0; x < responseArray.length; x++) {
-            //if raDatum >= today and beforeToday == true then beforeToday = false hrChanged = true
-            //if raDatum > today and afterToday == false then afterToday = true hrChanged = true
-            //if hrChanged == true and x != 0 then html += hr hrChanged = false //add hr css
             var responseDay = new Date(responseArray[x].datum);
-            var today = new Date();
+            var todayAux = new Date();
+            var today = new Date(todayAux.getFullYear(), todayAux.getMonth(), todayAux.getDate());
             var todayCheck = false;
-            if (responseDay.getDate() == today.getDate() && responseDay.getMonth() == today.getMonth() && responseDay.getFullYear() == today.getFullYear())
+            if (responseDay.getTime() == today.getTime())
               todayCheck = true;
-            var dateShown = "" + responseDay.getDate() + "." + (responseDay.getMonth() + 1) + "." + responseDay.getFullYear() + ".";
+            if (today.getTime() >= responseDay.getTime() && future == true) {
+              future = false;
+              hrChanged = true;
+            }
+            if (today.getTime() > responseDay.getTime() && future == true) {
+              past = true;
+              hrChanged = true;
+            }
+            if (hrChanged == true) {
+              html += `<hr>`
+              hrChanged = false;
+            }
+            var dateShown = "" + ((responseDay.getDate() < 10) ? "0" : "") + responseDay.getDate() + "." + ((responseDay.getMonth() + 1 < 10) ? "0" : "") + (responseDay.getMonth() + 1) + "." + responseDay.getFullYear() + ".";
             html += `
                 <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);" ` + ((todayCheck == true) ? `style="background-color: rgba(161, 45, 46, 0.4)"` : ``) + `>
                   <div class="searchtable-contents-item-first row">
-                    <div class="col-2" style="color: green"><i class="fa fa-` + ((responseArray[x].salterskiTermin == true) ? `file` : `archive`) + `"></i></div>
+                    <div class="col-2" style="` + ((responseArray[x].potvrda == true) ? `color: green` : ((responseArray[x].potvrda == false) ? `color: #A12D2E` : ((responseArray[x].otkazan == true) ? `color: #FFA000` : ``))) + `"><i class="fa fa-` + ((responseArray[x].salterskiTermin == true) ? `file` : `archive`) + `"></i></div>
                     <div class="col-2">` + dateShown + `</div>
                     <div class="col-2">` + responseArray[x].termin + `</div>
                     <div class="col-3">` + responseArray[x].ime.replace(/\s\s+/g, '&nbsp;') + `</div>
                     <div class="col-3">` + responseArray[x].nazivKancelarijeIliSaltera.replace(/\s\s+/g, '&nbsp;') + `</div>
                   </div>
                   <div class="searchtable-contents-item-second row">
-                    <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
+                    <div class="col-2" ` + ((responseArray.otkazan == true) ? `style="color: #FFA000"><i class="fa fa-` + cancellationReasonSwitcher(responseArray[x].razlogOtkazivanjaID) + `"></i>` : `>`) + `</div>
                     <div class="col-10">` + responseArray[x].vrstaDokumentaIliBrojPredmeta.replace(/\s\s+/g, '&nbsp;') + `</div>
                   </div>
                 </div>
@@ -1743,7 +1752,7 @@
         true, RGZ.bearer
       );
     }, 200);
-    /////////////
+    /////////////vvvvv
     /*for (var i = 0; i < 10; i++) {
       html += `
           <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
@@ -1776,7 +1785,22 @@
           </div>
       `;
     }*/
-  }
+  };
+
+  var cancellationReasonSwitcher = function(n) {
+    switch (n) {
+      case 1:
+        return 'phone';
+      case 2:
+        return 'envelope';
+      case 3:
+        return 'exclamation-triangle';
+      case 4:
+        return 'gavel';
+      default:
+        return 'question';
+    }
+  };
 
   RGZ.expandScheduleSearchPopupItem = function(e) {
     var hadClass = $(e).hasClass('searchtable-contents-item-expanded');
