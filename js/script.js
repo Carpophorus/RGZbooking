@@ -1640,11 +1640,11 @@
       //jconfirm number of results?
     var html = `
       <div id="searchtable-header" class="row">
-        <div class="col-1"><i class="fa fa-file-contract"></i>&nbsp;/&nbsp;<i class="fa fa-archive"></i></div>
+        <div class="col-2"><i class="fa fa-file-contract"></i>&nbsp;/&nbsp;<i class="fa fa-archive"></i></div>
         <div class="col-2"><i class="fa fa-calendar"></i></div>
-        <div class="col-1"><i class="fa fa-clock-o"></i></div>
-        <div class="col-4"><i class="fa fa-user"></i></div>
-        <div class="col-4"><i class="fa fa-map-marker-alt"></i></div>
+        <div class="col-2"><i class="fa fa-clock-o"></i></div>
+        <div class="col-3"><i class="fa fa-user"></i></div>
+        <div class="col-3"><i class="fa fa-map-marker-alt"></i></div>
       </div>
       <div id="searchtable-contents">
     `;
