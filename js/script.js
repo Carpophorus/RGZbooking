@@ -1599,7 +1599,7 @@
   };
 
   RGZ.scheduleSearchPopup = function() {
-    //funkcija u ravoju
+    //funkcija dodatne pretrage u ravoju
     //return
     var html = `
       <div id="schedule-search-popup" class="gone">
@@ -1609,9 +1609,9 @@
           </div>
           <div id="schedule-search-searchbar">
             <div id="schedule-search-searchbar-inner" class="row">
-              <div class="col-3"><input id="schedule-search-searchbar-datefrom"></div>
-              <div class="col-3"><input id="schedule-search-searchbar-dateto"></div>
-              <div class="col-6"><input id="schedule-search-searchbar-searchterm"></div>
+              <div class="col-3"><div class="schedule-search-searchbar-inner-label">датум од</div><input id="schedule-search-searchbar-datefrom"></div>
+              <div class="col-3"><div class="schedule-search-searchbar-inner-label">датум до</div><input id="schedule-search-searchbar-dateto"></div>
+              <div class="col-6"><div class="schedule-search-searchbar-inner-label">појам</div><input id="schedule-search-searchbar-searchterm"></div>
             </div>
             <div id="schedule-search-searchbar-searchbutton" onclick="$RGZ.scheduleSearchPopupSearch();"><i class="fa fa-search"></i></div>
           </div>
