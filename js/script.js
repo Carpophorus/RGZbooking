@@ -1622,7 +1622,7 @@
       format: "dd.mm.yyyy.",
       todayHighlight: true,
       autoclose: true,
-      todayBtn: true,
+      todayBtn: "linked",
       language: "sr",
       startDate: "12.03.2018.",
       daysOfWeekDisabled: [0, 6]
