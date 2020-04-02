@@ -1599,8 +1599,6 @@
   };
 
   RGZ.scheduleSearchPopup = function() {
-    //funkcija dodatne pretrage u ravoju
-    //return
     var html = `
       <div id="schedule-search-popup" class="gone">
         <div id="schedule-search-popup-inner">
@@ -1653,7 +1651,6 @@
   };
 
   RGZ.scheduleSearchPopupSearch = function() {
-    //vvvvvv
     if ($("#schedule-search-searchbar-datefrom").val() == "" || $("#schedule-search-searchbar-dateto").val() == "") {
       $.confirm({
         title: 'ГРЕШКА!',
@@ -1671,22 +1668,77 @@
       });
       return;
     }
-    //pleaseWait();
-    //api call
-    //on success until }:
-      //$(".jconfirm").remove();
-      //jconfirm number of results?
-    var html = `
-      <div id="searchtable-header" class="row">
-        <div class="col-2"><i class="fa fa-file"></i>&nbsp;/&nbsp;<i class="fa fa-archive"></i></div>
-        <div class="col-2"><i class="fa fa-calendar"></i></div>
-        <div class="col-2"><i class="fa fa-clock-o"></i></div>
-        <div class="col-3"><i class="fa fa-user"></i></div>
-        <div class="col-3"><i class="fa fa-map-marker"></i></div>
-      </div>
-      <div id="searchtable-contents">
-    `;
-    for (var i = 0; i < 10; i++) {
+    pleaseWait();
+    disappear($("#searchtable"), 200);
+    setTimeout(function() {
+      var dateFrom = $('#schedule-search-searchbar-datefrom').datepicker('getDate');
+      var dateTo = $('#schedule-search-searchbar-dateto').datepicker('getDate');
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "korisnici/pretragaTermina" + "?sluzbaID=" + RGZ.loginInfo.sluzbaId
+          + "&datumOd=" + encodeURIComponent(dateFrom.getFullYear() + '-' + (dateFrom.getMonth() + 1) + '-' + dateFrom.getDate())
+          + "&datumDo=" + encodeURIComponent(dateTo.getFullYear() + '-' + (dateTo.getMonth() + 1) + '-' + dateTo.getDate())
+          + (($("#schedule-search-searchbar-searchterm").val() != "") ? ("&pojam=" + encodeURIComponent($("#schedule-search-searchbar-searchterm").val())) : ''),
+        function(responseArray, status) {
+          var html = `
+            <div id="searchtable-header" class="row">
+              <div class="col-2"><i class="fa fa-file"></i>&nbsp;/&nbsp;<i class="fa fa-archive"></i></div>
+              <div class="col-2"><i class="fa fa-calendar"></i></div>
+              <div class="col-2"><i class="fa fa-clock-o"></i></div>
+              <div class="col-3"><i class="fa fa-user"></i></div>
+              <div class="col-3"><i class="fa fa-map-marker"></i></div>
+            </div>
+            <div id="searchtable-contents">
+          `;
+          //vvvvvv
+          var beforeToday = true;
+          var afterToday = false;
+          var hrChanged = false;
+          for (var x = 0; x < responseArray.length; x++) {
+            //if raDatum >= today and beforeToday == true then beforeToday = false hrChanged = true
+            //if raDatum > today and afterToday == false then afterToday = true hrChanged = true
+            //if hrChanged == true and x != 0 then html += hr hrChanged = false //add hr css
+            html += `
+                <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
+                  <div class="searchtable-contents-item-first row">
+                    <div class="col-2" style="color: green"><i class="fa fa-` + ((responseArray[x].salterskiTermin == true) ? `file` : `archive`) + `"></i></div>
+                    <div class="col-2">` + responseArray[x].datum + `</div>
+                    <div class="col-2">` + responseArray[x].termin + `</div>
+                    <div class="col-3">` + responseArray[x].ime.replace(/\s\s+/g, '&nbsp;') + `</div>
+                    <div class="col-3">` + responseArray[x].nazivKancelarijeIliSaltera.replace(/\s\s+/g, '&nbsp;') + `</div>
+                  </div>
+                  <div class="searchtable-contents-item-second row">
+                    <div class="col-2" style="color: orange"><i class="fa fa-gavel"></i></div>
+                    <div class="col-10">` + responseArray[x].vrstaDokumentaIliBrojPredmeta.replace(/\s\s+/g, '&nbsp;') + `</div>
+                  </div>
+                </div>
+            `;
+          }
+          html += `
+            </div>
+          `;
+          insertHtml("#searchtable", html);
+          appear($("#searchtable"), 500);
+          $(".jconfirm").remove();
+          $.confirm({
+            title: 'ПРЕТРАГА ЗАВРШЕНА',
+            content: 'Пронађено је ' + responseArray.length + ' резултата.',
+            theme: 'supervan',
+            backgroundDismiss: 'true',
+            buttons: {
+              ok: {
+                text: 'ОК',
+                btnClass: 'btn-white-prm',
+                keys: ['enter'],
+                action: function() {}
+              }
+            }
+          });
+        },
+        true, RGZ.bearer
+      );
+    }, 200);
+    /////////////
+    /*for (var i = 0; i < 10; i++) {
       html += `
           <div class="searchtable-contents-item odd" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
             <div class="searchtable-contents-item-first row">
@@ -1717,13 +1769,7 @@
             </div>
           </div>
       `;
-    }
-    html += `
-      </div>
-    `;
-    //red horizontal rows for future/today/past?
-    insertHtml("#searchtable", html);
-    appear($("#searchtable"), 500);
+    }*/
   }
 
   RGZ.expandScheduleSearchPopupItem = function(e) {
