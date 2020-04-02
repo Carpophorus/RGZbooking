@@ -3015,8 +3015,8 @@
             <option value="4">Измена шалтера</option>
             <option value="5">Нови корисник</option>
             <option value="6">Измена корисника</option>
-            <option value="7">Нови празник</option>
-            <option value="8">Брисање празника</option>
+            <option value="7">Нови нерадни дан</option>
+            <option value="8">Брисање нерадног дана</option>
             <option value="9">Нови документ</option>
             <option value="10">Измена документа</option>
             <option value="11">Нова канцеларија</option>
