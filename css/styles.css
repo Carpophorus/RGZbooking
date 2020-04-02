@@ -1410,6 +1410,7 @@ input {
 
 #searchtable-header {
   height: 4vh;
+  line-height: 2vh;
   width: 100%;
   border-bottom: 0.5vh solid #1A3360;
   box-sizing: border-box;
