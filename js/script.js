@@ -1625,6 +1625,7 @@
       todayBtn: true,
       language: "sr",
       startDate: "12.03.2018.",
+      daysOfWeekDisabled: [0, 6]
     });
     appear($("#schedule-search-popup"), 500);
   };
@@ -1713,8 +1714,8 @@
             }
             var dateShown = "" + ((responseDay.getDate() < 10) ? "0" : "") + responseDay.getDate() + "." + ((responseDay.getMonth() + 1 < 10) ? "0" : "") + (responseDay.getMonth() + 1) + "." + responseDay.getFullYear() + ".";
             html += `
-                <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);" ` + ((todayCheck == true) ? `style="background-color: rgba(161, 45, 46, 0.4)"` : ``) + `>
-                  <div class="searchtable-contents-item-first row">
+                <div class="searchtable-contents-item ` + ((x % 2 == 0) ? `odd` : `even`) + `" onclick="$RGZ.expandScheduleSearchPopupItem(this);">
+                  <div class="searchtable-contents-item-first row ` + ((todayCheck == true) ? ` today-reddish` : ``) + `">
                     <div class="col-2" style="` + ((responseArray[x].potvrda == true) ? `color: green` : ((responseArray[x].potvrda == false) ? `color: #A12D2E` : ((responseArray[x].otkazan == true) ? `color: #FFA000` : ``))) + `"><i class="fa fa-` + ((responseArray[x].salterskiTermin == true) ? `file` : `archive`) + `"></i></div>
                     <div class="col-2">` + dateShown + `</div>
                     <div class="col-2">` + responseArray[x].termin + `</div>

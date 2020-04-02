@@ -1447,13 +1447,21 @@ input {
 .searchtable-contents-item-first, .searchtable-contents-item-second {
   height: 7vh;
   line-height: 7vh;
-  -webkit-transition: color 0.5s ease;
-  -moz-transition: color 0.5s ease;
-  transition: color 0.5s ease;
+  -webkit-transition: background-color 0.5s ease;
+  -moz-transition: background-color 0.5s ease;
+  transition: background-color 0.5s ease;
 }
 
 .searchtable-contents-item.odd>.searchtable-contents-item-first, .searchtable-contents-item-second {
   background-color: rgba(255, 255, 255, 0.5);
+}
+
+.searchtable-contents-item.odd>.searchtable-contents-item-first.today-reddish {
+  background-color: rgba(161, 45, 46, 0.5)
+}
+
+.searchtable-contents-item.even>.searchtable-contents-item-first.today-reddish {
+  background-color: rgba(161, 45, 46, 0.15)
 }
 
 .searchtable-contents-item.even>.searchtable-contents-item-first {
@@ -1483,8 +1491,6 @@ input {
   font-size: 2vh;
   font-weight: 700;
 }
-
-/*vvvvvv*/
 
 @media (min-width: 991.5px) {
   #schedule-searchbar {
