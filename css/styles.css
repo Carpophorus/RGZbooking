@@ -1371,6 +1371,11 @@ input {
   padding: 0 2vh;
   overflow: hidden !important;
   text-overflow: ellipsis;
+  text-align: center;
+  text-align-last: center;
+  font-family: 'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  line-height: 7vh;
 }
 
 #schedule-search-searchbar-searchbutton {
@@ -1402,6 +1407,18 @@ input {
   overflow-y: auto;
 }
 
+#searchtable-header {
+  height: 3vh;
+  width: 100%;
+  border-bottom: 0.5vh solid #1A3360;
+  box-sizing: border-box;
+}
+
+#searchtable-contents {
+  height: 56vh;
+  width: 100%;
+}
+
 .schedule-search-searchbar-inner-label {
   position: absolute;
   top: -3vh;
@@ -1409,6 +1426,7 @@ input {
   width: 100%;
   height: 3vh;
   font-size: 2vh;
+  font-weight: 700;
 }
 
 /*vvvvvv*/
