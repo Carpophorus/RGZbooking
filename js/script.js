@@ -1609,8 +1609,8 @@
           </div>
           <div id="schedule-search-searchbar">
             <div id="schedule-search-searchbar-inner" class="row">
-              <div class="col-3"><div class="schedule-search-searchbar-inner-label">датум од</div><input id="schedule-search-searchbar-datefrom"></div>
-              <div class="col-3"><div class="schedule-search-searchbar-inner-label">датум до</div><input id="schedule-search-searchbar-dateto"></div>
+              <div class="col-3"><div class="schedule-search-searchbar-inner-label">датум од</div><input id="schedule-search-searchbar-datefrom" onkeydown="return false" onchange="$RGZ.searchPopupDateFromChanged(this);"></div>
+              <div class="col-3"><div class="schedule-search-searchbar-inner-label">датум до</div><input id="schedule-search-searchbar-dateto" onkeydown="return false" onchange="$RGZ.searchPopupDateToChanged(this);"></div>
               <div class="col-6"><div class="schedule-search-searchbar-inner-label">појам</div><input id="schedule-search-searchbar-searchterm"></div>
             </div>
             <div id="schedule-search-searchbar-searchbutton" onclick="$RGZ.scheduleSearchPopupSearch();"><i class="fa fa-search"></i></div>
@@ -1620,7 +1620,15 @@
       </div>
     `;
     $(".schedule").append(html);
-    //init datepickers
+    $("#schedule-search-searchbar-datefrom, #schedule-search-searchbar-dateto").datepicker({
+      format: "dd.mm.yyyy.",
+      todayHighlight: true,
+      autoclose: true,
+      todayBtn: true,
+      language: "sr",
+      endDate: "0d",
+      startDate: "12.03.2018.",
+    });
     appear($("#schedule-search-popup"), 500);
   };
 
