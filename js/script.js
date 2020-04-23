@@ -6,8 +6,8 @@
   RGZ.loginInfo = '';
 
   //DBS TEST
-  //RGZ.apiRoot = 'http://10.0.1.251:8083/api/';
-  RGZ.apiRoot = 'http://localhost:50398/api/';
+  RGZ.apiRoot = 'http://10.0.1.251:8083/api/';
+  //RGZ.apiRoot = 'http://localhost:50398/api/';
 
   //RGZ TEST
   //RGZ.apiRoot = 'http://10.11.153.76:7083/api/';
@@ -1833,6 +1833,8 @@
           <select id="schedule-co" onchange="$RGZ.scheduleSearch();" style="` + ((RGZ.loginInfo.rola > 3) ? "width: calc(100% - 8vh)" : "") + `">
             <option disabled selected hidden>ИЗАБЕРИТЕ ШАЛТЕР/КАНЦЕЛАРИЈУ...</option>
     `;
+    if (qualified.length == 0)
+      scheduleContentHtml += `<option disabled>НЕМА ЗАКАЗАНИХ ТЕРМИНА</option>`;
     for (i = 0; i < qualified.length; i++)
       scheduleContentHtml += `<option>` + qualified[i] + `</option>`;
     scheduleContentHtml += `
@@ -3786,13 +3788,16 @@
     var seconds = date.getSeconds();
     setTimeout(RGZ.currentClientIndicator, (61 - seconds) * 1000);
     var minDiff = 333333;
-    var timeAux = hours * 100 + minutes;
+    var timeAux = hours * 10000 + minutes * 100 + seconds;
     $(".schedule-item").each(function() {
-      var timeFromString = Number($(this).find(".item-time").html().replace(':', ''));
-      if (timeAux - timeFromString >= 0 && timeAux - timeFromString < minDiff) {
+      var timeFromString = Number($(this).find(".item-time").html().replace(':', '') + '00');
+      if (timeAux - timeFromString >= 0 && timeAux - timeFromString <= minDiff) {
         minDiff = timeAux - timeFromString;
-        $(".item-indicator i").addClass("hidden");
-        $(this).find(".item-indicator i").removeClass("hidden");
+        if (!($(this).find(".item-c").hasClass("arrival"))) {
+          $(".item-indicator i").addClass("hidden");
+          $(this).find(".item-indicator i").removeClass("hidden");
+          return;
+        }
       }
     });
   };
