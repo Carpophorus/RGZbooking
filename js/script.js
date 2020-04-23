@@ -3796,7 +3796,6 @@
         if (!($(this).find(".item-c").hasClass("arrival"))) {
           $(".item-indicator i").addClass("hidden");
           $(this).find(".item-indicator i").removeClass("hidden");
-          return;
         }
       }
     });
