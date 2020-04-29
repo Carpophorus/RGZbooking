@@ -96,7 +96,7 @@
           sync = sync - 1;
           if (sync == 0) RGZ.loadBookContent();
         },
-        true /*, RGZ.bearer*/
+        true
       );
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "salteri/zahtevi",
@@ -105,7 +105,7 @@
           sync = sync - 1;
           if (sync == 0) RGZ.loadBookContent();
         },
-        true /*, RGZ.bearer*/
+        true
       );
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "kancelarije/sluzbe",
@@ -114,7 +114,7 @@
           sync = sync - 1;
           if (sync == 0) RGZ.loadBookContent();
         },
-        true /*, RGZ.bearer*/
+        true
       );
       $ajaxUtils.sendGetRequest(
         RGZ.apiRoot + "status/sluzbe",
@@ -123,7 +123,7 @@
           sync = sync - 1;
           if (sync == 0) RGZ.loadBookContent();
         },
-        true /*, RGZ.bearer*/
+        true
       );
       RGZ.footMouseOver();
       setTimeout(RGZ.footMouseOut, 2000);
@@ -532,7 +532,7 @@
           disappear($(".content-box-loader"), 200);
           appear($("#book-status-aux"), 500);
         },
-        true /*, RGZ.bearer */
+        true
       );
     }
   };
@@ -736,7 +736,7 @@
           disappear($(".content-box-loader"), 200);
           $("#counter-select").prop("disabled", false);
         },
-        true /*, RGZ.bearer*/
+        true
       );
     }, 500);
   };
@@ -958,7 +958,7 @@
           disappear($(".content-box-loader"), 200);
           $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", false);
         },
-        true , RGZ.bearer
+        true, ((RGZ.bearer == "" || RGZ.bearer == undefined) ? null : RGZ.bearer)
       );
     }, 500);
   };
@@ -1489,7 +1489,7 @@
                   }
                 });
               },
-              true /*, RGZ.bearer*/
+              true
             );
           }
         }
