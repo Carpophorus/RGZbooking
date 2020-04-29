@@ -958,7 +958,7 @@
           disappear($(".content-box-loader"), 200);
           $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", false);
         },
-        true /*, RGZ.bearer*/
+        true , RGZ.bearer
       );
     }, 500);
   };
