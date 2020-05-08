@@ -5,12 +5,8 @@
   RGZ.bearer = '';
   RGZ.loginInfo = '';
 
-  //DBS TEST
-  RGZ.apiRoot = 'http://10.0.1.251:8083/api/';
-  //RGZ.apiRoot = 'http://localhost:50398/api/';
-
   //RGZ TEST
-  //RGZ.apiRoot = 'http://10.11.153.76:7083/api/';
+  RGZ.apiRoot = 'http://10.11.153.76:8095/api/';
 
   //RGZ LIVE
   //RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
@@ -188,6 +184,8 @@
         <select id="counter-select" onchange="$RGZ.counterDepartmentChanged();">
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
+    if (RGZ.salteriSluzbe.length == 0)
+      bookHtml += `<option disabled>НЕМА ДОСТУПНИХ СЛУЖБИ</option>`;
     for (var i = 0; i < RGZ.salteriSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.salteriSluzbe[i].id + `">` + RGZ.salteriSluzbe[i].sluzba + `</option>`;
     bookHtml += `
@@ -217,6 +215,8 @@
         <select id="office-select" onchange="$RGZ.officeDepartmentChanged();">
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
+    if (RGZ.kancelarijeSluzbe.length == 0)
+      bookHtml += `<option disabled>НЕМА ДОСТУПНИХ СЛУЖБИ</option>`;
     for (i = 0; i < RGZ.kancelarijeSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.kancelarijeSluzbe[i].id + `">` + RGZ.kancelarijeSluzbe[i].sluzba + `</option>`;
     bookHtml += `
