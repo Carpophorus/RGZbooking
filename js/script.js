@@ -721,7 +721,7 @@
           else
             $.confirm({
               title: 'ОБАВЕШТЕЊЕ',
-              content: 'Сви термини у одабраној служби су заузети, молимо покушајте касније.',
+              content: 'Нема слободних термина, молимо покушајте касније.',
               theme: 'supervan',
               backgroundDismiss: 'true',
               buttons: {
@@ -943,7 +943,7 @@
           else
             $.confirm({
               title: 'ОБАВЕШТЕЊЕ',
-              content: 'Сви термини у одабраној служби су заузети, молимо покушајте касније.',
+              content: 'Нема слободних термина, молимо покушајте касније.',
               theme: 'supervan',
               backgroundDismiss: 'true',
               buttons: {
