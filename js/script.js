@@ -185,7 +185,7 @@
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
     if (RGZ.salteriSluzbe.length == 0)
-      bookHtml += `<option disabled>НЕМА ДОСТУПНИХ СЛУЖБИ</option>`;
+      bookHtml += `<option disabled>НЕМА СЛОБОДНИХ ТЕРМИНА</option>`;
     for (var i = 0; i < RGZ.salteriSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.salteriSluzbe[i].id + `">` + RGZ.salteriSluzbe[i].sluzba + `</option>`;
     bookHtml += `
@@ -216,7 +216,7 @@
           <option disabled value="0" selected hidden>ИЗАБЕРИТЕ СЛУЖБУ...</option>
     `;
     if (RGZ.kancelarijeSluzbe.length == 0)
-      bookHtml += `<option disabled>НЕМА ДОСТУПНИХ СЛУЖБИ</option>`;
+      bookHtml += `<option disabled>НЕМА СЛОБОДНИХ ТЕРМИНА</option>`;
     for (i = 0; i < RGZ.kancelarijeSluzbe.length; i++)
       bookHtml += `<option value="` + RGZ.kancelarijeSluzbe[i].id + `">` + RGZ.kancelarijeSluzbe[i].sluzba + `</option>`;
     bookHtml += `
