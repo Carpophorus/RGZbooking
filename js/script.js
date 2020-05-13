@@ -1828,7 +1828,7 @@
       <div id="schedule-searchbar" class="row">
         <div class="col-lg-3 hidden-md-down"></div>
         <div class="col-12 col-lg-6">
-          <div id="schedule-cal" class="` + ((RGZ.loginInfo.rola > 3) ? "" : "gone") + `" onclick="$('#schedule-cal-input').focus();">
+          <div id="schedule-cal" ` + ((RGZ.loginInfo.rola > 3) ? `` : `class="gone" `) + `"onclick="$('#schedule-cal-input').focus();">
             <i class="fa fa-calendar"></i>
             <input id="schedule-cal-input">
           </div>
@@ -3681,13 +3681,13 @@
           btnClass: 'btn-white-rgz',
           keys: ['enter'],
           action: function() {*/
-            /*var date = new Date();
+            var date = new Date();
             var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
             var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
             var year = date.getFullYear();
-            var hours = ((date.getHours() < 10) ? "0" : "") + date.getHours();
+            /*var hours = ((date.getHours() < 10) ? "0" : "") + date.getHours();
             var minutes = ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();*/
-            var printTitle = RGZ.loginInfo.sluzba + " &bull; " + $("#schedule-co").val() /*+ " &bull; " + RGZ.loginInfo.name*/ + " &bull; " + $("#schedule-cal-input").val() /*day + `.` + month + `.` + year + `. ` + hours + `:` + minutes + (($("#print-title").val() != "") ? (" &bull; " + $("#print-title").val()) : "")*/;
+            var printTitle = RGZ.loginInfo.sluzba + " &bull; " + $("#schedule-co").val() /*+ " &bull; " + RGZ.loginInfo.name*/ + " &bull; " + (($("#schedule-cal-input").val() != '') ? $("#schedule-cal-input").val() : (day + `.` + month + `.` + year + `.` /*+ ` ` + hours + `:` + minutes*/)) /*+ (($("#print-title").val() != "") ? (" &bull; " + $("#print-title").val()) : "")*/;
             var html4print = `
                 <head><title>ЗАКАЗАНИ ТЕРМИНИ</title></head>
                 <body>
@@ -3774,7 +3774,7 @@
                       width: 20%;
                     }
                     .inner-xxl {
-                      width: 40%;
+                      width: calc(45% - 1px);
                     }
                   </style>
                 </body>
