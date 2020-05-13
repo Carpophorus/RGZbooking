@@ -50,6 +50,8 @@
   var novaSKN = 0;
   var otkazRazlog = 0;
 
+  var array4print = [];
+
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
     targetElem.innerHTML = html;
@@ -1816,7 +1818,7 @@
       }
     }
     var scheduleContentHtml = `
-      ` //+ <div id="schedule-print` + ((RGZ.loginInfo.rola == 7) ? `-2` : ((RGZ.loginInfo.rola == 6) ? `-1` : ``)) + `" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>`
+      <div id="schedule-print" class="schedule-navi-button hidden-md-down gone" onclick="$RGZ.schedulePrint();"><i class="fa fa-print"></i></div>`
       + ((RGZ.loginInfo.rola == 7) ? `<div id="schedule-switch-skn" class="schedule-navi-button" onclick="$RGZ.switchSKN();"><strong>СКН</strong></div>` : ``)
       + ((RGZ.loginInfo.rola == 6 || RGZ.loginInfo.rola == 7) ? `<div id="schedule-search" class="schedule-navi-button" onclick="$RGZ.scheduleSearchPopup();"><i class="fa fa-search"></i></div>` : ``)
       + `<div id="schedule-filter" class="schedule-navi-button" onclick="$RGZ.scheduleFilter(this);"><i class="fa fa-filter"></i></div>`
@@ -1857,6 +1859,7 @@
       scheduleDate = $("#schedule-cal-input").val();
     }).on("hide", function() {
       if (scheduleDate != $("#schedule-cal-input").val()) {
+        disappear($("#schedule-print"), 500);
         scheduleDateAux = scheduleDate = $("#schedule-cal-input").val().substring(6, 10) + "-" + $("#schedule-cal-input").val().substring(3, 5) + "-" + $("#schedule-cal-input").val().substring(0, 2);
         RGZ.zakazaniTermini = [];
         var date = new Date();
@@ -3355,7 +3358,7 @@
 
   RGZ.scheduleSearch = function() {
     disappear($("#timetable"), 500);
-    //disappear($("#schedule-print, #schedule-print-1, #schedule-print-2"), 500);
+    disappear($("#schedule-print"), 500);
     var ttHtml = `
       <div id="schedule-header" class="row">
         <div class="col-1"></div>
@@ -3365,13 +3368,18 @@
       </div>
       <div id="schedule-items">
     `;
-    //var itemCounter = 0;
+    var a4pIndex = 0;
+    array4print = [];
     for (var i = 0; i < RGZ.zakazaniTermini.length; i++) {
       var salterTrim = (RGZ.zakazaniTermini[i].salter != undefined) ? RGZ.zakazaniTermini[i].salter.replace(/\s\s+/g, ' ').trim() : '';
       var kancelarijaTrim = (RGZ.zakazaniTermini[i].kancelarija != undefined) ? RGZ.zakazaniTermini[i].kancelarija.replace(/\s\s+/g, ' ').trim() : '';
-      if (salterTrim == $("#schedule-co").val() || kancelarijaTrim == $("#schedule-co").val())
+      if (salterTrim == $("#schedule-co").val() || kancelarijaTrim == $("#schedule-co").val()) {
+        if (RGZ.zakazaniTermini[i].otkazan == false) {
+          array4print[a4pIndex] = RGZ.zakazaniTermini[i];
+          a4pIndex = a4pIndex + 1;
+        }
         ttHtml += `
-          <div class="schedule-item row` + ((RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active") == false) ? ` zero-height` : ``) + /*((itemCounter % 2 == 0) ? ` odd` : `even`) +*/ `" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
+          <div class="schedule-item row` + ((RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active") == false) ? ` zero-height` : ``) + `" id="item-` + i + `" onclick="$RGZ.scheduleItemClicked(` + i + `, this);">
             <div class="col-1 item-indicator"><i class="fa fa-circle pulse hidden"></i></div>
             <div class="col-2 item-time">` + RGZ.zakazaniTermini[i].termin + `</div>
             <div class="col-6 item-name">` + RGZ.zakazaniTermini[i].ime + `</div>
@@ -3401,8 +3409,7 @@
             </div>
           </div>
         `;
-        /*if (RGZ.zakazaniTermini[i].otkazan == true && $("#schedule-filter").hasClass("active"))
-          itemCounter = itemCounter + 1;*/
+      }
     }
     ttHtml += `
       </div>
@@ -3413,7 +3420,8 @@
     }, 500);
     setTimeout(function() {
       appear($("#timetable"), 500);
-      //appear($("#schedule-print, #schedule-print-1, #schedule-print-2"), 500);
+      if (array4print.length > 0)
+        appear($("#schedule-print"), 500);
       setTimeout(RGZ.currentClientIndicator, 10);
     }, 600);
   };
@@ -3655,8 +3663,8 @@
     }
   };
 
-  /*RGZ.schedulePrint = function() {
-    $.confirm({
+  RGZ.schedulePrint = function() {
+    /*$.confirm({
       title: 'ПОТВРДА',
       content: `Уколико желите додатак наслову на документу за штампу, унесите га у ово поље:<br><br><input id="print-title" type="text" placeholder="наслов" onfocus="this.placeholder = ''" onblur="this.placeholder = 'наслов'">`,
       theme: 'supervan',
@@ -3672,39 +3680,40 @@
           text: '<i class="fa fa-print"></i>',
           btnClass: 'btn-white-rgz',
           keys: ['enter'],
-          action: function() {
-            var date = new Date();
+          action: function() {*/
+            /*var date = new Date();
             var day = ((date.getDate() < 10) ? "0" : "") + date.getDate();
             var month = ((date.getMonth() + 1 < 10) ? "0" : "") + (date.getMonth() + 1);
             var year = date.getFullYear();
             var hours = ((date.getHours() < 10) ? "0" : "") + date.getHours();
-            var minutes = ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();
-            var printTitle = RGZ.loginInfo.sluzba + " &bull; " + $("#schedule-co").val() + " &bull; " + RGZ.loginInfo.name + " &bull; " + day + `.` + month + `.` + year + `. ` + hours + `:` + minutes + (($("#print-title").val() != "") ? (" &bull; " + $("#print-title").val()) : "");
+            var minutes = ((date.getMinutes() < 10) ? "0" : "") + date.getMinutes();*/
+            var printTitle = RGZ.loginInfo.sluzba + " &bull; " + $("#schedule-co").val() /*+ " &bull; " + RGZ.loginInfo.name*/ + " &bull; " + $("#schedule-cal-input").val() /*day + `.` + month + `.` + year + `. ` + hours + `:` + minutes + (($("#print-title").val() != "") ? (" &bull; " + $("#print-title").val()) : "")*/;
             var html4print = `
                 <head><title>ЗАКАЗАНИ ТЕРМИНИ</title></head>
                 <body>
                   <div class="print-title">` + printTitle + `</div>
                   <div class="header">
                     <div class="inner-s">&nbsp;&nbsp;&nbsp;време</div>
-                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;име и презиме</div>
-                    <div class="inner-xl">&nbsp;&nbsp;&nbsp;документ / бр. предмета</div>
+                    <div class="inner-xxl">&nbsp;&nbsp;&nbsp;име и презиме</div>
+                    <div class="inner-xxl">&nbsp;&nbsp;&nbsp;документ / бр. предмета</div>` /*+ `
                     <div class="inner-xl">&nbsp;&nbsp;&nbsp;e-mail</div>
                     <div class="inner-l">&nbsp;&nbsp;&nbsp;телефон</div>
-                    <div class="inner-l">потврда доласка</div>
+                    <div class="inner-l">потврда доласка</div>`*/ + `
                   </div>
                   <div class="print-items">
               `;
-            for (var i = 0; i < RGZ.zakazaniTermini.length; i++)
-              if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val() || RGZ.zakazaniTermini[i].kancelarija == $("#schedule-co").val())
+            //for (var i = 0; i < RGZ.zakazaniTermini.length; i++)
+              //if (RGZ.zakazaniTermini[i].salter == $("#schedule-co").val() || RGZ.zakazaniTermini[i].kancelarija == $("#schedule-co").val())
+              for (var i = 0; i < array4print.length; i++)
                 html4print += `
                     <div class="outer">
-                      <div class="inner-s">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].termin + `</div>
-                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].ime + `</div>
-                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].dokument + `</div>
-                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].email + `</div>
-                      <div class="inner-l">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].tel + `</div>
-                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `✔` : `&nbsp;`) + `</div>
-                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `✘` : `&nbsp;`) + `</div>
+                      <div class="inner-s">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].termin + `</div>` + `
+                      <div class="inner-xxl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].ime + `</div>` + `
+                      <div class="inner-xxl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].dokument + `</div>` /*+ `
+                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].email + `</div>` + `
+                      <div class="inner-l">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].tel + `</div>` + `
+                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `✔` : `&nbsp;`) + `</div>` + `
+                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `✘` : `&nbsp;`) + `</div>`*/ + `
                     </div>
                 `;
             html4print += `
@@ -3717,12 +3726,13 @@
                     .header, .outer, .print-title {
                       position: relative;
                       width: 100%;
-                      font-size: 65%;
+                      font-size: 120%;
+                      ` /*+ `font-size: 65%;`*/ + `
                       overflow: auto;
                     }
                     .print-title {
                       text-align: center;
-                      font-size: 75%;
+                      ` /*+ `font-size: 75%;`*/ + `
                       font-weight: 600;
                       padding: 20px;
                     }
@@ -3746,10 +3756,10 @@
                       overflow: hidden !important;
                       text-overflow: ellipsis;
                       line-height: 2;
-                    }
+                    }` /*+ `
                     .inner-xs, .header>div:last-child {
                       text-align: center !important;
-                    }
+                    }`*/ + `
                     .inner-xs {
                       width: calc(7.5% - 1px);
                       border-left: 1px solid #ddd;
@@ -3763,6 +3773,9 @@
                     .inner-xl {
                       width: 20%;
                     }
+                    .inner-xxl {
+                      width: 40%;
+                    }
                   </style>
                 </body>
               `;
@@ -3771,11 +3784,11 @@
             w.document.write(html4print);
             w.print();
             w.close();
-          }
+          /*}
         }
       }
-    });
-  };*/
+    });*/
+  };
 
   RGZ.currentClientIndicator = function() {
     var date = new Date();

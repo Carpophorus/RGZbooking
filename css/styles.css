@@ -970,17 +970,21 @@ input {
   /*orange*/
 }
 
-#schedule-print, #schedule-search {
+#schedule-print {
+  right: calc(50vw - 3.6vh);
+}
+
+/*#schedule-print,*/ #schedule-search {
   right: 28.8vh;
 }
 
-#schedule-print-1, #schedule-switch-skn {
+/*#schedule-print-1,*/ #schedule-switch-skn {
   right: 36vh;
 }
 
-#schedule-print-2 {
+/*#schedule-print-2 {
   right: 43.2vh;
-}
+}*/
 
 #timetable {
   opacity: 0;
