@@ -3374,7 +3374,7 @@
       var salterTrim = (RGZ.zakazaniTermini[i].salter != undefined) ? RGZ.zakazaniTermini[i].salter.replace(/\s\s+/g, ' ').trim() : '';
       var kancelarijaTrim = (RGZ.zakazaniTermini[i].kancelarija != undefined) ? RGZ.zakazaniTermini[i].kancelarija.replace(/\s\s+/g, ' ').trim() : '';
       if (salterTrim == $("#schedule-co").val() || kancelarijaTrim == $("#schedule-co").val()) {
-        if (RGZ.zakazaniTermini[i].otkazan == false) {
+        if (RGZ.zakazaniTermini[i].otkazan != true) {
           array4print[a4pIndex] = RGZ.zakazaniTermini[i];
           a4pIndex = a4pIndex + 1;
         }
