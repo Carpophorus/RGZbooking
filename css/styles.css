@@ -876,12 +876,18 @@ input {
 
 #schedule-cal-input {
   height: 0 !important;
+  line-height: 0 !important;
   position: absolute;
   left: 0;
   bottom: 0;
   margin: 0 !important;
   border: none !important;
   opacity: 0;
+  padding: 0;
+}
+
+#schedule-cal-input:hover, #schedule-cal>i {
+  cursor: pointer;
 }
 
 #schedule-co {

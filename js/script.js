@@ -1828,7 +1828,7 @@
       <div id="schedule-searchbar" class="row">
         <div class="col-lg-3 hidden-md-down"></div>
         <div class="col-12 col-lg-6">
-          <div id="schedule-cal" ` + ((RGZ.loginInfo.rola > 3) ? `` : `class="gone" `) + `"onclick="$('#schedule-cal-input').focus();">
+          <div id="schedule-cal" ` + ((RGZ.loginInfo.rola > 3) ? `` : `class="gone" `) + `onclick="$('#schedule-cal-input').focus();">
             <i class="fa fa-calendar"></i>
             <input id="schedule-cal-input">
           </div>
