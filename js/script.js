@@ -3707,13 +3707,13 @@
               for (var i = 0; i < array4print.length; i++)
                 html4print += `
                     <div class="outer">
-                      <div class="inner-s">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].termin + `</div>` + `
-                      <div class="inner-xxl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].ime + `</div>` + `
-                      <div class="inner-xxl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].dokument + `</div>` /*+ `
-                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].email + `</div>` + `
-                      <div class="inner-l">&nbsp;&nbsp;&nbsp;` + RGZ.zakazaniTermini[i].tel + `</div>` + `
-                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == true) ? `✔` : `&nbsp;`) + `</div>` + `
-                      <div class="inner-xs">` + ((RGZ.zakazaniTermini[i].potvrda == false) ? `✘` : `&nbsp;`) + `</div>`*/ + `
+                      <div class="inner-s">&nbsp;&nbsp;&nbsp;` + array4print[i].termin + `</div>` + `
+                      <div class="inner-xxl">&nbsp;&nbsp;&nbsp;` + array4print[i].ime + `</div>` + `
+                      <div class="inner-xxl">&nbsp;&nbsp;&nbsp;` + array4print[i].dokument + `</div>` /*+ `
+                      <div class="inner-xl">&nbsp;&nbsp;&nbsp;` + array4print[i].email + `</div>` + `
+                      <div class="inner-l">&nbsp;&nbsp;&nbsp;` + array4print[i].tel + `</div>` + `
+                      <div class="inner-xs">` + ((array4print[i].potvrda == true) ? `✔` : `&nbsp;`) + `</div>` + `
+                      <div class="inner-xs">` + ((array4print[i].potvrda == false) ? `✘` : `&nbsp;`) + `</div>`*/ + `
                     </div>
                 `;
             html4print += `
