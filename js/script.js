@@ -52,6 +52,8 @@
 
   var array4print = [];
 
+  var opzEnabled = true;
+
   var insertHtml = function(selector, html) {
     var targetElem = document.querySelector(selector);
     targetElem.innerHTML = html;
@@ -236,6 +238,10 @@
             <div class="subj-5">/</div>
             <div class="subj-6"><input id="subj-year" type="text" maxlength="4" onkeyup="$RGZ.numbersOnly(this);" onkeydown="$RGZ.numbersOnly(this);"></div>
           </div>
+        </div>
+        <div id="book-office-opz-group" onclick="$RGZ.opzClicked();">
+          <div id="book-office-opz"><i class="fa fa-square-o"></i></div>
+          <label class="checkbox-label">ТЕРМИН ЗА ОДРИЦАЊЕ ОД ПРАВА НА ЖАЛБУ</label>
         </div>
         <div class="form-search-button-container"><div class="form-search-button" onclick="$RGZ.fetchOfficeTimes();">ПРЕТРАГА</div><div class="form-notice">НАПОМЕНА: Уколико желите да закажете састанак у вези предмета формираног 2013. године или раније, позовите Инфо Центар.</div></div>
         <select id="office-day-select" class="gone" onchange="$RGZ.bookOfficeDay();">
@@ -436,7 +442,7 @@
       data.email = $("#book-office-mail").val();
       data = JSON.stringify(data);
       $ajaxUtils.sendPostRequestWithData(
-        RGZ.apiRoot + "kancelarije/zakazitermin" + "?token=" + encodeURIComponent(token),
+        RGZ.apiRoot + "kancelarije/zakazitermin" + "?opz=" + (($('#book-office-opz i').hasClass('fa-check-square-o')) ? 1 : 0) + "&token=" + encodeURIComponent(token),
         function(responseArray, status) {
           $(".jconfirm").remove();
           var detailsText = `
@@ -586,7 +592,7 @@
       if (!officeDescViewed)
         $.confirm({
           title: 'ЗАКАЗИВАЊЕ КАНЦЕЛАРИЈСКОГ ТЕРМИНА',
-          content: 'Овај део апликације еЗаказивање Вам помаже да закажете термин са службеником за геодетске или правне послове у оквиру одређене Службе Катастра Непокретности, ради увида у постојећи предмет.<br><br><div style="width: 100%; text-align: left">&bull;&nbsp;Одаберите жељену Службу Катастра Непокретности и упишите број Вашег предмета (поље подвучено црвеном линијом прихвата податке у формату "nnnn" или "sss-nnnn", где је "nnnn" број предмета, а "sss" број Службе по новој класификацији). Потом, кликните на дугме ПРЕТРАГА.<br>&bull;&nbsp;Изаберите датум из падајуће листе, а потом и термин који би Вам највише одговарао.<br>&bull;&nbsp;Попуните форму са личним подацима, прихватите услове коришћења и кликните на дугме ЗАКАЖИ.<br>&bull;&nbsp;Сачекајте потврду заказаног термина од стране апликације. Примићете и e-mail потврде на адресу електронске поште коју сте оставили приликом попуњавања форме.</div>',
+          content: 'Овај део апликације еЗаказивање Вам помаже да закажете термин са службеником за геодетске или правне послове у оквиру одређене Службе Катастра Непокретности, ради увида у постојећи предмет.<br><br><div style="width: 100%; text-align: left">&bull;&nbsp;Одаберите жељену Службу Катастра Непокретности и упишите број Вашег предмета (поље подвучено црвеном линијом прихвата податке у формату "nnnn" или "sss-nnnn", где је "nnnn" број предмета, а "sss" број Службе по новој класификацији). Уколико желите да закажете термин за одрицање од права на жалбу, означите то кликом на ТЕРМИН ЗА ОДРИЦАЊЕ ОД ПРАВА НА ЖАЛБУ. Потом, кликните на дугме ПРЕТРАГА.<br>&bull;&nbsp;Изаберите датум из падајуће листе, а потом и термин који би Вам највише одговарао.<br>&bull;&nbsp;Попуните форму са личним подацима, прихватите услове коришћења и кликните на дугме ЗАКАЖИ.<br>&bull;&nbsp;Сачекајте потврду заказаног термина од стране апликације. Примићете и e-mail потврде на адресу електронске поште коју сте оставили приликом попуњавања форме.</div>',
           theme: 'supervan',
           buttons: {
             ok: {
@@ -659,6 +665,12 @@
     $(".content-box-content").animate({
       scrollTop: 0
     }, 500);
+  };
+
+  RGZ.opzClicked = function() {
+    if (opzEnabled == false) return;
+    RGZ.checkboxClicked($('#book-office-opz'));
+    RGZ.officeDepartmentChanged();
   };
 
   RGZ.counterReasonChanged = function() {
@@ -907,8 +919,9 @@
       }
     }
     $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", true);
+    opzEnabled = false;
     $(".content-box-loader").css({
-      "padding-top": "56vh"
+      "padding-top": "72vh"
     });
     appear($(".content-box-loader"), 200);
     disappear($("#office-time-select, #office-day-select, #book-office-aux"), 500);
@@ -918,7 +931,7 @@
     RGZ.officeDepartmentChanged();
     setTimeout(function() {
       $ajaxUtils.sendGetRequest(
-        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&broj_dok=" + encodeURIComponent("952-02-" + $("#book-offices #subj-type").val() + "-" + $("#book-offices #subj-id").val() + "/" + $("#book-offices #subj-year").val()),
+        RGZ.apiRoot + "kancelarije/termini" + "?sluzbaId=" + $("#office-select option:selected").attr("value") + "&opz=" + (($('#book-office-opz i').hasClass('fa-check-square-o')) ? 1 : 0) + "&broj_dok=" + encodeURIComponent("952-02-" + $("#book-offices #subj-type").val() + "-" + $("#book-offices #subj-id").val() + "/" + $("#book-offices #subj-year").val()),
         function(responseArray, status) {
           RGZ.kancelarijeTermini = responseArray;
           var datumi = [];
@@ -959,6 +972,7 @@
             });
           disappear($(".content-box-loader"), 200);
           $("#office-select, #book-offices #subj-type, #book-offices #subj-id, #book-offices #subj-year").prop("disabled", false);
+          opzEnabled = true;
         },
         true, ((RGZ.bearer == "" || RGZ.bearer == undefined) ? null : RGZ.bearer)
       );
@@ -1859,6 +1873,7 @@
       scheduleDate = $("#schedule-cal-input").val();
     }).on("hide", function() {
       if (scheduleDate != $("#schedule-cal-input").val()) {
+        disappear($("#timetable"), 500);
         disappear($("#schedule-print"), 500);
         scheduleDateAux = scheduleDate = $("#schedule-cal-input").val().substring(6, 10) + "-" + $("#schedule-cal-input").val().substring(3, 5) + "-" + $("#schedule-cal-input").val().substring(0, 2);
         RGZ.zakazaniTermini = [];

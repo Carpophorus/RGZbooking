@@ -573,7 +573,7 @@ input {
 
 .btn-group>label {
   border-radius: 0;
-  padding: 0.6vh 0;
+  padding: 0.4vh 0;
   width: 33.333333%;
   font-size: 2vh;
   font-family: /*'Russo One'*/
@@ -731,6 +731,12 @@ input {
   padding: 6vh 25% 0 25%;
 }
 
+#book-office-opz-group {
+  display: inline-block;
+  margin-left: 25%;
+  margin-bottom: 3vh;
+}
+
 #book-status-aux-desc {
   padding: 3vh 0 6vh 0;
   text-align: center;
@@ -807,7 +813,7 @@ input {
   font-size: 3vh;
 }
 
-#book-counter-check, #book-office-check {
+#book-counter-check, #book-office-check, #book-office-opz {
   display: inline-block;
   width: 5vh;
   height: 5vh;
@@ -826,6 +832,19 @@ input {
   text-align: justify;
   width: calc(100% - 8vh);
   padding-top: 1.5vh;
+}
+
+#book-office-opz-group>.checkbox-label {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 2.5vh;
+  font-family: /*'Russo One'*/
+  'Fira Sans Extra Condensed', sans-serif;
+  font-weight: 700;
+  height: 5vh;
+  padding: 0 !important;
+  margin-top: -0.4vh;
+  white-space: nowrap;
 }
 
 .form-notice {
@@ -1592,6 +1611,9 @@ input {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
+  }
+  #book-office-opz-group {
+    margin-left: 0;
   }
   .form-button, .form-search-button {
     margin-right: 0;
