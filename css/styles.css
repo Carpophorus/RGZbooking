@@ -118,7 +118,7 @@ input {
   position: relative;
 }
 
-.booking #tiles, .schedule #tiles, .admin #tiles {
+.booking #tiles, .schedule #tiles, .admin #tiles, .associate #tiles {
   height: 93vh;
 }
 
@@ -1123,11 +1123,11 @@ input {
   display: none !important;
 }
 
-.schedule .content-box-content, .admin .content-box-content {
+.schedule .content-box-content, .admin .content-box-content, .associate .content-box-content {
   opacity: 0;
 }
 
-.schedule .content-box-loader, .admin .content-box-loader {
+.schedule .content-box-loader, .admin .content-box-loader, .associate .content-box-loader {
   opacity: 1;
 }
 
@@ -1562,7 +1562,7 @@ input {
   /* .content-box {
     height: 84vh;
   } */
-  .schedule #tiles, .admin #tiles {
+  .schedule #tiles, .admin #tiles, .associate #tiles {
     height: 92vh;
   }
   #schedule-content {
