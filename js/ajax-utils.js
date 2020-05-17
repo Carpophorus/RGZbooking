@@ -107,7 +107,11 @@
           responseHandler(JSON.parse((request.status == 204) ? null : request.responseText), request.status);
         else
           responseHandler((request.status == 204) ? null : request.responseText, request.status);
-      } else if (request.status == 400 || request.status >= 500) {
+        } else if (request.status === 401) {
+          if (localStorage.getItem("RGZtoken") != null)
+            localStorage.removeItem("RGZtoken");
+          location.reload();
+        } else if (request.status == 400 || request.status >= 500) {
         var errorText = JSON.parse(request.responseText).Message;
         setTimeout(function() {
           disappear($(".content-box-loader"), 200);
