@@ -1521,6 +1521,16 @@ input {
   font-weight: 700;
 }
 
+.associate-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  height: 100vh;
+  width: 100vw;
+  border: 0;
+}
+
 @media (min-width: 991.5px) {
   #schedule-searchbar {
     padding-bottom: 3vh;

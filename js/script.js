@@ -7,9 +7,11 @@
 
   //RGZ TEST
   RGZ.apiRoot = 'http://10.11.153.76:8095/api/';
+  RGZ.frontRoot = 'http://10.11.153.76:8096';
 
   //RGZ LIVE
   //RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
+  //RGZ.frontRoot = 'http://10.11.153.76:8084';
 
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
@@ -130,11 +132,21 @@
     } else if ($(".schedule").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
       if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola < 3)
         location.pathname = location.pathname.replace('termini', 'admin');
+      else if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola == 9)
+        location.pathname = location.pathname.replace('termini', 'saradnik');
       RGZ.scheduleAux();
     } else if ($(".admin").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
-      if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola >= 3)
+      if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola == 9)
+        location.pathname = location.pathname.replace('admin', 'saradnik');
+      else if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola >= 3)
         location.pathname = location.pathname.replace('admin', 'termini');
       RGZ.adminAux();
+    } else if ($(".associate").length > 0 && sessionStorage.getItem(RGZ.ssTokenLabel) != null) {
+      if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola < 3)
+        location.pathname = location.pathname.replace('saradnik', 'admin');
+      else if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola != 9)
+        location.pathname = location.pathname.replace('saradnik', 'termini');
+      RGZ.associateAux();
     } else if (sessionStorage.getItem(RGZ.ssTokenLabel) == null) {
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
@@ -3170,6 +3182,24 @@
     );
   };
 
+  RGZ.associateAux = function() {
+    var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
+    if (tokens == null) return;
+    RGZ.bearer = tokens.access_token;
+    RGZ.loginInfo = tokens;
+    var scheduleContentHtml = `
+      <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
+      <div id="logout" class="schedule-navi-button" onclick="$RGZ.logout();"><i class="fa fa-sign-out"></i></div>
+      <iframe class="associate-frame" src="` + RGZ.frontRoot + `"></iframe>
+    `;
+    insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
+    setTimeout(function() {
+      appear($(".content-box-content"), 500);
+      disappear($(".content-box-loader"), 200);
+      disappear($("#navi-landing"), 500);
+    }, 500);
+  };
+
   RGZ.login = function() {
     if ($("#username").val() == "" || $("#password").val() == "") {
       $.confirm({
@@ -3194,14 +3224,24 @@
     var data = "username=" + encodeURIComponent($("#username").val()) + "&password=" + encodeURIComponent($("#password").val()) + "&grant_type=password&client_id=837rgz";
     $.post(RGZ.apiRoot.substring(0, RGZ.apiRoot.length - 4) + "token", data, function(response) {
       sessionStorage.setItem(RGZ.ssTokenLabel, JSON.stringify(response));
-      if (response.rola < 3 && ~location.pathname.indexOf('termini')) {
+      if (response.rola == 9 && ~location.pathname.indexOf('admin')) {
+        location.pathname = location.pathname.replace('admin', 'saradnik');
+      } else if (response.rola == 9 && ~location.pathname.indexOf('termini')) {
+        location.pathname = location.pathname.replace('termini', 'saradnik');
+      } else if (response.rola == 9 && ~location.pathname.indexOf('saradnik')) {
+        RGZ.associateAux();
+      } else if (response.rola < 3 && ~location.pathname.indexOf('termini')) {
         location.pathname = location.pathname.replace('termini', 'admin');
+      } else if (response.rola < 3 && ~location.pathname.indexOf('saradnik')) {
+        location.pathname = location.pathname.replace('saradnik', 'admin');
       } else if (response.rola < 3 && ~location.pathname.indexOf('admin')) {
         RGZ.adminAux();
-      } else if (response.rola >= 3 && ~location.pathname.indexOf('termini')) {
-        RGZ.scheduleAux();
       } else if (response.rola >= 3 && ~location.pathname.indexOf('admin')) {
         location.pathname = location.pathname.replace('admin', 'termini');
+      } else if (response.rola >= 3 && ~location.pathname.indexOf('saradnik')) {
+        location.pathname = location.pathname.replace('saradnik', 'termini');
+      } else if (response.rola >= 3 && ~location.pathname.indexOf('termini')) {
+        RGZ.scheduleAux();
       }
     }).fail(function(response) {
       if (response.status == 400) {
