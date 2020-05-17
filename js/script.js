@@ -11,7 +11,7 @@
 
   //RGZ LIVE
   //RGZ.apiRoot = 'http://93.87.56.76:8083/api/';
-  //RGZ.frontRoot = 'http://10.11.153.76:8084';
+  //RGZ.frontRoot = 'http://93.87.56.76:8084';
 
   RGZ.salteriSluzbe = '';
   RGZ.zahtevi = '';
