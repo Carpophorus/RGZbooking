@@ -929,6 +929,10 @@ input {
   padding-top: 28.5vh;
 }
 
+.associate #schedule-content>.content-box-content>.row {
+  padding-top: 35.5vh;
+}
+
 #schedule-content input {
   width: 100%;
   margin-bottom: 4vh;
@@ -1579,6 +1583,9 @@ input {
   }
   #schedule-content>.content-box-content>.row {
     padding-top: 29vh;
+  }
+  .associate #schedule-content>.content-box-content>.row {
+    padding-top: 36vh;
   }
   .schedule-navi-button {
     width: 8.2vh;
