@@ -118,8 +118,13 @@ input {
   position: relative;
 }
 
-.booking #tiles, .schedule #tiles, .admin #tiles, .associate #tiles {
+.booking #tiles, .schedule #tiles, .admin #tiles {
   height: 93vh;
+}
+
+.associate #tiles {
+  height: 100vh !important;
+  margin-top: 0 !important;
 }
 
 #foot {
@@ -1562,8 +1567,12 @@ input {
   /* .content-box {
     height: 84vh;
   } */
-  .schedule #tiles, .admin #tiles, .associate #tiles {
+  .schedule #tiles, .admin #tiles {
     height: 92vh;
+  }
+  .associate #tiles {
+    height: 100vh !important;
+    margin-top: 0 !important;
   }
   #schedule-content {
     height: 100% !important;
