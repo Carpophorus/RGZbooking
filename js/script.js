@@ -146,7 +146,43 @@
         location.pathname = location.pathname.replace('saradnik', 'admin');
       else if (JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel)).rola != 9)
         location.pathname = location.pathname.replace('saradnik', 'termini');
-      RGZ.associateAux();
+      var sync = 4;
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "salteri/sluzbe",
+        function(responseArray, status) {
+          RGZ.salteriSluzbe = responseArray;
+          sync = sync - 1;
+          if (sync == 0) RGZ.associateAux();
+        },
+        true
+      );
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "salteri/zahtevi",
+        function(responseArray, status) {
+          RGZ.zahtevi = responseArray;
+          sync = sync - 1;
+          if (sync == 0) RGZ.associateAux();
+        },
+        true
+      );
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "kancelarije/sluzbe",
+        function(responseArray, status) {
+          RGZ.kancelarijeSluzbe = responseArray;
+          sync = sync - 1;
+          if (sync == 0) RGZ.associateAux();
+        },
+        true
+      );
+      $ajaxUtils.sendGetRequest(
+        RGZ.apiRoot + "status/sluzbe",
+        function(responseArray, status) {
+          RGZ.statusSluzbe = responseArray;
+          sync = sync - 1;
+          if (sync == 0) RGZ.associateAux();
+        },
+        true
+      );
     } else if (sessionStorage.getItem(RGZ.ssTokenLabel) == null) {
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
@@ -172,7 +208,7 @@
     }
   });
 
-  RGZ.loadBookContent = function() {
+  var generateBookHtml = function() {
     var bookHtml = `
       <div class="btn-group hidden-xs-down" data-toggle="buttons">
         <label class="btn btn-primary active" onclick="$RGZ.bookSwitch(0);">
@@ -308,6 +344,11 @@
         </div>
       </div>
     `;
+    return bookHtml;
+  };
+
+  RGZ.loadBookContent = function() {
+    var bookHtml = generateBookHtml();
     insertHtml("#book-content>.content-box-content", bookHtml);
     disappear($(".content-box-loader"), 200);
     setTimeout(function() {
@@ -762,7 +803,7 @@
           disappear($(".content-box-loader"), 200);
           $("#counter-select").prop("disabled", false);
         },
-        true
+        true, ((RGZ.bearer == "" || RGZ.bearer == undefined) ? null : RGZ.bearer)
       );
     }, 500);
   };
@@ -3187,15 +3228,21 @@
     if (tokens == null) return;
     RGZ.bearer = tokens.access_token;
     RGZ.loginInfo = tokens;
+    counterDescViewed = true;
+    officeDescViewed = true;
+    statusDescViewed = true;
+    var bookHtml = generateBookHtml();
     var scheduleContentHtml = `
       <div id="schedule-password-change" class="schedule-navi-button" onclick="$RGZ.schedulePasswordChange();"><i class="fa fa-key"></i></div>
       <div id="logout" class="schedule-navi-button" onclick="$RGZ.logout();"><i class="fa fa-sign-out"></i></div>
-      <iframe class="associate-frame" src="` + RGZ.frontRoot + `"></iframe>
+      ` + bookHtml + `
     `;
     insertHtml("#schedule-content .content-box-content", scheduleContentHtml);
+    $("#schedule-content").attr("id", "book-content");
     setTimeout(function() {
       appear($(".content-box-content"), 500);
       disappear($(".content-box-loader"), 200);
+      disappear($(".content-box-img"), 200);
       disappear($("#navi-landing"), 500);
     }, 500);
   };
@@ -3229,7 +3276,43 @@
       } else if (response.rola == 9 && ~location.pathname.indexOf('termini')) {
         location.pathname = location.pathname.replace('termini', 'saradnik');
       } else if (response.rola == 9 && ~location.pathname.indexOf('saradnik')) {
-        RGZ.associateAux();
+        var sync = 4;
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "salteri/sluzbe",
+          function(responseArray, status) {
+            RGZ.salteriSluzbe = responseArray;
+            sync = sync - 1;
+            if (sync == 0) RGZ.associateAux();
+          },
+          true
+        );
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "salteri/zahtevi",
+          function(responseArray, status) {
+            RGZ.zahtevi = responseArray;
+            sync = sync - 1;
+            if (sync == 0) RGZ.associateAux();
+          },
+          true
+        );
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "kancelarije/sluzbe",
+          function(responseArray, status) {
+            RGZ.kancelarijeSluzbe = responseArray;
+            sync = sync - 1;
+            if (sync == 0) RGZ.associateAux();
+          },
+          true
+        );
+        $ajaxUtils.sendGetRequest(
+          RGZ.apiRoot + "status/sluzbe",
+          function(responseArray, status) {
+            RGZ.statusSluzbe = responseArray;
+            sync = sync - 1;
+            if (sync == 0) RGZ.associateAux();
+          },
+          true
+        );
       } else if (response.rola < 3 && ~location.pathname.indexOf('termini')) {
         location.pathname = location.pathname.replace('termini', 'admin');
       } else if (response.rola < 3 && ~location.pathname.indexOf('saradnik')) {

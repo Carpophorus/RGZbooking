@@ -53,6 +53,12 @@
   <script src="../js/bootstrap-datepicker.min.js"></script>
   <script src="../js/locales/bootstrap-datepicker.sr.min.js"></script>
   <script src="../js/script.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js?hl=sr" async defer></script>
+  <script>
+    function onSubmit(token) {
+      $RGZ.recaptchaCallback(token);
+    }
+  </script>
 </head>
 
 <body class="associate">
@@ -85,6 +91,7 @@
           <div class="col-2 col-md-4"></div>
         </div>
       </div>
+      <div id="recaptcha" class="g-recaptcha" data-sitekey="6LfwyjYUAAAAAFRNVQ7w4LQjP3wQp4PwUG0ef19r" data-callback="onSubmit" data-size="invisible" data-badge="bottomleft" data-theme="dark"></div>
     </div>
   </div>
 </body>
