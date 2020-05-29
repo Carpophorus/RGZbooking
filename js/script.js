@@ -87,7 +87,12 @@
 
   document.addEventListener("DOMContentLoaded", function(event) {
     if ($("#book-content").length > 0) {
-      var tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
+      var tokens = null;
+      try {
+        tokens = JSON.parse(sessionStorage.getItem(RGZ.ssTokenLabel));
+      } catch (error) {
+        console.error(error);
+      }
       RGZ.bearer = (tokens != null) ? tokens.access_token : "";
       appear($("#book-content>.content-box-loader"), 200);
       var sync = 4;
